@@ -1,4 +1,4 @@
-/* NERIX — сервер с файлом аккаунтов, второй валютой, друзьями */
+/* NERIX — сервер с файлом аккаунтов, второй валютой, друзьями, картами Студии */
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -6,6 +6,7 @@ const { WebSocketServer } = require('ws');
 
 const PORT = process.env.PORT || 7000;
 const USERS_FILE = path.join(__dirname, 'users.json');
+const GAMES_FILE = path.join(__dirname, 'games.json');
 
 /* ==================== ЗАГРУЗКА АККАУНТОВ ==================== */
 let users = {};
@@ -16,6 +17,17 @@ try {
   }
 } catch (e) {
   console.log('✗ Не удалось загрузить users.json:', e.message);
+}
+
+/* ==================== ЗАГРУЗКА КАРТ СТУДИИ ==================== */
+let userGames = {};
+try {
+  if (fs.existsSync(GAMES_FILE)) {
+    userGames = JSON.parse(fs.readFileSync(GAMES_FILE, 'utf8'));
+    console.log('✓ Загружено карт Студии:', Object.keys(userGames).length);
+  }
+} catch (e) {
+  console.log('✗ Не удалось загрузить games.json:', e.message);
 }
 
 let saveTimer = null;
@@ -29,11 +41,69 @@ function saveUsers() {
     }
   }, 500);
 }
+
+let gamesSaveTimer = null;
+function saveGames() {
+  clearTimeout(gamesSaveTimer);
+  gamesSaveTimer = setTimeout(() => {
+    try {
+      fs.writeFileSync(GAMES_FILE, JSON.stringify(userGames, null, 2));
+    } catch (e) {
+      console.log('✗ Ошибка сохранения карт:', e.message);
+    }
+  }, 500);
+}
+
 process.on('SIGINT', () => {
   try { fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2)); } catch {}
-  console.log('\n✓ Аккаунты сохранены. Выход.');
+  try { fs.writeFileSync(GAMES_FILE, JSON.stringify(userGames, null, 2)); } catch {}
+  console.log('\n✓ Аккаунты и карты сохранены. Выход.');
   process.exit(0);
 });
+
+/* ==================== КАРТЫ ИГРОКОВ (Nerix Studio) ==================== */
+function handleGameMsg(ws, msg, nick) {
+  const out = o => ws.send(JSON.stringify(o));
+
+  if (msg.type === 'games') {
+    out({
+      type: 'games',
+      list: Object.values(userGames).map(g => ({
+        id: g.id, name: g.name, by: g.by, n: (g.blocks || []).length
+      }))
+    });
+    return true;
+  }
+
+  if (msg.type === 'getgame') {
+    const g = userGames[String(msg.id)];
+    if (g) out({ type: 'game', game: g });
+    return true;
+  }
+
+  if (msg.type === 'publish') {
+    if (!nick) return true;
+    const g = msg.game;
+    if (!g || typeof g.id !== 'string' || !Array.isArray(g.blocks) || g.blocks.length > 700) return true;
+    const id = g.id.replace(/[^\w-]/g, '').slice(0, 40);
+    if (!id) return true;
+    if (userGames[id] && userGames[id].by !== nick) return true;
+    if (!userGames[id] && Object.keys(userGames).length >= 200) return true;
+    userGames[id] = {
+      id,
+      name: String(g.name || 'Игра').slice(0, 24),
+      by: nick,
+      blocks: g.blocks,
+      spawn: g.spawn,
+      sky: g.sky
+    };
+    saveGames();
+    out({ type: 'published', id });
+    return true;
+  }
+
+  return false;
+}
 
 /* ==================== ЗАДАНИЯ ==================== */
 const TASKS_TEMPLATE = [
@@ -88,6 +158,9 @@ wss.on('connection', (ws) => {
 
   ws.on('message', (raw) => {
     let m; try { m = JSON.parse(raw); } catch { return; }
+
+    /* ---------- КАРТЫ СТУДИИ (games / getgame / publish) ---------- */
+    if (handleGameMsg(ws, m, ws.nick)) return;
 
     /* ---------- РЕГИСТРАЦИЯ ---------- */
     if (m.type === 'register') {
@@ -161,14 +234,11 @@ wss.on('connection', (ws) => {
     }
 
     /* ---------- ПОКУПКА ---------- */
-    /* Обычные предметы — за нелси. Лимитки — за нериксы. */
     if (m.type === 'buy') {
       const item = m.item; if (!item) return;
       if (u.inventory.includes(item.id)) return;
-
       const currency = item.limited ? 'nerixs' : 'nelsi';
       const have = currency === 'nerixs' ? u.nerixs : (u.nelsi || 0);
-
       if (have < item.price) {
         return ws.send(JSON.stringify({
           type:'buyResult', ok:false,
@@ -177,7 +247,6 @@ wss.on('connection', (ws) => {
       }
       if (currency === 'nerixs') u.nerixs -= item.price;
       else u.nelsi = (u.nelsi || 0) - item.price;
-
       u.inventory.push(item.id);
       saveUsers();
       ws.send(JSON.stringify({type:'userUpdate', user: pubUser(u)}));
@@ -214,7 +283,6 @@ wss.on('connection', (ws) => {
       saveUsers();
       completeTaskServer(u, 'add_friend');
       ws.send(JSON.stringify({type:'friendResult', ok:true, user: pubUser(u)}));
-      // Обновить второго игрока если онлайн
       wss.clients.forEach(cl => {
         if (cl.nick && cl.nick.toLowerCase() === t && cl.readyState === 1) {
           cl.send(JSON.stringify({type:'userUpdate', user: pubUser(users[t])}));
@@ -290,7 +358,6 @@ function completeTaskServer(u, taskId) {
   const t = u.tasks.find(x => x.id === taskId);
   if (!t || t.done) return;
   t.done = true;
-  /* Все задания дают ТОЛЬКО нелси */
   u.nelsi = (u.nelsi || 0) + t.reward;
   saveUsers();
   wss.clients.forEach(cl => {
@@ -321,6 +388,8 @@ server.listen(PORT, () => {
   console.log('');
   console.log('✅ NERIX сервер запущен: http://localhost:' + PORT);
   console.log('   Аккаунтов в базе:', Object.keys(users).length);
+  console.log('   Карт Студии в базе:', Object.keys(userGames).length);
   console.log('   Файл аккаунтов:', USERS_FILE);
+  console.log('   Файл карт:', GAMES_FILE);
   console.log('');
 });
