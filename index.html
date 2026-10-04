@@ -837,6 +837,7 @@ function showPlatform(){
   running=false;mode='play';studioTest=false;document.body.classList.remove('ed');
   gid('nametags').innerHTML='';for(const k in tagEls)delete tagEls[k];
   for(const k in remotes)delete remotes[k];curPlace=null;
+  send({type:'visit',place:null});
   send({type:'games'});renderFriends();renderCatalog();
   renderGames();renderTasks();renderStudio();updBal();
   const tb=gid('tb');if(tb)tb.classList.toggle('on',myUser.equipped&&Object.keys(myUser.equipped).length>0);
