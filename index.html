@@ -126,15 +126,19 @@ body.ed #joy{bottom:190px}
 <div id="auth"><div class="box">
   <div class="logo">NERIX</div>
   <div style="text-align:center;opacity:.5;margin-bottom:20px;font-size:13px">Добро пожаловать</div>
+  <input id="inpSrv" placeholder="Адрес сервера wss://..." style="display:none">
   <input id="inpNick" placeholder="Никнейм" maxlength="16">
   <input id="inpPass" type="password" placeholder="Пароль" maxlength="32">
-  <button class="btn" id="btnAuth" style="margin-top:8px">ВОЙТИ</button>
+  <div id="authMsg" style="color:#f77;font-size:13px;min-height:18px;margin:2px 0 6px"></div>
+  <button class="btn" id="btnAuth">ВОЙТИ</button>
+  <button class="btn" id="btnReg" style="margin-top:8px;background:#2a2a2a;color:#fff">РЕГИСТРАЦИЯ</button>
+  <button class="btn" id="btnGuest" style="margin-top:8px;background:transparent;color:#9aa0a6">Играть без сервера</button>
 </div></div>
 <div id="platform">
   <div id="pTop"><div id="logo">NERIX</div>
     <div style="display:flex;gap:8px;align-items:center">
       <div id="balance">💎 <span id="balanceNerixs">0</span> · 💧 <span id="balanceNelsi">0</span></div>
-      <button class="tbtn" id="btnLogout">ВЫЙТИ</button></div></div>
+      <button class="tbtn" id="btnBonus">🎁 Бонус</button><button class="tbtn" id="btnLogout">ВЫЙТИ</button></div></div>
   <div id="pContent">
     <div class="tabbar">
       <div class="tab on" data-page="games">🎮 Игры</div><div class="tab" data-page="tasks">📋 Квесты</div>
@@ -148,8 +152,6 @@ body.ed #joy{bottom:190px}
       <div style="display:flex;gap:8px;margin:10px 0"><input id="stName" placeholder="Название игры" maxlength="24" style="flex:1;margin:0"><button class="btn" style="width:auto;padding:10px 16px" id="stNew">Создать</button></div>
       <div id="stList"></div></div>
     <div class="page" id="page-server"><h2>Сервер</h2>
-      <input id="srvUrl" placeholder="wss://адрес-сервера" style="margin-top:10px">
-      <button class="btn" id="srvBtn">Подключиться</button>
       <div id="srvSt" style="margin:10px 0;opacity:.8">Не подключено</div>
       <h3 style="margin:12px 0">Игры других игроков</h3><div class="grid" id="srvGames"></div></div>
     <div class="page" id="page-avatar"><h2>Аватар</h2><div style="opacity:.7">Скоро больше кастомизации</div></div>
@@ -396,7 +398,7 @@ function playCustom(g0,test){
   gid('deathScreen').classList.remove('on');gid('bShoot').style.display='none';
   gid('s1').innerHTML='<i>1</i>🖐';gid('lbN').textContent=myUser.nick;
   chatLog=[];renderChat();toast('▶ '+g.name);running=true;gamePaused=false;
-  if(!test)joinRoom('g'+g.id);
+  if(!test)enterPlace('g'+g.id);
 }
 // ---- Studio editor ----
 const SIZES=[['Плита',2,0.25,2],['Куб',1,1,1],['Стена',3,1.5,0.5],['Большая плита',5,0.25,5],['Столб',0.5,3,0.5],['Ступень',1,0.25,1]];
@@ -495,8 +497,8 @@ function renderStudio(){
     el.appendChild(d);});
 }
 function publish(g){
-  if(!ws||ws.readyState!==1){toast('Сначала подключи сервер (вкладка 🌐 Сервер)');return;}
-  send({t:'publish',game:{id:g.id,name:g.name,blocks:g.blocks,spawn:g.spawn,sky:g.sky}});
+  if(!ws||ws.readyState!==1||!authed){toast('Для публикации нужен вход на сервер');return;}
+  send({type:'publish',game:{id:g.id,name:g.name,blocks:g.blocks,spawn:g.spawn,sky:g.sky}});
 }
 document.querySelectorAll('#edUI [data-tool]').forEach(b=>b.onclick=()=>{ed.tool=b.dataset.tool;updEdUI();});
 gid('edSize').onclick=()=>{ed.size=(ed.size+1)%SIZES.length;updEdUI();};
@@ -506,42 +508,74 @@ gid('edTest').onclick=()=>playCustom(ed.game,true);
 gid('edSave').onclick=()=>{saveCustom();toast('💾 Сохранено');};
 gid('edPub').onclick=()=>{saveCustom();publish(ed.game);};
 gid('edExit').onclick=()=>{saveCustom();showPlatform();};
-// ---- Multiplayer ----
+// ---- Multiplayer (протокол твоего сервера: register/login/move/chat/...) ----
+let authed=false,pending=null,curPlace=null;
 function send(m){if(ws&&ws.readyState===1)ws.send(JSON.stringify(m));}
 function srvStatus(t){const e=gid('srvSt');if(e)e.textContent=t;}
-function addRemote(id,nick){return remotes[id]=remotes[id]||{nick:String(nick||'?').slice(0,16),x:0,y:0,z:0,yaw:0,ph:0,w:false,tx:0,ty:0,tz:0,tyaw:0,first:true};}
-function joinRoom(room){for(const k in remotes)delete remotes[k];send({t:'join',room});}
-function connect(url){
+function authMsg(t){gid('authMsg').textContent=t;}
+function wsUrl(){return srvUrl||(location.protocol.indexOf('http')===0?(location.protocol==='https:'?'wss://':'ws://')+location.host:'');}
+function addRemote(nick){return remotes[nick]=remotes[nick]||{nick:String(nick).slice(0,16),x:0,y:0,z:0,yaw:0,ph:0,w:false,tx:0,ty:0,tz:0,tyaw:0,first:true};}
+function enterPlace(place){curPlace=place;for(const k in remotes)delete remotes[k];send({type:'visit',place});}
+function openWs(onopen){
+  const url=wsUrl();if(!url){authMsg('Укажи адрес сервера');return;}
   if(ws){try{ws.onclose=null;ws.close();}catch(e){}ws=null;}
-  srvStatus('Подключение...');
-  try{ws=new WebSocket(url);}catch(e){srvStatus('Неверный адрес');ws=null;return;}
-  ws.onopen=()=>{srvStatus('✅ Подключено');send({t:'hello',nick:myUser.nick});send({t:'games'});};
-  ws.onclose=()=>{srvStatus('Отключено');ws=null;for(const k in remotes)delete remotes[k];};
-  ws.onerror=()=>srvStatus('Ошибка соединения');
+  authMsg('Подключение...');
+  try{ws=new WebSocket(url);}catch(e){authMsg('Неверный адрес сервера');ws=null;return;}
+  ws.onopen=()=>{authMsg('');srvStatus('✅ Подключено');onopen();};
+  ws.onclose=()=>{srvStatus('Отключено');ws=null;for(const k in remotes)delete remotes[k];if(!authed)authMsg('Нет соединения с сервером');else toast('Соединение потеряно');authed=false;};
+  ws.onerror=()=>{};
   ws.onmessage=ev=>{let m;try{m=JSON.parse(ev.data);}catch(e){return;}handleMsg(m);};
 }
+function doAuth(type){
+  const nick=gid('inpNick').value.trim(),pass=gid('inpPass').value;
+  if(!nick||!pass){authMsg('Введи ник и пароль');return;}
+  const sv=gid('inpSrv').value.trim();if(sv){srvUrl=sv;localStorage.setItem('nerix_server',sv);}
+  pending={nick,pass};openWs(()=>send({type,nick,pass}));
+}
+function applyUser(u){
+  if(!u)return;myUser=Object.assign(myUser,u);save.nerixs=+u.nerixs||0;save.nelsi=+u.nelsi||0;updBal();renderFriends();
+}
+function renderFriends(){
+  const el=gid('friendsList');if(!el)return;el.innerHTML='';
+  const fr=Array.isArray(myUser.friends)?myUser.friends:[];
+  if(!fr.length){el.innerHTML='<div style="opacity:.6">Друзей пока нет</div>';return;}
+  fr.forEach(f=>{const n=typeof f==='string'?f:f.nick,d=document.createElement('div');d.className='settingRow';d.style.maxWidth='none';
+    d.innerHTML=`<span>${esc(n)}</span><button class="tbtn">✖</button>`;d.querySelector('button').onclick=()=>send({type:'removeFriend',nick:n});el.appendChild(d);});
+}
 function handleMsg(m){
-  if(m.t==='welcome')myId=m.id;
-  else if(m.t==='players')m.list.forEach(p=>addRemote(p.id,p.nick));
-  else if(m.t==='join')addRemote(m.id,m.nick);
-  else if(m.t==='leave')delete remotes[m.id];
-  else if(m.t==='s'){const r=remotes[m.id]||addRemote(m.id,'?');r.tx=+m.x||0;r.ty=+m.y||0;r.tz=+m.z||0;r.tyaw=+m.yaw||0;r.w=!!m.w;
-    if(r.first){r.x=r.tx;r.y=r.ty;r.z=r.tz;r.yaw=r.tyaw;r.first=false;}}
-  else if(m.t==='chat'){chatLog.push({from:esc(m.nick),text:esc(m.text)});renderChat();}
-  else if(m.t==='hit'){if(!player.dead&&player.spawnProt<=0){player.health-=Math.min(50,+m.dmg||0);if(player.health<=0){send({t:'ko',to:m.from});die();}}}
-  else if(m.t==='ko'){player.kos++;gid('lbK').textContent=player.kos;toast('☠ Убийство!');}
-  else if(m.t==='games'){srvGames=m.list||[];renderSrvGames();}
-  else if(m.t==='game'&&m.game)playCustom(m.game);
-  else if(m.t==='published')toast('✔ Игра опубликована');
+  switch(m.type){
+    case 'authResult':
+      if(m.ok){authed=true;if(pending){myUser.nick=pending.nick;localStorage.setItem('nerix_nick',pending.nick);localStorage.setItem('nerix_pass',pending.pass);}
+        applyUser(m.user);gid('auth').style.display='none';showPlatform();toast('Добро пожаловать, '+myUser.nick);}
+      else authMsg(m.msg||'Ошибка входа');
+      break;
+    case 'userUpdate':applyUser(m.user);break;
+    case 'players':{
+      if(!running||mode!=='play'||studioTest)break;const seen={};
+      for(const p of m.list||[]){if(p.nick===myUser.nick||String(p.place)!==String(curPlace))continue;seen[p.nick]=1;
+        const r=remotes[p.nick]||addRemote(p.nick);r.tx=+p.x||0;r.ty=+p.y||0;r.tz=+p.z||0;r.tyaw=+p.yaw||0;r.w=!!p.walking;
+        if(r.first){r.x=r.tx;r.y=r.ty;r.z=r.tz;r.yaw=r.tyaw;r.first=false;}}
+      for(const k in remotes)if(!seen[k])delete remotes[k];
+      break;}
+    case 'chat':
+      if(m.system)chatLog.push({system:true,text:esc(m.text)});
+      else if(m.from!==myUser.nick)chatLog.push({from:esc(m.from),text:esc(m.text)});
+      renderChat();break;
+    case 'buyResult':case 'bonusResult':case 'friendResult':
+      if(m.user)applyUser(m.user);if(m.msg)toast(m.msg);break;
+    case 'taskNotify':toast('✔ '+m.name+' +'+m.reward);break;
+    case 'games':srvGames=m.list||[];renderSrvGames();break;
+    case 'game':if(m.game)playCustom(m.game);break;
+    case 'published':toast('✔ Игра опубликована для всех');break;
+  }
 }
 function renderSrvGames(){
   const el=gid('srvGames');if(!el)return;el.innerHTML='';
-  if(!srvGames.length){el.innerHTML='<div style="opacity:.6">Пока пусто (или сервер не подключён)</div>';return;}
+  if(!srvGames.length){el.innerHTML='<div style="opacity:.6">Пока пусто (или нет соединения)</div>';return;}
   srvGames.forEach(sg=>{const d=document.createElement('div');d.className='gameCard';
     d.innerHTML=`<div class="thumb">🌐</div><div class="body"><div class="nm">${esc(sg.name)}</div><div class="ds">от ${esc(sg.by)} · ${+sg.n||0} блоков</div><button class="playBtn">ИГРАТЬ</button></div>`;
-    d.onclick=()=>send({t:'getgame',id:sg.id});el.appendChild(d);});
+    d.onclick=()=>send({type:'getgame',id:sg.id});el.appendChild(d);});
 }
-gid('srvBtn').onclick=()=>{srvUrl=gid('srvUrl').value.trim();localStorage.setItem('nerix_server',srvUrl);if(srvUrl)connect(srvUrl);else{if(ws)ws.close();srvStatus('Адрес не указан');}};
 function proj2(v,p,x,y,z){
   const vx=v[0]*x+v[4]*y+v[8]*z+v[12],vy=v[1]*x+v[5]*y+v[9]*z+v[13],vz=v[2]*x+v[6]*y+v[10]*z+v[14],vw=v[3]*x+v[7]*y+v[11]*z+v[15];
   const cx=p[0]*vx+p[4]*vy+p[8]*vz+p[12]*vw,cy=p[1]*vx+p[5]*vy+p[9]*vz+p[13]*vw,cw=p[3]*vx+p[7]*vy+p[11]*vz+p[15]*vw;
@@ -607,7 +641,7 @@ function loadGame(idx){
   if(idx===3)playerHasSword=true;
   document.getElementById('s1').innerHTML='<i>1</i>'+(idx===3?'🗡':'🖐');
   document.getElementById('lbN').textContent=myUser.nick;
-  chatLog=[];renderChat();toast('▶ '+g.name);playTone(440,0.1);camDistance=7;camPitch=0.35;joinRoom('b'+idx);
+  chatLog=[];renderChat();toast('▶ '+g.name);playTone(440,0.1);camDistance=7;camPitch=0.35;enterPlace(idx);
 }
 function die(){
   if(player.dead)return;player.dead=true;player.respawnAt=performance.now()+2000;player.wipeouts++;
@@ -633,8 +667,7 @@ canvas.addEventListener('pointermove',e=>{if(e.pointerId!==lookId)return;camYaw-
 canvas.addEventListener('pointerup',e=>{if(e.pointerId===lookId){lookId=null;if(mode==='edit'&&Math.hypot(e.clientX-tapX,e.clientY-tapY)<10&&performance.now()-tapT<450)edTap(e.clientX,e.clientY);}});
 canvas.addEventListener('wheel',e=>{if(allowZoom)camDistance=Math.max(3,Math.min(14,camDistance+e.deltaY*0.01));});
 document.getElementById('bJump').onpointerdown=e=>{e.preventDefault();if(player.onGround&&!player.dead){player.vy=9.5;player.onGround=false;}};
-document.getElementById('bShoot').onpointerdown=e=>{e.preventDefault();if(playerHasSword&&performance.now()-lastSlash>400){lastSlash=performance.now();toast('⚔ Удар!');playTone(200,0.08);
-  for(const id in remotes){const r=remotes[id];if(!r.first&&Math.hypot(r.x-player.x,r.z-player.z)<3.5&&Math.abs(r.y-player.y)<2)send({t:'hit',to:+id,dmg:35});}}};
+document.getElementById('bShoot').onpointerdown=e=>{e.preventDefault();if(playerHasSword&&performance.now()-lastSlash>400){lastSlash=performance.now();toast('⚔ Удар!');playTone(200,0.08);}};
  
 // ============ UI ============
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2200);}
@@ -647,14 +680,14 @@ function renderChat(){
 document.getElementById('chatBtn').onclick=()=>document.getElementById('chatPanel').classList.toggle('on');
 document.getElementById('chatSend').onclick=()=>{
   const i=document.getElementById('chatInput'),t=i.value.trim();if(!t)return;
-  chatLog.push({from:myUser.nick,text:t.replace(/</g,'&lt;')});send({t:'chat',text:t});i.value='';renderChat();
+  chatLog.push({from:myUser.nick,text:t.replace(/</g,'&lt;')});send({type:'chat',text:t});i.value='';renderChat();
 };
 function showPlatform(){
   document.getElementById('hud').classList.remove('on');document.getElementById('platform').classList.add('on');
   running=false;mode='play';studioTest=false;document.body.classList.remove('ed');
   gid('nametags').innerHTML='';for(const k in tagEls)delete tagEls[k];
-  for(const k in remotes)delete remotes[k];send({t:'leave'});
-  gid('srvUrl').value=srvUrl;if(srvUrl&&!ws)connect(srvUrl);else send({t:'games'});
+  for(const k in remotes)delete remotes[k];curPlace=null;
+  send({type:'games'});renderFriends();
   renderGames();renderTasks();renderStudio();updBal();
 }
 function renderGames(){
@@ -670,12 +703,16 @@ function renderTasks(){
     div.style.cssText='background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center';
     div.innerHTML=`<div><b>${t.name}</b>${t.hard?' <span style="color:#f44">СЛОЖНЫЙ</span>':''}<br><small style="opacity:.6">+${t.reward} 💧</small></div><div>${t.done?'✅':'⬜'}</div>`;el.appendChild(div);});
 }
-document.getElementById('btnAuth').onclick=()=>{
-  const nick=document.getElementById('inpNick').value.trim()||'Player';
-  myUser.nick=nick;localStorage.setItem('nerix_nick',nick);
-  document.getElementById('auth').style.display='none';showPlatform();toast('Добро пожаловать, '+nick);
-};
-if(localStorage.getItem('nerix_nick')){myUser.nick=localStorage.getItem('nerix_nick');document.getElementById('auth').style.display='none';showPlatform();}
+gid('btnAuth').onclick=()=>doAuth('login');
+gid('btnReg').onclick=()=>doAuth('register');
+gid('btnGuest').onclick=()=>{myUser.nick=gid('inpNick').value.trim()||'Guest';gid('auth').style.display='none';showPlatform();toast('Офлайн-режим: без сервера');};
+gid('btnBonus').onclick=()=>send({type:'bonus'});
+gid('btnAddFriend').onclick=()=>{const n=gid('inpFriend').value.trim();if(n)send({type:'addFriend',nick:n});gid('inpFriend').value='';};
+(function(){
+  const web=location.protocol.indexOf('http')===0;gid('inpSrv').style.display=web?'none':'block';gid('inpSrv').value=srvUrl;
+  const n=localStorage.getItem('nerix_nick'),p=localStorage.getItem('nerix_pass');
+  if(n&&p){gid('inpNick').value=n;gid('inpPass').value=p;if(wsUrl()){pending={nick:n,pass:p};openWs(()=>send({type:'login',nick:n,pass:p}));}}
+})();
 const $=id=>document.getElementById(id);
 $('btnMenu').onclick=()=>{$('pauseMenu').classList.add('on');gamePaused=true;};
 $('pmStay').onclick=()=>{$('pauseMenu').classList.remove('on');gamePaused=false;};
@@ -686,13 +723,13 @@ $('settingsClose').onclick=()=>{$('settingsPanel').classList.remove('on');$('pau
 $('sensRange').oninput=function(){lookSens=this.value*0.001;};
 $('chkMusic').onchange=function(){musicOn=this.checked;};
 $('chkScale').onchange=function(){allowZoom=this.checked;};
-$('btnLogout').onclick=()=>{localStorage.removeItem('nerix_nick');location.reload();};
+$('btnLogout').onclick=()=>{localStorage.removeItem('nerix_nick');localStorage.removeItem('nerix_pass');location.reload();};
 const showPl=()=>{let h=`<div class="settingRow"><span>${esc(myUser.nick)} (ты)</span><span>${player.kos} / ${player.wipeouts}</span></div>`;for(const id in remotes)h+=`<div class="settingRow"><span>${esc(remotes[id].nick)}</span><span>онлайн</span></div>`;$('ppList').innerHTML=h;$('playersPanel').classList.add('on');};
 $('btnPlayers').onclick=showPl;$('pmPlayers').onclick=showPl;
 $('ppClose').onclick=()=>$('playersPanel').classList.remove('on');
 document.querySelectorAll('.tab').forEach(t=>{t.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  t.classList.add('on');$('page-'+t.dataset.page).classList.add('on');if(t.dataset.page==='tasks')renderTasks();if(t.dataset.page==='studio')renderStudio();if(t.dataset.page==='server'){send({t:'games'});renderSrvGames();}};});
+  t.classList.add('on');$('page-'+t.dataset.page).classList.add('on');if(t.dataset.page==='tasks')renderTasks();if(t.dataset.page==='studio')renderStudio();if(t.dataset.page==='server'){send({type:'games'});renderSrvGames();}};});
  
 // ============ MAIN LOOP ============
 function matLook(ex,ey,ez,cx,cy,cz){
@@ -729,7 +766,7 @@ function loop(t){
     if(player.spawnProt<=0&&!player.dead)for(const h of hazards)if(Math.abs(player.x-h.x)<h.sx&&Math.abs(player.z-h.z)<h.sz&&player.y<h.y+h.sy&&player.y+1.5>h.y-h.sy){die();break;}
     for(const id in remotes){const r=remotes[id];if(r.first)continue;const k=Math.min(1,dt*12);r.x+=(r.tx-r.x)*k;r.y+=(r.ty-r.y)*k;r.z+=(r.tz-r.z)*k;
       let d=r.tyaw-r.yaw;d=Math.atan2(Math.sin(d),Math.cos(d));r.yaw+=d*k;if(r.w)r.ph+=dt*9;}
-    if(ws&&ws.readyState===1&&t-lastSend>70&&!studioTest){lastSend=t;send({t:'s',x:+player.x.toFixed(2),y:+player.y.toFixed(2),z:+player.z.toFixed(2),yaw:+player.yaw.toFixed(2),ph:+player.walkPhase.toFixed(2),w:player.walking?1:0});}
+    if(ws&&ws.readyState===1&&t-lastSend>70&&!studioTest){lastSend=t;send({type:'move',x:+player.x.toFixed(2),y:+player.y.toFixed(2),z:+player.z.toFixed(2),yaw:+player.yaw.toFixed(2),walking:!!player.walking,walkPhase:+player.walkPhase.toFixed(2),place:curPlace,health:Math.round(player.health)});}
  
     let cx=player.x+Math.sin(camYaw)*camDistance,cz=player.z+Math.cos(camYaw)*camDistance,cy=player.y+2.3+Math.sin(camPitch)*camDistance*0.4;
     {const tx=player.x,ty=player.y+1.4,tz=player.z,m=0.3;let te=1;
