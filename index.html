@@ -79,6 +79,15 @@ body.ed #edUI{display:flex}
 .edr button.sw.on{border-color:#fff}
 body.ed #tb,body.ed #hp,body.ed #lb,body.ed #bJump,body.ed #bShoot,body.ed #chatBtn,body.ed #st,body.ed #topbar{display:none!important}
 body.ed #joy{bottom:190px}
+#gamePage{position:fixed;inset:0;background:#0d0d0d;z-index:11;display:none;flex-direction:column;padding:16px;overflow-y:auto}
+#gamePage.on{display:flex}
+#gpHead{display:flex;gap:14px;align-items:center;margin:14px 0}
+#gpIc{width:84px;height:84px;border-radius:18px;background:#1c1c1c;border:1px solid #2a2a2a;display:flex;align-items:center;justify-content:center;font-size:46px}
+#gpName{font-size:22px;font-weight:800}#gpBy{opacity:.55;font-size:13px;margin-top:4px}
+.gtab{padding:8px 14px;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;cursor:pointer;font-size:13px}
+.gtab.on{background:#9aa0a6;color:#000;font-weight:bold}
+select{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12px;color:#fff;width:100%;font-size:15px;margin-bottom:10px}
+body.ed #joy{bottom:250px!important}
 </style>
 </head>
 <body>
@@ -97,10 +106,18 @@ body.ed #joy{bottom:190px}
   <button id="chatBtn">💬</button>
 </div></div>
 <div id="edUI">
-  <div class="edr"><button data-tool="place" class="on">➕ Блок</button><button data-tool="del">🗑 Убрать</button><button data-tool="spawn">🚩 Спавн</button><button id="edSize">📐 Плита</button></div>
-  <div class="edr"><button id="edUp">▲</button><span id="edLay">слой 0</span><button id="edDn">▼</button><button id="edZi">🔍+</button><button id="edZo">🔍−</button></div>
+  <div class="edr" id="edHint">Тапни по земле — появится блок</div>
+  <div class="edr"><button data-tool="place" class="on">➕ Ставить</button><button data-tool="del">🗑 Убрать</button><button data-tool="spawn">🚩 Старт</button><button id="edUndo">↩ Отмена</button></div>
+  <div class="edr" id="edShapes"></div>
   <div class="edr" id="edCols"></div>
-  <div class="edr"><button id="edTest">▶ Тест</button><button id="edSave">💾 Сохранить</button><button id="edPub">⬆ На сервер</button><button id="edExit">✖ Выйти</button></div>
+  <div class="edr"><button id="edTest">▶ Тест</button><button id="edSave">✔ Готово</button><button id="edMore">⋯ Ещё</button></div>
+  <div class="edr" id="edExtra" style="display:none"><button id="edUp">▲</button><span id="edLay">слой 0</span><button id="edDn">▼</button><button id="edZi">🔍+</button><button id="edZo">🔍−</button><button id="edPub">⬆ Опубликовать</button></div>
+</div>
+<div id="gamePage">
+  <div><button class="tbtn" id="gpBack">← Назад</button></div>
+  <div id="gpHead"><div id="gpIc"></div><div><div id="gpName"></div><div id="gpBy"></div></div></div>
+  <div class="tabbar"><div class="gtab on" data-gp="about">О игре</div><div class="gtab" data-gp="rooms">Сервера</div></div>
+  <div id="gpAbout"></div><div id="gpRooms" style="display:none"></div>
 </div>
 <div id="chatPanel"><div id="chatMsgs"></div>
   <div id="chatRow"><input id="chatInput" placeholder="Сообщение..." maxlength="100"><button id="chatSend">➤</button></div></div>
@@ -142,16 +159,18 @@ body.ed #joy{bottom:190px}
   <div id="pContent">
     <div class="tabbar">
       <div class="tab on" data-page="games">🎮 Игры</div><div class="tab" data-page="tasks">📋 Квесты</div>
-      <div class="tab" data-page="friends">👥 Друзья</div><div class="tab" data-page="studio">🛠 Студия</div><div class="tab" data-page="server">🌐 Сервер</div><div class="tab" data-page="avatar">🧍 Аватар</div></div>
+      <div class="tab" data-page="friends">👥 Друзья</div><div class="tab" data-page="studio">🛠 Студия</div><div class="tab" data-page="server">🌐 Карты игроков</div><div class="tab" data-page="avatar">🧍 Аватар</div></div>
     <div class="page on" id="page-games"><h2>Игры</h2><div class="grid" id="gamesGrid"></div></div>
     <div class="page" id="page-tasks"><h2>Ежедневные квесты</h2><div id="tasksList"></div></div>
     <div class="page" id="page-friends"><h2>Друзья</h2>
       <div style="display:flex;gap:8px;margin-bottom:12px"><input id="inpFriend" placeholder="Ник друга" style="flex:1">
       <button class="btn" style="width:auto;padding:10px 16px" id="btnAddFriend">Добавить</button></div><div id="friendsList"></div></div>
     <div class="page" id="page-studio"><h2>Nerix Studio</h2>
-      <div style="display:flex;gap:8px;margin:10px 0"><input id="stName" placeholder="Название игры" maxlength="24" style="flex:1;margin:0"><button class="btn" style="width:auto;padding:10px 16px" id="stNew">Создать</button></div>
+      <input id="stName" placeholder="Название игры" maxlength="24" style="margin-top:10px">
+      <select id="stTpl"><option value="empty">Пустая площадка</option><option value="obby">Полоса препятствий</option><option value="arena">Арена</option><option value="park">Парк</option></select>
+      <button class="btn" id="stNew" style="margin-bottom:12px">➕ Создать игру</button>
       <div id="stList"></div></div>
-    <div class="page" id="page-server"><h2>Сервер</h2>
+    <div class="page" id="page-server"><h2>Карты игроков</h2>
       <div id="srvSt" style="margin:10px 0;opacity:.8">Не подключено</div>
       <h3 style="margin:12px 0">Игры других игроков</h3><div class="grid" id="srvGames"></div></div>
     <div class="page" id="page-avatar"><h2>Аватар</h2><div style="opacity:.7">Скоро больше кастомизации</div></div>
@@ -389,7 +408,7 @@ function buildCustom(g){
   for(const b of g.blocks){if(b.t==='acid'){box(b.x,b.y,b.z,b.sx,b.sy,b.sz,b.c,2);hazards.push(b);}else box(b.x,b.y,b.z,b.sx,b.sy,b.sz,b.c);}
   skyCol=g.sky||[0.45,0.65,0.95];curSpawn=g.spawn||{x:0,y:1,z:0};
 }
-function playCustom(g0,test){
+function playCustom(g0,test,room='1'){
   const g=sanitize(g0);
   gid('platform').classList.remove('on');gid('hud').classList.add('on');
   mode='play';studioTest=!!test;document.body.classList.remove('ed');
@@ -398,12 +417,12 @@ function playCustom(g0,test){
   gid('deathScreen').classList.remove('on');gid('bShoot').style.display='none';
   gid('s1').innerHTML='<i>1</i>🖐';gid('lbN').textContent=myUser.nick;
   chatLog=[];renderChat();toast('▶ '+g.name);running=true;gamePaused=false;
-  if(!test)enterPlace('g'+g.id);
+  if(!test)enterPlace('g'+g.id,room);gid('gamePage').classList.remove('on');
 }
 // ---- Studio editor ----
 const SIZES=[['Плита',2,0.25,2],['Куб',1,1,1],['Стена',3,1.5,0.5],['Большая плита',5,0.25,5],['Столб',0.5,3,0.5],['Ступень',1,0.25,1]];
 const COLS=[[0.85,0.25,0.25],[0.95,0.75,0.25],[0.3,0.75,0.4],[0.3,0.6,0.9],[0.6,0.4,0.85],[0.95,0.95,0.95],[0.25,0.25,0.3],[0.55,0.38,0.25]];
-const ed={game:null,tx:0,tz:0,layer:0,tool:'place',size:0,color:0,acid:false,cam:[0,10,10]};
+const ed={game:null,tx:0,tz:0,layer:0,tool:'place',size:0,color:0,acid:false,cam:[0,10,10],undo:[]};
 const sn=v=>Math.round(v*2)/2;
 (function(){const box=gid('edCols');
   COLS.forEach((c,i)=>{const b=document.createElement('button');b.className='sw';b.style.background=`rgb(${c.map(v=>Math.round(v*255))})`;b.onclick=()=>{ed.color=i;ed.acid=false;ed.tool='place';updEdUI();};box.appendChild(b);});
@@ -411,14 +430,19 @@ const sn=v=>Math.round(v*2)/2;
 })();
 function updEdUI(){
   document.querySelectorAll('#edUI [data-tool]').forEach(b=>b.classList.toggle('on',b.dataset.tool===ed.tool));
-  document.querySelectorAll('#edCols .sw').forEach((b,i)=>b.classList.toggle('on',ed.acid?i===COLS.length:i===ed.color&&ed.tool==='place'));
-  gid('edSize').textContent='📐 '+SIZES[ed.size][0];gid('edLay').textContent='слой '+ed.layer;
+  document.querySelectorAll('#edCols .sw').forEach((b,i)=>b.classList.toggle('on',ed.tool==='place'&&(ed.acid?i===COLS.length:i===ed.color)));
+  document.querySelectorAll('#edShapes .sw').forEach((b,i)=>b.classList.toggle('on',i===ed.size));
+  gid('edLay').textContent='слой '+ed.layer;
+  gid('edHint').textContent=ed.tool==='del'?'Тапни по блоку, чтобы убрать':ed.tool==='spawn'?'Тапни, куда поставить точку старта':'Блок «'+SIZES[ed.size][0]+(ed.acid?'» (кислота)':'»')+' — тапни, чтобы поставить';
 }
-function rebuildEdit(){buildCustom(ed.game);uploadWorld();}
+(function(){const SH=['▭','🧊','🧱','⬜','🗼','🪜'],box=gid('edShapes');
+  SH.forEach((ic,i)=>{const b=document.createElement('button');b.className='sw';b.style.cssText='width:44px;height:36px;font-size:18px';b.textContent=ic;b.onclick=()=>{ed.size=i;ed.tool='place';updEdUI();};box.appendChild(b);});})();
+function pushUndo(){ed.undo.push(JSON.stringify({b:ed.game.blocks,s:ed.game.spawn}));if(ed.undo.length>40)ed.undo.shift();}
+function rebuildEdit(){buildCustom(ed.game);uploadWorld();saveCustom();}
 function enterEditor(g){
   ed.game=g;mode='edit';studioTest=false;document.body.classList.add('ed');
   gid('platform').classList.remove('on');gid('hud').classList.add('on');gid('nametags').innerHTML='';for(const k in tagEls)delete tagEls[k];
-  running=true;gamePaused=false;ed.tx=g.spawn.x;ed.tz=g.spawn.z;ed.layer=0;camDistance=18;camPitch=0.6;
+  ed.undo=[];running=true;gamePaused=false;ed.tx=g.spawn.x;ed.tz=g.spawn.z;ed.layer=0;camDistance=18;camPitch=0.6;
   gid('spawnProt').style.display='none';gid('deathScreen').classList.remove('on');rebuildEdit();updEdUI();
 }
 function edRay(sx,sy){
@@ -439,19 +463,19 @@ function rayBox(o,d,b){
 function edTap(sx,sy){
   const g=ed.game,r=edRay(sx,sy);let best=null,bi=-1;
   g.blocks.forEach((b,i)=>{const h=rayBox(r.o,r.d,b);if(h&&(!best||h.t<best.t)){best=h;bi=i;}});
-  if(ed.tool==='del'){if(bi>=0){g.blocks.splice(bi,1);rebuildEdit();}return;}
+  if(ed.tool==='del'){if(bi>=0){pushUndo();g.blocks.splice(bi,1);rebuildEdit();}return;}
   let tp=1e9;if(r.d[1]<-1e-6){const t=(ed.layer-r.o[1])/r.d[1];if(t>0)tp=t;}
   let p,face=null;
   if(best&&best.t<=tp){p=[r.o[0]+r.d[0]*best.t,r.o[1]+r.d[1]*best.t,r.o[2]+r.d[2]*best.t];face=best;}
   else if(tp<1e9)p=[r.o[0]+r.d[0]*tp,ed.layer,r.o[2]+r.d[2]*tp];
   else return;
-  if(ed.tool==='spawn'){g.spawn={x:sn(p[0]),y:p[1]+0.5,z:sn(p[2])};return;}
+  if(ed.tool==='spawn'){pushUndo();g.spawn={x:sn(p[0]),y:p[1]+0.5,z:sn(p[2])};return;}
   const S=SIZES[ed.size],nh=[S[1],S[2],S[3]];let c=[sn(p[0]),0,sn(p[2])];
   if(face){const hb=g.blocks[bi],hh=[hb.sx,hb.sy,hb.sz],hv=[hb.x,hb.y,hb.z];
     c=[sn(p[0]),sn(p[1]),sn(p[2])];c[face.ax]=hv[face.ax]+face.sg*(hh[face.ax]+nh[face.ax]);}
   else c[1]=ed.layer+nh[1];
   if(g.blocks.length>=700){toast('Лимит блоков (700)');return;}
-  g.blocks.push({x:c[0],y:c[1],z:c[2],sx:nh[0],sy:nh[1],sz:nh[2],c:ed.acid?[0.3,1,0.3]:COLS[ed.color],t:ed.acid?'acid':'s'});rebuildEdit();
+  pushUndo();g.blocks.push({x:c[0],y:c[1],z:c[2],sx:nh[0],sy:nh[1],sz:nh[2],c:ed.acid?[0.3,1,0.3]:COLS[ed.color],t:ed.acid?'acid':'s'});rebuildEdit();
 }
 function drawPass(){
   gl.uniform1f(uWorld,1);
@@ -483,8 +507,21 @@ function editFrame(dt){
   Z(sp.x,sp.y,sp.z,0.08,1,0.08,[0.3,1,0.95]);Z(sp.x+0.4,sp.y+0.8,sp.z,0.4,0.2,0.04,[0.3,1,0.95]);
   drawDyn();
 }
-gid('stNew').onclick=()=>{const nm=gid('stName').value.trim()||'Моя игра';
-  const g={id:'c'+Date.now().toString(36)+Math.floor(Math.random()*1e4),name:nm,blocks:[{x:0,y:-0.5,z:0,sx:20,sy:0.5,sz:20,c:[0.3,0.62,0.52],t:'s'}],spawn:{x:0,y:1,z:0},sky:[0.45,0.65,0.95]};
+const GC=[0.3,0.62,0.52],BR=[0.55,0.38,0.25];
+const TPL={
+  empty:()=>({blocks:[{x:0,y:-0.5,z:0,sx:20,sy:0.5,sz:20,c:GC,t:'s'}],spawn:{x:0,y:1,z:0}}),
+  obby:()=>{const b=[{x:0,y:-0.5,z:0,sx:5,sy:0.5,sz:5,c:GC,t:'s'}];let z=-4,y=0.25;
+    for(let i=0;i<14;i++){z-=4.5;y+=0.5;b.push({x:i%2?2:-2,y,z,sx:1.5,sy:0.25,sz:1.5,c:COLS[i%COLS.length],t:'s'});}
+    b.push({x:0,y:y+0.5,z:z-5,sx:3,sy:0.25,sz:3,c:[0.3,0.9,0.5],t:'s'});return{blocks:b,spawn:{x:0,y:1,z:0}};},
+  arena:()=>{const b=[{x:0,y:-0.5,z:0,sx:20,sy:0.5,sz:20,c:GC,t:'s'}];
+    for(const k of[-1,1]){b.push({x:k*20,y:1.5,z:0,sx:0.5,sy:1.5,sz:20,c:BR,t:'s'});b.push({x:0,y:1.5,z:k*20,sx:20,sy:1.5,sz:0.5,c:BR,t:'s'});}
+    b.push({x:0,y:0.5,z:0,sx:3,sy:0.5,sz:3,c:COLS[1],t:'s'});return{blocks:b,spawn:{x:0,y:1,z:12}};},
+  park:()=>{const b=[{x:0,y:-0.5,z:0,sx:20,sy:0.5,sz:20,c:[0.35,0.7,0.4],t:'s'}];
+    [[-8,-6],[8,-8],[-12,6],[10,9],[0,-12]].forEach(p=>{b.push({x:p[0],y:1.5,z:p[1],sx:0.4,sy:1.5,sz:0.4,c:BR,t:'s'});b.push({x:p[0],y:4,z:p[1],sx:1.6,sy:1.2,sz:1.6,c:[0.2,0.6,0.3],t:'s'});});
+    b.push({x:0,y:0.25,z:6,sx:3,sy:0.25,sz:3,c:COLS[1],t:'s'});return{blocks:b,spawn:{x:0,y:1,z:0}};}
+};
+gid('stNew').onclick=()=>{const nm=gid('stName').value.trim()||'Моя игра',t=TPL[gid('stTpl').value]();
+  const g={id:'c'+Date.now().toString(36)+Math.floor(Math.random()*1e4),name:nm,blocks:t.blocks,spawn:t.spawn,sky:[0.45,0.65,0.95]};
   customGames.push(g);saveCustom();gid('stName').value='';enterEditor(g);};
 function renderStudio(){
   const el=gid('stList');el.innerHTML='';
@@ -492,7 +529,7 @@ function renderStudio(){
   customGames.forEach((g,i)=>{const d=document.createElement('div');d.style.cssText='background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:12px;margin-bottom:8px';
     d.innerHTML=`<b>${esc(g.name)}</b> <small style="opacity:.5">${g.blocks.length} блоков</small><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="tbtn" data-a="play">▶ Играть</button><button class="tbtn" data-a="edit">✏ Править</button><button class="tbtn" data-a="pub">⬆ На сервер</button><button class="tbtn" data-a="del">🗑</button></div>`;
     d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const a=b.dataset.a;
-      if(a==='play')playCustom(g);else if(a==='edit')enterEditor(g);else if(a==='pub')publish(g);
+      if(a==='play')openGamePage(mineInfo(g));else if(a==='edit')enterEditor(g);else if(a==='pub')publish(g);
       else if(a==='del'&&confirm('Удалить «'+g.name+'»?')){customGames.splice(i,1);saveCustom();renderStudio();renderGames();}});
     el.appendChild(d);});
 }
@@ -501,13 +538,14 @@ function publish(g){
   send({type:'publish',game:{id:g.id,name:g.name,blocks:g.blocks,spawn:g.spawn,sky:g.sky}});
 }
 document.querySelectorAll('#edUI [data-tool]').forEach(b=>b.onclick=()=>{ed.tool=b.dataset.tool;updEdUI();});
-gid('edSize').onclick=()=>{ed.size=(ed.size+1)%SIZES.length;updEdUI();};
+gid('edUndo').onclick=()=>{const u=ed.undo.pop();if(!u){toast('Нечего отменять');return;}const o=JSON.parse(u);ed.game.blocks=o.b;ed.game.spawn=o.s;rebuildEdit();};
+gid('edMore').onclick=()=>{const e=gid('edExtra');e.style.display=e.style.display==='none'?'flex':'none';};
 gid('edUp').onclick=()=>{ed.layer+=0.5;updEdUI();};gid('edDn').onclick=()=>{ed.layer-=0.5;updEdUI();};
 gid('edZi').onclick=()=>{camDistance=Math.max(4,camDistance-3);};gid('edZo').onclick=()=>{camDistance=Math.min(50,camDistance+3);};
 gid('edTest').onclick=()=>playCustom(ed.game,true);
-gid('edSave').onclick=()=>{saveCustom();toast('💾 Сохранено');};
+gid('edSave').onclick=()=>{saveCustom();showPlatform();toast('💾 Игра сохранена');};
 gid('edPub').onclick=()=>{saveCustom();publish(ed.game);};
-gid('edExit').onclick=()=>{saveCustom();showPlatform();};
+ 
 // ---- Multiplayer (протокол твоего сервера: register/login/move/chat/...) ----
 let authed=false,pending=null,curPlace=null;
 function send(m){if(ws&&ws.readyState===1)ws.send(JSON.stringify(m));}
@@ -515,7 +553,7 @@ function srvStatus(t){const e=gid('srvSt');if(e)e.textContent=t;}
 function authMsg(t){gid('authMsg').textContent=t;}
 function wsUrl(){return srvUrl||(location.protocol.indexOf('http')===0?(location.protocol==='https:'?'wss://':'ws://')+location.host:'');}
 function addRemote(nick){return remotes[nick]=remotes[nick]||{nick:String(nick).slice(0,16),x:0,y:0,z:0,yaw:0,ph:0,w:false,tx:0,ty:0,tz:0,tyaw:0,first:true};}
-function enterPlace(place){curPlace=place;for(const k in remotes)delete remotes[k];send({type:'visit',place});}
+function enterPlace(key,room){curPlace=key+'#'+(room||'1');for(const k in remotes)delete remotes[k];send({type:'visit',place:key});}
 function openWs(onopen){
   const url=wsUrl();if(!url){authMsg('Укажи адрес сервера');return;}
   if(ws){try{ws.onclose=null;ws.close();}catch(e){}ws=null;}
@@ -551,6 +589,7 @@ function handleMsg(m){
       break;
     case 'userUpdate':applyUser(m.user);break;
     case 'players':{
+      lastPlayers=m.list||[];if(gid('gamePage').classList.contains('on'))renderRooms();
       if(!running||mode!=='play'||studioTest)break;const seen={};
       for(const p of m.list||[]){if(p.nick===myUser.nick||String(p.place)!==String(curPlace))continue;seen[p.nick]=1;
         const r=remotes[p.nick]||addRemote(p.nick);r.tx=+p.x||0;r.ty=+p.y||0;r.tz=+p.z||0;r.tyaw=+p.yaw||0;r.w=!!p.walking;
@@ -565,7 +604,7 @@ function handleMsg(m){
       if(m.user)applyUser(m.user);if(m.msg)toast(m.msg);break;
     case 'taskNotify':toast('✔ '+m.name+' +'+m.reward);break;
     case 'games':srvGames=m.list||[];renderSrvGames();break;
-    case 'game':if(m.game)playCustom(m.game);break;
+    case 'game':if(m.game){gameCache[m.game.id]=m.game;const rm=pendingJoin?pendingJoin.room:'1';pendingJoin=null;playCustom(m.game,false,rm);}break;
     case 'published':toast('✔ Игра опубликована для всех');break;
   }
 }
@@ -574,8 +613,50 @@ function renderSrvGames(){
   if(!srvGames.length){el.innerHTML='<div style="opacity:.6">Пока пусто (или нет соединения)</div>';return;}
   srvGames.forEach(sg=>{const d=document.createElement('div');d.className='gameCard';
     d.innerHTML=`<div class="thumb">🌐</div><div class="body"><div class="nm">${esc(sg.name)}</div><div class="ds">от ${esc(sg.by)} · ${+sg.n||0} блоков</div><button class="playBtn">ИГРАТЬ</button></div>`;
-    d.onclick=()=>send({type:'getgame',id:sg.id});el.appendChild(d);});
+    d.onclick=()=>openGamePage({key:'g'+sg.id,kind:'srv',id:sg.id,name:sg.name,ic:'🌐',by:sg.by,about:'Карта игрока '+sg.by+'. Блоков: '+(+sg.n||0)+'.'});el.appendChild(d);});
 }
+// ---- Game page (О игре / Сервера) ----
+const ABOUT=['Свободная карта с домом, деревьями и платформами. Бегай, прыгай, строй планы и общайся с друзьями.','Прыгай по платформам вверх до финиша. Спокойная полоса препятствий для новичков.','Длинная полоса с мелкими платформами. Один промах — и начинай сначала.','Сражайся на высоте над кислотой. Не упади! Меч уже у тебя в руках.','Большой перекрёсток — открытая площадка, чтобы встречаться и болтать.'];
+let gpInfo=null,pendingJoin=null,lastPlayers=[];const gameCache={};const MAXP=12;
+function mineInfo(g){return{key:'g'+g.id,kind:'mine',game:g,name:g.name,ic:'🛠',by:myUser.nick,about:'Игра, созданная в Nerix Studio. Блоков: '+g.blocks.length+'.'};}
+function isOnline(){return ws&&ws.readyState===1&&authed;}
+function roomsFor(key){
+  const c={},pre=String(key)+'#';
+  for(const p of lastPlayers){const pl=String(p.place);if(pl.indexOf(pre)===0){const r=pl.slice(pre.length)||'1';c[r]=(c[r]||0)+1;}}
+  if(!c['1'])c['1']=0;
+  return Object.keys(c).sort((a,b)=>a-b).map(r=>({r,n:c[r]}));
+}
+function nextRoom(list){let i=1;while(list.some(x=>+x.r===i))i++;return String(i);}
+function bestRoom(key){
+  if(!isOnline())return '1';const l=roomsFor(key),ok=l.filter(x=>x.n<MAXP).sort((a,b)=>b.n-a.n);
+  return ok.length?ok[0].r:nextRoom(l);
+}
+function openGamePage(info){
+  gpInfo=info;gid('gamePage').classList.add('on');gid('gpIc').textContent=info.ic;gid('gpName').textContent=info.name;gid('gpBy').textContent='Создатель: '+info.by;
+  gid('gpAbout').innerHTML=`<p style="opacity:.8;line-height:1.5;margin:6px 0 16px">${esc(info.about||'')}</p><button class="btn" id="gpPlay" style="font-size:17px;padding:16px">▶ ИГРАТЬ</button><div style="opacity:.5;font-size:12px;margin-top:10px">Тебя поместят на сервер, где уже есть игроки. Другой сервер можно выбрать на вкладке «Сервера».</div>`;
+  gid('gpPlay').onclick=()=>joinGame(info,bestRoom(info.key));gpTab('about');
+}
+function gpTab(n){
+  document.querySelectorAll('.gtab').forEach(t=>t.classList.toggle('on',t.dataset.gp===n));
+  gid('gpAbout').style.display=n==='about'?'block':'none';gid('gpRooms').style.display=n==='rooms'?'block':'none';if(n==='rooms')renderRooms();
+}
+function renderRooms(){
+  const el=gid('gpRooms');if(!gpInfo)return;const l=roomsFor(gpInfo.key);
+  el.innerHTML=isOnline()?'':'<div style="opacity:.6;margin:8px 0">Нет связи с сервером — доступна одна локальная комната.</div>';
+  l.forEach(x=>{const d=document.createElement('div');d.className='settingRow';d.style.maxWidth='none';
+    d.innerHTML=`<div><b>Сервер ${x.r}</b><br><small style="opacity:.6">${x.n}/${MAXP} игроков</small></div><button class="tbtn">${x.n>=MAXP?'Полный':'Войти'}</button>`;
+    const b=d.querySelector('button');if(x.n>=MAXP)b.disabled=true;else b.onclick=()=>joinGame(gpInfo,x.r);el.appendChild(d);});
+  if(isOnline()&&l.length<20){const b=document.createElement('button');b.className='btn';b.style.marginTop='8px';b.textContent='➕ Создать новый сервер';b.onclick=()=>joinGame(gpInfo,nextRoom(l));el.appendChild(b);}
+}
+function joinGame(info,room){
+  if(info.kind==='builtin'){
+    gid('gamePage').classList.remove('on');gid('platform').classList.remove('on');gid('hud').classList.add('on');
+    mode='play';studioTest=false;document.body.classList.remove('ed');loadGame(info.idx,room);running=true;
+  }else if(info.kind==='mine')playCustom(info.game,false,room);
+  else{const g=gameCache[info.id];if(g)playCustom(g,false,room);else{pendingJoin={room};send({type:'getgame',id:info.id});toast('Загрузка карты...');}}
+}
+document.querySelectorAll('.gtab').forEach(t=>t.onclick=()=>gpTab(t.dataset.gp));
+gid('gpBack').onclick=()=>gid('gamePage').classList.remove('on');
 function proj2(v,p,x,y,z){
   const vx=v[0]*x+v[4]*y+v[8]*z+v[12],vy=v[1]*x+v[5]*y+v[9]*z+v[13],vz=v[2]*x+v[6]*y+v[10]*z+v[14],vw=v[3]*x+v[7]*y+v[11]*z+v[15];
   const cx=p[0]*vx+p[4]*vy+p[8]*vz+p[12]*vw,cy=p[1]*vx+p[5]*vy+p[9]*vz+p[13]*vw,cw=p[3]*vx+p[7]*vy+p[11]*vz+p[15]*vw;
@@ -630,7 +711,7 @@ function groundTop(px,pz,cy){
  
 // ============ GAME FLOW ============
 let bP,bN,bC,worldCount=0;
-function loadGame(idx){
+function loadGame(idx,room='1'){
   wallBoxes.length=0;flatPlatforms.length=0;solids.length=0;P.length=0;N.length=0;C.length=0;acidY=-999;playerHasSword=false;
   const g=GAMES[idx],data=g.build();skyCol=data.sky;curSpawn=data.spawn;
   const buf=a=>{const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(a),gl.STATIC_DRAW);return b;};
@@ -641,7 +722,7 @@ function loadGame(idx){
   if(idx===3)playerHasSword=true;
   document.getElementById('s1').innerHTML='<i>1</i>'+(idx===3?'🗡':'🖐');
   document.getElementById('lbN').textContent=myUser.nick;
-  chatLog=[];renderChat();toast('▶ '+g.name);playTone(440,0.1);camDistance=7;camPitch=0.35;enterPlace(idx);
+  chatLog=[];renderChat();toast('▶ '+g.name);playTone(440,0.1);camDistance=7;camPitch=0.35;enterPlace(idx,room);
 }
 function die(){
   if(player.dead)return;player.dead=true;player.respawnAt=performance.now()+2000;player.wipeouts++;
@@ -666,7 +747,10 @@ canvas.addEventListener('pointerdown',e=>{lookId=e.pointerId;lx=e.clientX;ly=e.c
 canvas.addEventListener('pointermove',e=>{if(e.pointerId!==lookId)return;camYaw-=(e.clientX-lx)*lookSens;camPitch=Math.max(-0.4,Math.min(1.1,camPitch+(e.clientY-ly)*lookSens));lx=e.clientX;ly=e.clientY;});
 canvas.addEventListener('pointerup',e=>{if(e.pointerId===lookId){lookId=null;if(mode==='edit'&&Math.hypot(e.clientX-tapX,e.clientY-tapY)<10&&performance.now()-tapT<450)edTap(e.clientX,e.clientY);}});
 canvas.addEventListener('wheel',e=>{if(allowZoom)camDistance=Math.max(3,Math.min(14,camDistance+e.deltaY*0.01));});
-document.getElementById('bJump').onpointerdown=e=>{e.preventDefault();if(player.onGround&&!player.dead){player.vy=9.5;player.onGround=false;}};
+let jumpHeld=false,coyote=0;
+const bj=document.getElementById('bJump');
+bj.onpointerdown=e=>{e.preventDefault();jumpHeld=true;try{bj.setPointerCapture(e.pointerId);}catch(_){}};
+bj.onpointerup=bj.onpointercancel=bj.onlostpointercapture=()=>{jumpHeld=false;};
 document.getElementById('bShoot').onpointerdown=e=>{e.preventDefault();if(playerHasSword&&performance.now()-lastSlash>400){lastSlash=performance.now();toast('⚔ Удар!');playTone(200,0.08);}};
  
 // ============ UI ============
@@ -692,10 +776,10 @@ function showPlatform(){
 }
 function renderGames(){
   const g=gid('gamesGrid');g.innerHTML='';
-  const card=(ic,nm,ds,fn)=>{const d=document.createElement('div');d.className='gameCard';
-    d.innerHTML=`<div class="thumb">${ic}</div><div class="body"><div class="nm">${esc(nm)}</div><div class="ds">${esc(ds)}</div><button class="playBtn">ИГРАТЬ</button></div>`;d.onclick=fn;g.appendChild(d);};
-  GAMES.forEach((game,i)=>card(game.ic,game.name,game.ds,()=>{gid('platform').classList.remove('on');gid('hud').classList.add('on');mode='play';document.body.classList.remove('ed');loadGame(i);running=true;}));
-  customGames.forEach(cg=>card('🛠',cg.name,'Моя игра · '+cg.blocks.length+' блоков',()=>playCustom(cg)));
+  const card=(info)=>{const d=document.createElement('div');d.className='gameCard';
+    d.innerHTML=`<div class="thumb">${info.ic}</div><div class="body"><div class="nm">${esc(info.name)}</div><div class="ds">${esc(info.short)}</div><button class="playBtn">ОТКРЫТЬ</button></div>`;d.onclick=()=>openGamePage(info);g.appendChild(d);};
+  GAMES.forEach((game,i)=>card({key:i,kind:'builtin',idx:i,name:game.name,ic:game.ic,short:game.ds,by:'NERIX',about:ABOUT[i]||game.ds}));
+  customGames.forEach(cg=>{const i=mineInfo(cg);i.short='Моя игра · '+cg.blocks.length+' блоков';card(i);});
 }
 function renderTasks(){
   const el=document.getElementById('tasksList');el.innerHTML='';
@@ -753,7 +837,8 @@ function loop(t){
     }else player.walking=false;
     player.vy-=24*dt;player.y+=player.vy*dt;
     const gy=groundTop(player.x,player.z,player.y);
-    if(player.y<=gy+0.1){player.y=gy;player.vy=0;player.onGround=true;}else player.onGround=false;
+    if(player.y<=gy+0.1&&player.vy<=0){player.y=gy;player.vy=0;player.onGround=true;coyote=0.12;}else{player.onGround=false;coyote-=dt;}
+    if(jumpHeld&&!player.dead&&coyote>0){player.vy=9.5;player.onGround=false;coyote=0;}
     if(acidY>-900&&player.y<acidY+0.5&&player.spawnProt<=0)die();
     if(player.y<-25)die();
     if(player.dead&&performance.now()>=player.respawnAt){
@@ -809,4 +894,4 @@ requestAnimationFrame(loop);
 </script>
 </body>
 </html>
- 
+ Новый код!!!
