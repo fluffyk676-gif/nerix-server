@@ -1,4 +1,4 @@
-/* NERIX — сервер с файлом аккаунтов, второй валютой, друзьями, картами Студии */
+/* NERIX — сервер с JSONBin.io (аккаунты не сбрасываются при деплое) */
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -8,102 +8,88 @@ const PORT = process.env.PORT || 7000;
 const USERS_FILE = path.join(__dirname, 'users.json');
 const GAMES_FILE = path.join(__dirname, 'games.json');
 
-/* ==================== ЗАГРУЗКА АККАУНТОВ ==================== */
-let users = {};
-try {
-  if (fs.existsSync(USERS_FILE)) {
-    users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
-    console.log('✓ Загружено аккаунтов:', Object.keys(users).length);
-  }
-} catch (e) {
-  console.log('✗ Не удалось загрузить users.json:', e.message);
+/* ==================== JSONBIN ==================== */
+const JSONBIN_ID = '6ac2aa5cffd5d160534cd40a';
+const JSONBIN_KEY = '$2a$10$rrrIQDSNfNtzVSNzB8pZUFOBamWK8lAncuPuLjU0H2q9S0i/Si1YW2';
+const JSONBIN_API = 'https://api.jsonbin.io/v3/b/' + JSONBIN_ID;
+
+async function jbLoad() {
+  try {
+    const res = await fetch(JSONBIN_API + '/latest', {
+      headers: { 'X-Access-Key': JSONBIN_KEY }
+    });
+    if (!res.ok) { console.log('✗ JSONBin load HTTP', res.status); return null; }
+    const data = await res.json();
+    return data.record || null;
+  } catch (e) { console.log('✗ JSONBin load error:', e.message); return null; }
 }
 
-/* ==================== ЗАГРУЗКА КАРТ СТУДИИ ==================== */
-let userGames = {};
-try {
-  if (fs.existsSync(GAMES_FILE)) {
-    userGames = JSON.parse(fs.readFileSync(GAMES_FILE, 'utf8'));
-    console.log('✓ Загружено карт Студии:', Object.keys(userGames).length);
+async function jbSave(obj) {
+  try {
+    const res = await fetch(JSONBIN_API, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Key': JSONBIN_KEY },
+      body: JSON.stringify(obj)
+    });
+    if (!res.ok) { console.log('✗ JSONBin save HTTP', res.status); return false; }
+    return true;
+  } catch (e) { console.log('✗ JSONBin save error:', e.message); return false; }
+}
+
+/* ==================== ЗАГРУЗКА АККАУНТОВ ==================== */
+let users = {};
+let games = {};
+let jbReady = false;
+
+async function initFromJSONBin() {
+  const rec = await jbLoad();
+  if (rec && typeof rec === 'object') {
+    // поддерживаем оба формата: {users, games} или старый (просто users)
+    if (rec.users && typeof rec.users === 'object') {
+      users = rec.users;
+      games = rec.games || {};
+    } else if (rec.placeholder) {
+      console.log('○ JSONBin пустой (placeholder) — стартуем с нуля');
+    } else {
+      users = rec; // старый формат — просто объект аккаунтов
+    }
+    jbReady = true;
+    console.log('✓ Загружено из JSONBin:', Object.keys(users).length, 'аккаунтов');
+  } else {
+    // fallback: попробуем локальный файл
+    try {
+      if (fs.existsSync(USERS_FILE)) users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+    } catch (e) {}
+    console.log('○ JSONBin недоступен, старт с локальными данными:', Object.keys(users).length);
   }
-} catch (e) {
-  console.log('✗ Не удалось загрузить games.json:', e.message);
 }
 
 let saveTimer = null;
 function saveUsers() {
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    try {
-      fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-    } catch (e) {
-      console.log('✗ Ошибка сохранения:', e.message);
-    }
+  saveTimer = setTimeout(async () => {
+    // локальный бэкап
+    try { fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2)); } catch (e) {}
+    try { fs.writeFileSync(GAMES_FILE, JSON.stringify(games, null, 2)); } catch (e) {}
+    // JSONBin
+    const ok = await jbSave({ users, games });
+    if (!ok) console.log('✗ Не удалось сохранить в JSONBin');
   }, 500);
 }
 
-let gamesSaveTimer = null;
-function saveGames() {
-  clearTimeout(gamesSaveTimer);
-  gamesSaveTimer = setTimeout(() => {
-    try {
-      fs.writeFileSync(GAMES_FILE, JSON.stringify(userGames, null, 2));
-    } catch (e) {
-      console.log('✗ Ошибка сохранения карт:', e.message);
-    }
-  }, 500);
-}
+// автосохранение раз в 5 минут
+setInterval(async () => {
+  if (Object.keys(users).length) {
+    await jbSave({ users, games });
+  }
+}, 5 * 60 * 1000);
 
-process.on('SIGINT', () => {
-  try { fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2)); } catch {}
-  try { fs.writeFileSync(GAMES_FILE, JSON.stringify(userGames, null, 2)); } catch {}
-  console.log('\n✓ Аккаунты и карты сохранены. Выход.');
+process.on('SIGINT', async () => {
+  console.log('\n→ Сохраняю перед выходом...');
+  try { await jbSave({ users, games }); } catch (e) {}
+  try { fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2)); } catch (e) {}
   process.exit(0);
 });
-
-/* ==================== КАРТЫ ИГРОКОВ (Nerix Studio) ==================== */
-function handleGameMsg(ws, msg, nick) {
-  const out = o => ws.send(JSON.stringify(o));
-
-  if (msg.type === 'games') {
-    out({
-      type: 'games',
-      list: Object.values(userGames).map(g => ({
-        id: g.id, name: g.name, by: g.by, n: (g.blocks || []).length
-      }))
-    });
-    return true;
-  }
-
-  if (msg.type === 'getgame') {
-    const g = userGames[String(msg.id)];
-    if (g) out({ type: 'game', game: g });
-    return true;
-  }
-
-  if (msg.type === 'publish') {
-    if (!nick) return true;
-    const g = msg.game;
-    if (!g || typeof g.id !== 'string' || !Array.isArray(g.blocks) || g.blocks.length > 700) return true;
-    const id = g.id.replace(/[^\w-]/g, '').slice(0, 40);
-    if (!id) return true;
-    if (userGames[id] && userGames[id].by !== nick) return true;
-    if (!userGames[id] && Object.keys(userGames).length >= 200) return true;
-    userGames[id] = {
-      id,
-      name: String(g.name || 'Игра').slice(0, 24),
-      by: nick,
-      blocks: g.blocks,
-      spawn: g.spawn,
-      sky: g.sky
-    };
-    saveGames();
-    out({ type: 'published', id });
-    return true;
-  }
-
-  return false;
-}
 
 /* ==================== ЗАДАНИЯ ==================== */
 const TASKS_TEMPLATE = [
@@ -128,8 +114,8 @@ let nextId = 1;
 function pubUser(u) {
   return {
     nick: u.nick, nerixs: u.nerixs, nelsi: u.nelsi || 0,
-    inventory: u.inventory, equipped: u.equipped,
-    friends: u.friends, bonusClaimed: u.bonusClaimed,
+    inventory: u.inventory || [], equipped: u.equipped || {},
+    friends: u.friends || [], bonusClaimed: u.bonusClaimed,
     tasks: u.tasks, stats: u.stats
   };
 }
@@ -140,13 +126,11 @@ const server = http.createServer((req, res) => {
       const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(html);
-    } catch (e) {
-      res.writeHead(500);
-      res.end('Не найден index.html');
-    }
-  } else {
-    res.writeHead(404); res.end('Not found');
-  }
+    } catch (e) { res.writeHead(500); res.end('Не найден index.html'); }
+  } else if (req.url === '/ping') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('ok');
+  } else { res.writeHead(404); res.end('Not found'); }
 });
 
 const wss = new WebSocketServer({ server });
@@ -158,9 +142,6 @@ wss.on('connection', (ws) => {
 
   ws.on('message', (raw) => {
     let m; try { m = JSON.parse(raw); } catch { return; }
-
-    /* ---------- КАРТЫ СТУДИИ (games / getgame / publish) ---------- */
-    if (handleGameMsg(ws, m, ws.nick)) return;
 
     /* ---------- РЕГИСТРАЦИЯ ---------- */
     if (m.type === 'register') {
@@ -190,6 +171,8 @@ wss.on('connection', (ws) => {
       if (!u) return ws.send(JSON.stringify({type:'authResult', ok:false, msg:'Не найден'}));
       if (u.pass !== m.pass) return ws.send(JSON.stringify({type:'authResult', ok:false, msg:'Неверный пароль'}));
       if (u.nelsi === undefined) u.nelsi = 0;
+      if (!u.inventory) u.inventory = [];
+      if (!u.equipped) u.equipped = {};
       players[id] = { nick: u.nick, x:0, y:1, z:0, yaw:0, walking:false, walkPhase:0, place:0, health:100, equipped: u.equipped };
       ws.nick = u.nick;
       ws.send(JSON.stringify({type:'authResult', ok:true, user: pubUser(u)}));
@@ -208,7 +191,7 @@ wss.on('connection', (ws) => {
       p.x = m.x; p.y = m.y; p.z = m.z; p.yaw = m.yaw;
       p.walking = m.walking; p.walkPhase = m.walkPhase;
       p.place = m.place; p.health = m.health;
-      p.equipped = u.equipped;
+      p.equipped = u.equipped || {};
       broadcastPlayers();
       return;
     }
@@ -222,10 +205,13 @@ wss.on('connection', (ws) => {
       return;
     }
 
-    /* ---------- ЗАДАНИЕ ВЫПОЛНЕНО ---------- */
-    if (m.type === 'taskDone') { completeTaskServer(u, m.taskId); return; }
+    /* ---------- ЗАДАНИЕ ВЫПОЛНЕНО (с клиента) ---------- */
+    if (m.type === 'taskDone') {
+      completeTaskServer(u, m.taskId);
+      return;
+    }
 
-    /* ---------- БОНУС +50 (только нериксы) ---------- */
+    /* ---------- БОНУС ---------- */
     if (m.type === 'bonus') {
       if (u.bonusClaimed) return ws.send(JSON.stringify({type:'bonusResult', ok:false, msg:'Уже получен'}));
       u.nerixs += 50; u.bonusClaimed = true; saveUsers();
@@ -236,20 +222,18 @@ wss.on('connection', (ws) => {
     /* ---------- ПОКУПКА ---------- */
     if (m.type === 'buy') {
       const item = m.item; if (!item) return;
+      if (!u.inventory) u.inventory = [];
       if (u.inventory.includes(item.id)) return;
       const currency = item.limited ? 'nerixs' : 'nelsi';
       const have = currency === 'nerixs' ? u.nerixs : (u.nelsi || 0);
       if (have < item.price) {
-        return ws.send(JSON.stringify({
-          type:'buyResult', ok:false,
-          msg: 'Мало ' + (currency === 'nerixs' ? 'Nerixs' : 'Nelsi')
-        }));
+        return ws.send(JSON.stringify({type:'buyResult', ok:false, msg:'Мало ' + (currency==='nerixs'?'Nerixs':'Nelsi')}));
       }
       if (currency === 'nerixs') u.nerixs -= item.price;
       else u.nelsi = (u.nelsi || 0) - item.price;
       u.inventory.push(item.id);
       saveUsers();
-      ws.send(JSON.stringify({type:'userUpdate', user: pubUser(u)}));
+      ws.send(JSON.stringify({type:'buyResult', ok:true, user: pubUser(u)}));
       completeTaskServer(u, 'buy_first');
       return;
     }
@@ -257,13 +241,10 @@ wss.on('connection', (ws) => {
     /* ---------- НАДЕТЬ/СНЯТЬ ---------- */
     if (m.type === 'equip') {
       const { itemId, slot } = m;
-      if (itemId === null || itemId === undefined) {
-        delete u.equipped[slot];
-      } else if (u.equipped[slot] === itemId) {
-        delete u.equipped[slot];
-      } else {
-        u.equipped[slot] = itemId;
-      }
+      if (!u.equipped) u.equipped = {};
+      if (itemId === null || itemId === undefined) delete u.equipped[slot];
+      else if (u.equipped[slot] === itemId) delete u.equipped[slot];
+      else u.equipped[slot] = itemId;
       saveUsers();
       ws.send(JSON.stringify({type:'userUpdate', user: pubUser(u)}));
       if (players[id]) players[id].equipped = u.equipped;
@@ -277,8 +258,10 @@ wss.on('connection', (ws) => {
       if (!t) return ws.send(JSON.stringify({type:'friendResult', ok:false, msg:'Введи ник'}));
       if (!users[t]) return ws.send(JSON.stringify({type:'friendResult', ok:false, msg:'Не найден'}));
       if (t === ws.nick.toLowerCase()) return ws.send(JSON.stringify({type:'friendResult', ok:false, msg:'Это вы'}));
+      if (!u.friends) u.friends = [];
       if (u.friends.includes(t)) return ws.send(JSON.stringify({type:'friendResult', ok:false, msg:'Уже друг'}));
       u.friends.push(t);
+      if (!users[t].friends) users[t].friends = [];
       if (!users[t].friends.includes(ws.nick.toLowerCase())) users[t].friends.push(ws.nick.toLowerCase());
       saveUsers();
       completeTaskServer(u, 'add_friend');
@@ -291,26 +274,19 @@ wss.on('connection', (ws) => {
       return;
     }
 
-    /* ---------- УДАЛИТЬ ДРУГА ---------- */
     if (m.type === 'removeFriend') {
       const t = (m.nick || '').trim().toLowerCase();
-      u.friends = u.friends.filter(f => f !== t);
-      if (users[t]) users[t].friends = users[t].friends.filter(f => f !== ws.nick.toLowerCase());
+      u.friends = (u.friends||[]).filter(f => f !== t);
+      if (users[t]) users[t].friends = (users[t].friends||[]).filter(f => f !== ws.nick.toLowerCase());
       saveUsers();
       ws.send(JSON.stringify({type:'userUpdate', user: pubUser(u)}));
-      if (users[t]) {
-        wss.clients.forEach(cl => {
-          if (cl.nick && cl.nick.toLowerCase() === t && cl.readyState === 1) {
-            cl.send(JSON.stringify({type:'userUpdate', user: pubUser(users[t])}));
-          }
-        });
-      }
       return;
     }
 
     /* ---------- СТАТИСТИКА ---------- */
     if (m.type === 'stats') {
       const s = m.stats || {};
+      if (!u.stats) u.stats = {shots:0,rockets:0,destroyed:0,walked:0,jumps:0,visitedPlaces:[]};
       u.stats.shots = (u.stats.shots||0) + (s.shots||0);
       u.stats.rockets = (u.stats.rockets||0) + (s.rockets||0);
       u.stats.destroyed = (u.stats.destroyed||0) + (s.destroyed||0);
@@ -325,10 +301,35 @@ wss.on('connection', (ws) => {
 
     /* ---------- ПОСЕЩЕНИЕ ПЛЕЙСА ---------- */
     if (m.type === 'visit') {
+      if (!u.stats) u.stats = {visitedPlaces:[]};
       if (!u.stats.visitedPlaces) u.stats.visitedPlaces = [];
       if (!u.stats.visitedPlaces.includes(m.place)) u.stats.visitedPlaces.push(m.place);
       checkTaskServer(u);
       saveUsers();
+      return;
+    }
+
+    /* ---------- КАРТЫ (publish/getgame/games) ---------- */
+    if (m.type === 'games') {
+      const list = Object.values(games).map(g => ({ id: g.id, name: g.name, by: g.by, n: (g.blocks||[]).length }));
+      ws.send(JSON.stringify({type:'games', list}));
+      return;
+    }
+    if (m.type === 'getgame') {
+      const g = games[String(m.id)];
+      if (g) ws.send(JSON.stringify({type:'game', game: g}));
+      return;
+    }
+    if (m.type === 'publish') {
+      const g = m.game;
+      if (!g || typeof g.id !== 'string' || !Array.isArray(g.blocks) || g.blocks.length > 700) return;
+      const id = g.id.replace(/[^\w-]/g, '').slice(0, 40);
+      if (!id) return;
+      if (games[id] && games[id].by !== u.nick) return;
+      if (!games[id] && Object.keys(games).length >= 200) return;
+      games[id] = { id, name: String(g.name || 'Игра').slice(0,24), by: u.nick, blocks: g.blocks, spawn: g.spawn, sky: g.sky };
+      saveUsers();
+      ws.send(JSON.stringify({type:'published', id}));
       return;
     }
   });
@@ -384,12 +385,14 @@ function broadcastChat(msg) {
 }
 
 /* ==================== СТАРТ ==================== */
-server.listen(PORT, () => {
-  console.log('');
-  console.log('✅ NERIX сервер запущен: http://localhost:' + PORT);
-  console.log('   Аккаунтов в базе:', Object.keys(users).length);
-  console.log('   Карт Студии в базе:', Object.keys(userGames).length);
-  console.log('   Файл аккаунтов:', USERS_FILE);
-  console.log('   Файл карт:', GAMES_FILE);
-  console.log('');
-});
+(async () => {
+  await initFromJSONBin();
+  server.listen(PORT, () => {
+    console.log('');
+    console.log('✅ NERIX сервер запущен: http://localhost:' + PORT);
+    console.log('   Аккаунтов в базе:', Object.keys(users).length);
+    console.log('   Карт игроков:', Object.keys(games).length);
+    console.log('   JSONBin:', jbReady ? 'подключён' : 'недоступен (локальный режим)');
+    console.log('');
+  });
+})();
