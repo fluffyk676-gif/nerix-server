@@ -1,4 +1,4 @@
-/* NERIX — сервер с JSONBin.io (аккаунты не сбрасываются при деплое) */
+/* NERIX — сервер с JSONBin.io, heartbeat, авто-рассылкой игроков */
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -15,15 +15,12 @@ const JSONBIN_API = 'https://api.jsonbin.io/v3/b/' + JSONBIN_ID;
 
 async function jbLoad() {
   try {
-    const res = await fetch(JSONBIN_API + '/latest', {
-      headers: { 'X-Access-Key': JSONBIN_KEY }
-    });
+    const res = await fetch(JSONBIN_API + '/latest', { headers: { 'X-Access-Key': JSONBIN_KEY } });
     if (!res.ok) { console.log('✗ JSONBin load HTTP', res.status); return null; }
     const data = await res.json();
     return data.record || null;
   } catch (e) { console.log('✗ JSONBin load error:', e.message); return null; }
 }
-
 async function jbSave(obj) {
   try {
     const res = await fetch(JSONBIN_API, {
@@ -36,7 +33,7 @@ async function jbSave(obj) {
   } catch (e) { console.log('✗ JSONBin save error:', e.message); return false; }
 }
 
-/* ==================== ЗАГРУЗКА АККАУНТОВ ==================== */
+/* ==================== ЗАГРУЗКА ==================== */
 let users = {};
 let games = {};
 let jbReady = false;
@@ -44,23 +41,14 @@ let jbReady = false;
 async function initFromJSONBin() {
   const rec = await jbLoad();
   if (rec && typeof rec === 'object') {
-    // поддерживаем оба формата: {users, games} или старый (просто users)
-    if (rec.users && typeof rec.users === 'object') {
-      users = rec.users;
-      games = rec.games || {};
-    } else if (rec.placeholder) {
-      console.log('○ JSONBin пустой (placeholder) — стартуем с нуля');
-    } else {
-      users = rec; // старый формат — просто объект аккаунтов
-    }
+    if (rec.users && typeof rec.users === 'object') { users = rec.users; games = rec.games || {}; }
+    else if (rec.placeholder) { console.log('○ JSONBin пустой (placeholder)'); }
+    else { users = rec; }
     jbReady = true;
     console.log('✓ Загружено из JSONBin:', Object.keys(users).length, 'аккаунтов');
   } else {
-    // fallback: попробуем локальный файл
-    try {
-      if (fs.existsSync(USERS_FILE)) users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
-    } catch (e) {}
-    console.log('○ JSONBin недоступен, старт с локальными данными:', Object.keys(users).length);
+    try { if (fs.existsSync(USERS_FILE)) users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8')); } catch (e) {}
+    console.log('○ JSONBin недоступен, локально:', Object.keys(users).length);
   }
 }
 
@@ -68,43 +56,33 @@ let saveTimer = null;
 function saveUsers() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(async () => {
-    // локальный бэкап
     try { fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2)); } catch (e) {}
     try { fs.writeFileSync(GAMES_FILE, JSON.stringify(games, null, 2)); } catch (e) {}
-    // JSONBin
-    const ok = await jbSave({ users, games });
-    if (!ok) console.log('✗ Не удалось сохранить в JSONBin');
+    await jbSave({ users, games });
   }, 500);
 }
-
-// автосохранение раз в 5 минут
-setInterval(async () => {
-  if (Object.keys(users).length) {
-    await jbSave({ users, games });
-  }
-}, 5 * 60 * 1000);
+setInterval(async () => { if (Object.keys(users).length) await jbSave({ users, games }); }, 5 * 60 * 1000);
 
 process.on('SIGINT', async () => {
-  console.log('\n→ Сохраняю перед выходом...');
+  console.log('\n→ Сохраняю...');
   try { await jbSave({ users, games }); } catch (e) {}
-  try { fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2)); } catch (e) {}
   process.exit(0);
 });
 
 /* ==================== ЗАДАНИЯ ==================== */
 const TASKS_TEMPLATE = [
-  {id:'play_first', name:'Сыграть первый раз', reward:50, hint:'Зайди в игру'},
-  {id:'walk_100', name:'Пройти 100 метров', reward:60, hint:'Ходи'},
-  {id:'shoot_10', name:'Сделать 10 выстрелов', reward:80, hint:'Стреляй'},
-  {id:'rocket_3', name:'Запустить 3 ракеты', reward:120, hint:'Ракеты'},
-  {id:'destroy_1', name:'Разрушить здание', reward:100, hint:'Взорви'},
-  {id:'chat_1', name:'Написать в чат', reward:30, hint:'Сообщение'},
-  {id:'visit_3', name:'Посетить 3 плейса', reward:120, hint:'Меняй карты'},
-  {id:'buy_first', name:'Купить первый предмет', reward:40, hint:'Каталог'},
-  {id:'jump_10', name:'Прыгнуть 10 раз', reward:50, hint:'Прыгай'},
-  {id:'kill_health', name:'Потерять здоровье', reward:70, hint:'Урон'},
-  {id:'die_fall', name:'Упасть с высоты', reward:40, hint:'Сорвись'},
-  {id:'add_friend', name:'Добавить друга', reward:100, hint:'Найди друга'}
+  {id:'play_first', name:'Сыграть первый раз', reward:50},
+  {id:'walk_100', name:'Пройти 100 метров', reward:60},
+  {id:'shoot_10', name:'Сделать 10 выстрелов', reward:80},
+  {id:'rocket_3', name:'Запустить 3 ракеты', reward:120},
+  {id:'destroy_1', name:'Разрушить здание', reward:100},
+  {id:'chat_1', name:'Написать в чат', reward:30},
+  {id:'visit_3', name:'Посетить 3 плейса', reward:120},
+  {id:'buy_first', name:'Купить первый предмет', reward:40},
+  {id:'jump_10', name:'Прыгнуть 10 раз', reward:50},
+  {id:'kill_health', name:'Потерять здоровье', reward:70},
+  {id:'die_fall', name:'Упасть с высоты', reward:40},
+  {id:'add_friend', name:'Добавить друга', reward:100}
 ];
 
 /* ==================== ОНЛАЙН ==================== */
@@ -127,23 +105,31 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(html);
     } catch (e) { res.writeHead(500); res.end('Не найден index.html'); }
-  } else if (req.url === '/ping') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('ok');
-  } else { res.writeHead(404); res.end('Not found'); }
+  } else if (req.url === '/ping') { res.writeHead(200); res.end('ok'); }
+  else { res.writeHead(404); res.end('Not found'); }
 });
 
 const wss = new WebSocketServer({ server });
 
+/* heartbeat */
+const heartbeatInterval = setInterval(() => {
+  wss.clients.forEach(ws => {
+    if (ws.isAlive === false) return ws.terminate();
+    ws.isAlive = false;
+    try { ws.ping(); } catch(e) {}
+  });
+}, 10000);
+
 wss.on('connection', (ws) => {
   const id = nextId++;
   ws.id = id;
+  ws.isAlive = true;
+  ws.on('pong', () => { ws.isAlive = true; });
   console.log('+ Подключён', id);
 
   ws.on('message', (raw) => {
     let m; try { m = JSON.parse(raw); } catch { return; }
 
-    /* ---------- РЕГИСТРАЦИЯ ---------- */
     if (m.type === 'register') {
       const nick = (m.nick || '').trim();
       if (nick.length < 3) return ws.send(JSON.stringify({type:'authResult', ok:false, msg:'Ник минимум 3'}));
@@ -165,7 +151,6 @@ wss.on('connection', (ws) => {
       return;
     }
 
-    /* ---------- ВХОД ---------- */
     if (m.type === 'login') {
       const u = users[(m.nick || '').toLowerCase()];
       if (!u) return ws.send(JSON.stringify({type:'authResult', ok:false, msg:'Не найден'}));
@@ -185,7 +170,6 @@ wss.on('connection', (ws) => {
     const u = users[ws.nick.toLowerCase()];
     if (!u) return;
 
-    /* ---------- ДВИЖЕНИЕ ---------- */
     if (m.type === 'move') {
       const p = players[id]; if (!p) return;
       p.x = m.x; p.y = m.y; p.z = m.z; p.yaw = m.yaw;
@@ -196,7 +180,6 @@ wss.on('connection', (ws) => {
       return;
     }
 
-    /* ---------- ЧАТ ---------- */
     if (m.type === 'chat') {
       const txt = (m.text || '').slice(0, 120);
       if (!txt.trim()) return;
@@ -205,13 +188,8 @@ wss.on('connection', (ws) => {
       return;
     }
 
-    /* ---------- ЗАДАНИЕ ВЫПОЛНЕНО (с клиента) ---------- */
-    if (m.type === 'taskDone') {
-      completeTaskServer(u, m.taskId);
-      return;
-    }
+    if (m.type === 'taskDone') { completeTaskServer(u, m.taskId); return; }
 
-    /* ---------- БОНУС ---------- */
     if (m.type === 'bonus') {
       if (u.bonusClaimed) return ws.send(JSON.stringify({type:'bonusResult', ok:false, msg:'Уже получен'}));
       u.nerixs += 50; u.bonusClaimed = true; saveUsers();
@@ -219,16 +197,13 @@ wss.on('connection', (ws) => {
       return;
     }
 
-    /* ---------- ПОКУПКА ---------- */
     if (m.type === 'buy') {
       const item = m.item; if (!item) return;
       if (!u.inventory) u.inventory = [];
       if (u.inventory.includes(item.id)) return;
       const currency = item.limited ? 'nerixs' : 'nelsi';
       const have = currency === 'nerixs' ? u.nerixs : (u.nelsi || 0);
-      if (have < item.price) {
-        return ws.send(JSON.stringify({type:'buyResult', ok:false, msg:'Мало ' + (currency==='nerixs'?'Nerixs':'Nelsi')}));
-      }
+      if (have < item.price) return ws.send(JSON.stringify({type:'buyResult', ok:false, msg:'Мало ' + (currency==='nerixs'?'Nerixs':'Nelsi')}));
       if (currency === 'nerixs') u.nerixs -= item.price;
       else u.nelsi = (u.nelsi || 0) - item.price;
       u.inventory.push(item.id);
@@ -238,7 +213,6 @@ wss.on('connection', (ws) => {
       return;
     }
 
-    /* ---------- НАДЕТЬ/СНЯТЬ ---------- */
     if (m.type === 'equip') {
       const { itemId, slot } = m;
       if (!u.equipped) u.equipped = {};
@@ -252,7 +226,6 @@ wss.on('connection', (ws) => {
       return;
     }
 
-    /* ---------- ДРУЗЬЯ ---------- */
     if (m.type === 'addFriend') {
       const t = (m.nick || '').trim().toLowerCase();
       if (!t) return ws.send(JSON.stringify({type:'friendResult', ok:false, msg:'Введи ник'}));
@@ -266,11 +239,7 @@ wss.on('connection', (ws) => {
       saveUsers();
       completeTaskServer(u, 'add_friend');
       ws.send(JSON.stringify({type:'friendResult', ok:true, user: pubUser(u)}));
-      wss.clients.forEach(cl => {
-        if (cl.nick && cl.nick.toLowerCase() === t && cl.readyState === 1) {
-          cl.send(JSON.stringify({type:'userUpdate', user: pubUser(users[t])}));
-        }
-      });
+      wss.clients.forEach(cl => { if (cl.nick && cl.nick.toLowerCase() === t && cl.readyState === 1) cl.send(JSON.stringify({type:'userUpdate', user: pubUser(users[t])})); });
       return;
     }
 
@@ -283,7 +252,6 @@ wss.on('connection', (ws) => {
       return;
     }
 
-    /* ---------- СТАТИСТИКА ---------- */
     if (m.type === 'stats') {
       const s = m.stats || {};
       if (!u.stats) u.stats = {shots:0,rockets:0,destroyed:0,walked:0,jumps:0,visitedPlaces:[]};
@@ -299,17 +267,19 @@ wss.on('connection', (ws) => {
       return;
     }
 
-    /* ---------- ПОСЕЩЕНИЕ ПЛЕЙСА ---------- */
     if (m.type === 'visit') {
-      if (!u.stats) u.stats = {visitedPlaces:[]};
-      if (!u.stats.visitedPlaces) u.stats.visitedPlaces = [];
-      if (!u.stats.visitedPlaces.includes(m.place)) u.stats.visitedPlaces.push(m.place);
-      checkTaskServer(u);
-      saveUsers();
+      if (m.place != null) {
+        if (!u.stats) u.stats = {visitedPlaces:[]};
+        if (!u.stats.visitedPlaces) u.stats.visitedPlaces = [];
+        if (!u.stats.visitedPlaces.includes(m.place)) u.stats.visitedPlaces.push(m.place);
+        checkTaskServer(u);
+        saveUsers();
+      }
+      if (players[id]) players[id].place = m.place == null ? null : m.place;
+      broadcastPlayers();
       return;
     }
 
-    /* ---------- КАРТЫ (publish/getgame/games) ---------- */
     if (m.type === 'games') {
       const list = Object.values(games).map(g => ({ id: g.id, name: g.name, by: g.by, n: (g.blocks||[]).length }));
       ws.send(JSON.stringify({type:'games', list}));
@@ -343,7 +313,6 @@ wss.on('connection', (ws) => {
   });
 });
 
-/* ==================== ЗАДАНИЯ ==================== */
 function checkTaskServer(u) {
   const s = u.stats || {};
   if (s.shots >= 10) completeTaskServer(u, 'shoot_10');
@@ -369,7 +338,6 @@ function completeTaskServer(u, taskId) {
   });
 }
 
-/* ==================== РАССЫЛКА ==================== */
 function broadcastPlayers() {
   const list = Object.values(players).map(p => ({
     nick: p.nick, x: p.x, y: p.y, z: p.z, yaw: p.yaw,
@@ -384,7 +352,7 @@ function broadcastChat(msg) {
   wss.clients.forEach(cl => { if (cl.readyState === 1) cl.send(s); });
 }
 
-/* ==================== АВТО-РАССЫЛКА ИГРОКОВ ==================== */
+/* АВТО-РАССЫЛКА ИГРОКОВ раз в 1.5 сек */
 setInterval(broadcastPlayers, 1500);
 
 /* ==================== СТАРТ ==================== */
@@ -393,9 +361,11 @@ setInterval(broadcastPlayers, 1500);
   server.listen(PORT, () => {
     console.log('');
     console.log('✅ NERIX сервер запущен: http://localhost:' + PORT);
-    console.log('   Аккаунтов в базе:', Object.keys(users).length);
-    console.log('   Карт игроков:', Object.keys(games).length);
-    console.log('   JSONBin:', jbReady ? 'подключён' : 'недоступен (локальный режим)');
+    console.log('   Аккаунтов:', Object.keys(users).length);
+    console.log('   Карт:', Object.keys(games).length);
+    console.log('   JSONBin:', jbReady ? 'подключён' : 'недоступен (локально)');
     console.log('');
   });
 })();
+
+wss.on('close', () => clearInterval(heartbeatInterval));
