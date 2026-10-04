@@ -384,6 +384,9 @@ function broadcastChat(msg) {
   wss.clients.forEach(cl => { if (cl.readyState === 1) cl.send(s); });
 }
 
+/* ==================== АВТО-РАССЫЛКА ИГРОКОВ ==================== */
+setInterval(broadcastPlayers, 1500);
+
 /* ==================== СТАРТ ==================== */
 (async () => {
   await initFromJSONBin();
