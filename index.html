@@ -619,7 +619,8 @@ function handleMsg(m){
     case 'players':{
       lastPlayers=m.list||[];if(gid('gamePage').classList.contains('on'))renderRooms();
       if(!running||mode!=='play'||studioTest)break;const seen={};
-      for(const p of m.list||[]){if(p.nick===myUser.nick||String(p.place)!==String(curPlace))continue;seen[p.nick]=1;
+      const myMap=String(curPlace||'').split('#')[0];
+for(const p of m.list||[]){if(p.nick===myUser.nick||String(p.place)!==myMap)continue;seen[p.nick]=1;
         const r=remotes[p.nick]||addRemote(p.nick);r.tx=+p.x||0;r.ty=+p.y||0;r.tz=+p.z||0;r.tyaw=+p.yaw||0;r.w=!!p.walking;r.equipped=p.equipped||{};
         if(r.first){r.x=r.tx;r.y=r.ty;r.z=r.tz;r.yaw=r.tyaw;r.first=false;}}
       for(const k in remotes)if(!seen[k])delete remotes[k];
