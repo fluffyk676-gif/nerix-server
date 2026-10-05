@@ -1,232 +1,698 @@
 <!doctype html>
-<html язык="ру"><голова><мета charset="utf-8"><мета имя="область просмотра"содержание="width=device-width,initial-scale=1">
-<заголовок>НЕРИКС</заголовок><стиль>
-*{размер коробки:border-box;-webkit-tap-highlight-color:прозрачный}html,тело{допуск:0;высота:100%;переполнение:скрытый;фон:#0d0d0d;сенсорное действие:никто;семейство шрифтов:-apple-system,Ариал,шрифт без засечек;выбор пользователя:никто;цвет:#ффф}
-холст#с{ширина:100%;высота:100%;отображать:блокировать;сенсорное действие:никто}
-#HUD{позиция:зафиксированный;вставка:0;события указателя:никто;z-индекс:5;отображать:никто}
-#HUD.на{отображать:блокировать}
-.чип{позиция:абсолютный;вершина:12px;цвет:#ффф;фон:#000б;граница:1pxтвердый#fff3;радиус границы:10px;подкладка:6px 12px;размер шрифта:13px;события указателя:никто}
-#ст{левый:12px}
-#верхний правый{позиция:абсолютный;вершина:12px;верно:12px;отображать:флекс;зазор:8px;события указателя:авто}
-.тбтн{фон:#000б;граница:1pxтвердый#fff3;радиус границы:10px;подкладка:6px 12px;цвет:#ффф;размер шрифта:13px;курсор:указатель}
-#радость{позиция:абсолютный;левый:20px;нижний:20px;ширина:130px;высота:130px;радиус границы:50%;фон:#fff1;граница:2pxтвердый#fff3;события указателя:авто;сенсорное действие:никто}
-#радость.ручка{позиция:абсолютный;левый:50%;вершина:50%;ширина:60px;высота:60px;радиус границы:50%;фон:#9aa0a6cc;трансформировать:переводить(-50%,-50%)}
-#bJump{позиция:абсолютный;верно:20px;нижний:30px;ширина:80px;высота:80px;радиус границы:50%;граница:2pxтвердый#fff4;фон:#0008;цвет:#ффф;размер шрифта:26px;font-weight:смелый;сенсорное действие:никто;события указателя:авто}
-#bShoot{позиция:абсолютный;верно:110px;нижний:30px;ширина:80px;высота:80px;радиус границы:50%;граница:2pxтвердый#e0404088;фон:#e0404033;цвет:#ффф;размер шрифта:26px;font-weight:смелый;сенсорное действие:никто;события указателя:авто;отображать:никто}
-#переключение оружия{позиция:абсолютный;верно:20px;нижний:120px;отображать:никто;flex-direction:столбец;зазор:6px;события указателя:авто}
-.wbtn{ширина:70px;высота:44px;радиус границы:10px;граница:2pxтвердый#fff4;фон:#0008;цвет:#ффф;размер шрифта:20px;font-weight:смелый;сенсорное действие:никто;курсор:указатель}
-.wbtn.на{фон:#e0404033;цвет границы:#e04040}
-#chatBtn{позиция:абсолютный;левый:12px;вершина:52px;ширина:42px;высота:42px;радиус границы:50%;граница:2pxтвердый#fff4;фон:#000a;цвет:#ффф;размер шрифта:18px;сенсорное действие:никто;события указателя:авто;курсор:указатель;отображать:флекс;выравнивание элементов:центр;justify-content:центр;z-индекс:6}
-#чатПанель{позиция:зафиксированный;левый:12px;вершина:100px;ширина:мин(300px,85vw);высота:220px;фон:#000д;граница:1pxтвердый#fff3;радиус границы:12px;z-индекс:15;отображать:никто;flex-direction:столбец;переполнение:скрытый;события указателя:авто}
-#чатПанель.на{отображать:flex}
-#chatMgs{флекс:1;переполнение-й:авто;подкладка:8px 12px;размер шрифта:13px;высота строки:1.4}
-#chatMgs.от{цвет:#7dff9b;font-weight:смелый}
-#chatMgs.сис{цвет:#f0c040;непрозрачность:.8;стиль шрифта:курсив}
-#chatRow{отображать:флекс;зазор:6px;подкладка:8px;верхняя граница:1pxтвердый#fff2;гибкий-усадочный:0}
-#chatInput{флекс:1;фон:#1c1c1c;граница:1pxтвердый#2a2a2a;радиус границы:8px;подкладка:8px 10px;цвет:#ффф;размер шрифта:14px;контур:никто}
-#chatSend{фон:#9aa0a6;цвет:#0d0d0d;граница:никто;радиус границы:8px;подкладка:8px 12px;font-weight:смелый;размер шрифта:13px;курсор:указатель}
-#платформа{позиция:зафиксированный;вставка:0;фон:#0d0d0d;z-индекс:10;отображать:никто;flex-direction:столбец;переполнение:скрытый}
-#платформа.на{отображать:flex}
-#pТоп{отображать:флекс;выравнивание элементов:центр;justify-content:пространство между;подкладка:12px 16px;фон:#141414;нижний край:1pxтвердый#222;зазор:12px;гибкая обмотка:сворачивать}
-#логотип{размер шрифта:22px;font-weight:900;межбуквенный интервал:4px;фон:линейный градиент(90град,#e0e0e0,#9aa0a6);-webkit-background-clip:текст;фон-клип:текст;цвет:прозрачный}
-#баланс{отображать:флекс;выравнивание элементов:центр;зазор:6px;фон:#1c1c1c;граница:1pxтвердый#2a2a2a;радиус границы:10px;подкладка:6px 12px;размер шрифта:14px;гибкая обмотка:сворачивать}
-#баланс.монета{цвет:#f0c040;font-weight:смелый}
-#баланс.нлс{цвет:#4ea3ff;font-weight:смелый}
-#bonusBtn{фон:#f0c040;цвет:#0d0d0d;граница:никто;радиус границы:10px;подкладка:6px 12px;размер шрифта:13px;font-weight:смелый;курсор:указатель}
-#pСодержание{флекс:1;переполнение-й:авто;подкладка:20px}
-.панель вкладок{отображать:флекс;зазор:8px;margin-bottom:20px;гибкая обмотка:сворачивать}
-.вкладка{подкладка:8px 16px;фон:#1c1c1c;граница:1pxтвердый#2a2a2a;радиус границы:10px;курсор:указатель;размер шрифта:14px}
-.вкладка.на{фон:#9aa0a6;цвет:#0d0d0d;font-weight:смелый}
-.страница{отображать:никто}
-.страница.на{отображать:блокировать}
-.сетка{отображать:сетка;grid-template-columns:повторить(автозаполнение),минмакс(180px,1фр));зазор:14px}
-.карта{фон:#1c1c1c;граница:1pxтвердый#2a2a2a;радиус границы:14px;переполнение:скрытый;курсор:указатель}
-.карта.тело{подкладка:10px 12px}
-.карта.нм{font-weight:смелый;размер шрифта:14px;margin-bottom:4px}
-.карта.дс{размер шрифта:11px;непрозрачность:.55;высота строки:1.4}
-.карта.цена{размер шрифта:12px;цвет:#f0c040;margin-top:6px;font-weight:смелый}
-.карта.цена.нлс{цвет:#4ea3ff}
-.карта.собственный{цвет границы:#4a9a4a}
-.карта.ограниченный{цвет границы:#d04040}
-.карта.ограниченный.нм::после{содержание:" ★";цвет:#f0c040}
-.ряд{отображать:флекс;зазор:10px;выравнивание элементов:центр;подкладка:10px;фон:#1c1c1c;граница:1pxтвердый#2a2a2a;радиус границы:10px;margin-bottom:8px}
-.ряд.средний{ширина:36px;высота:36px;радиус границы:50%;фон:#3a3a3a;отображать:флекс;выравнивание элементов:центр;justify-content:центр;font-weight:смелый;размер шрифта:16px}
-.ряд.онлайн{цвет:#4a9a4a;размер шрифта:11px;font-weight:смелый}
-.ряд.офлайн{цвет:#666;размер шрифта:11px}
-h2{размер шрифта:20px;допуск:0 0 16px;font-weight:400;межбуквенный интервал:2px;непрозрачность:.85}
-h3{размер шрифта:14px;допуск:20px 0 10px;текст-преобразование:верхний регистр;межбуквенный интервал:1px;непрозрачность:.6}
-вход{фон:#1c1c1c;граница:1pxтвердый#2a2a2a;радиус границы:10px;подкладка:12px 16px;цвет:#ффф;размер шрифта:16px;ширина:100%;контур:никто}
-вход:фокус{цвет границы:#9aa0a6}
-.btn{подкладка:12px 24px;фон:#9aa0a6;цвет:#0d0d0d;граница:никто;радиус границы:10px;font-weight:смелый;размер шрифта:15px;курсор:указатель;ширина:100%}
-.btn.маленький{подкладка:8px 14px;размер шрифта:13px;ширина:авто}
-.ошибка{цвет:#e04040;размер шрифта:13px;margin-top:8px}
-.хорошо{цвет:#40c040;размер шрифта:13px;margin-top:8px}
-#аутентификация{позиция:зафиксированный;вставка:0;фон:линейный градиент(135град,#141414,#1e1e1e);z-индекс:20;отображать:флекс;выравнивание элементов:центр;justify-content:центр;подкладка:20px}
-#аутентификация.коробка{фон:#1a1a1a;граница:1pxтвердый#2a2a2a;радиус границы:20px;подкладка:32px 28px;максимальная ширина:420px;ширина:100%}
-#аутентификация.логотип{размер шрифта:42px;font-weight:900;межбуквенный интервал:6px;выравнивание текста:центр;margin-bottom:6px;фон:линейный градиент(90град,#e0e0e0,#9aa0a6);-webkit-background-clip:текст;фон-клип:текст;цвет:прозрачный}
-#аутентификация.субтитры{выравнивание текста:центр;непрозрачность:.5;размер шрифта:13px;margin-bottom:24px;межбуквенный интервал:2px}
-#аутентификация.вкладки{отображать:флекс;зазор:8px;margin-bottom:18px}
-#аутентификация.ТБ{флекс:1;подкладка:10px;выравнивание текста:центр;фон:#141414;граница:1pxтвердый#2a2a2a;радиус границы:10px;курсор:указатель;размер шрифта:14px}
-#аутентификация.ТБ.на{фон:#9aa0a6;цвет:#0d0d0d;font-weight:смелый}
-#аутентификация.поле{margin-bottom:12px}
-.игровая карта{фон:#1c1c1c;граница:1pxтвердый#2a2a2a;радиус границы:14px;переполнение:скрытый;курсор:указатель}
-.игровая карта.большой палец{высота:120px;отображать:флекс;выравнивание элементов:центр;justify-content:центр;размер шрифта:52px;позиция:родственник}
-.игровая карта.большой палец.значок{позиция:абсолютный;вершина:8px;верно:8px;фон:#000a;радиус границы:6px;подкладка:2px 8px;размер шрифта:11px;font-weight:смелый}
-.игровая карта.тело{подкладка:12px 14px}
-.игровая карта.нм{font-weight:смелый;размер шрифта:15px;margin-bottom:4px}
-.игровая карта.дс{размер шрифта:12px;непрозрачность:.55;margin-bottom:10px}
-.игровая карта.playBtn{фон:#9aa0a6;цвет:#0d0d0d;граница:никто;радиус границы:8px;подкладка:8px 0;ширина:100%;font-weight:смелый;размер шрифта:13px;курсор:указатель}
-.задача{отображать:флекс;justify-content:пространство между;выравнивание элементов:центр;подкладка:12px 14px;фон:#1c1c1c;граница:1pxтвердый#2a2a2a;радиус границы:10px;margin-bottom:8px}
-.задача.нм{размер шрифта:14px}
-.задача.нм маленький{отображать:блокировать;размер шрифта:11px;непрозрачность:.5;margin-top:2px}
-.задача.сделанный{цвет:#4a9a4a;font-weight:смелый}
-.задача.награда{цвет:#4ea3ff;font-weight:смелый;размер шрифта:13px}
-#тост{позиция:зафиксированный;левый:50%;вершина:80px;трансформировать:translateX(-50%);фон:#1a1a1a;граница:1pxтвердый#f0c040;радиус границы:12px;подкладка:10px 18px;цвет:#f0c040;размер шрифта:14px;z-индекс:30;непрозрачность:0;переход:.3с;события указателя:никто}
-#тост.на{непрозрачность:1}
-#dmgFlash{позиция:зафиксированный;вставка:0;фон:радиальный градиент(круг,ргба(255,0,0,0)40%,ргба(255,0,0,.6)100%);непрозрачность:0;события указателя:никто;переход:непрозрачность.3с;z-индекс:6}
-#dmgFlash.на{непрозрачность:1}
-#экран смерти{позиция:зафиксированный;вставка:0;фон:#8b0000e6;z-индекс:25;отображать:никто;flex-direction:столбец;выравнивание элементов:центр;justify-content:центр;цвет:#ффф;события указателя:никто}
-#экран смерти.на{отображать:flex}
-#экран смерти h1{размер шрифта:56px;допуск:0 0 12px;межбуквенный интервал:6px}
-#паузаМеню{позиция:зафиксированный;вставка:0;фон:#000д;z-индекс:22;отображать:никто;flex-direction:столбец;выравнивание элементов:центр;justify-content:центр;подкладка:24px;зазор:12px;фильтр фона:размытие(8px)}
-#паузаМеню.на{отображать:flex}
-#паузаМеню h2{размер шрифта:28px;допуск:0 0 24px;межбуквенный интервал:6px;font-weight:300;цвет:#9aa0a6}
-.pmBtn{ширина:100%;максимальная ширина:340px;подкладка:16px 24px;фон:#1c1c1c;цвет:#ффф;граница:1pxтвердый#2a2a2a;радиус границы:14px;размер шрифта:16px;font-weight:смелый;курсор:указатель}
-.pmBtn.Опасность{цвет:#e05050;цвет границы:#3a1a1a}
-.pmBtn.призрак{фон:прозрачный;цвет границы:#3a3a3a;цвет:#9aa0a6}
-#панель настроек{позиция:зафиксированный;вставка:0;фон:#000e;z-индекс:24;отображать:никто;flex-direction:столбец;выравнивание элементов:центр;justify-content:центр;подкладка:24px;зазор:16px}
-#панель настроек.на{отображать:flex}
-#панель настроек h2{размер шрифта:24px;допуск:0 0 16px;межбуквенный интервал:4px;цвет:#9aa0a6}
-.settingRow{отображать:флекс;выравнивание элементов:центр;justify-content:пространство между;ширина:100%;максимальная ширина:340px;подкладка:14px 18px;фон:#1c1c1c;граница:1pxтвердый#2a2a2a;радиус границы:12px}
-.settingRow этикетка{размер шрифта:15px}
-.settingRow вход[тип=флажок]{ширина:22px;высота:22px}
-#playersPanel{позиция:зафиксированный;вставка:0;фон:#000e;z-индекс:23;отображать:никто;flex-direction:столбец;подкладка:24px;переполнение-й:авто}
-#playersPanel.на{отображать:flex}
-.ppHead{отображать:флекс;justify-content:пространство между;выравнивание элементов:центр;margin-bottom:20px}
-.ppHead h2{размер шрифта:22px;допуск:0;межбуквенный интервал:4px;font-weight:300;цвет:#9aa0a6}
-.ppClose{фон:#1c1c1c;граница:1pxтвердый#2a2a2a;цвет:#ффф;ширина:44px;высота:44px;радиус границы:50%;размер шрифта:18px;курсор:указатель}
-#ppList{отображать:флекс;flex-direction:столбец;зазор:8px;максимальная ширина:600px;допуск:0авто;ширина:100%}
-.ppRow{отображать:флекс;выравнивание элементов:центр;зазор:12px;подкладка:12px 16px;фон:#1c1c1c;граница:1pxтвердый#2a2a2a;радиус границы:12px}
-.ppRow.средний{ширина:40px;высота:40px;радиус границы:50%;фон:линейный градиент(135град,#4ea3ff,#a06bff);отображать:флекс;выравнивание элементов:центр;justify-content:центр;размер шрифта:20px;font-weight:смелый}
-.ppRow.информация{флекс:1}
-.ppRow.Ник{font-weight:смелый;размер шрифта:14px}
-.ppRow.статус{размер шрифта:12px;непрозрачность:.6;margin-top:2px}
-.ppRow.ты{цвет:#7dff9b;размер шрифта:11px;font-weight:смелый}
-</стиль></голова><тело>
-<холст идентификатор="с"></холст>
-<див идентификатор="dmgFlash"></див>
-<див идентификатор="экран смерти"><h1>ВЫ ПАЛИ</h1><п>Респавн через<охватывать идентификатор="respawnTime">2.0</охватывать>сек...</п></див>
-<див идентификатор="тост"></див>
-<див идентификатор="HUD">
-  <див сорт="чип"идентификатор="ст">—</див>
-  <кнопка идентификатор="chatBtn">💬</кнопка>
-  <див идентификатор="верхний правый">
-    <кнопка сорт="тбтн"идентификатор="btnPlayers">👥</кнопка>
-    <кнопка сорт="тбтн"идентификатор="btnМеню">меню</кнопка>
-  </див>
-  <див идентификатор="радость"><див сорт="ручка"></див></див>
-  <див идентификатор="переключение оружия">
-    <кнопка сорт="wbtn on"данные-w="0">🔫</кнопка>
-    <кнопка сорт="wbtn"данные-w="1">🚀</кнопка>
-  </див>
-  <кнопка идентификатор="bShoot">🎯</кнопка>
-  <кнопка идентификатор="bJump">⤒</кнопка>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>NERIX</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#0d0d0d;font-family:-apple-system,Arial,sans-serif;user-select:none;color:#fff;touch-action:none}
+canvas#c{width:100%;height:100%;display:block}
+#ui{position:fixed;inset:0;pointer-events:none;z-index:10}
+#hud{display:none}#hud.on{display:block}
+#topbar{position:absolute;top:10px;left:10px;display:flex;gap:6px;pointer-events:auto}
+#topbar button{background:#0b1220cc;border:1px solid #5eead466;color:#e6fffb;font:600 13px Arial;padding:8px 14px;border-radius:12px;cursor:pointer}
+.chip{position:absolute;top:56px;left:10px;background:#0008;border-radius:6px;padding:3px 8px;font-size:11px}
+#lb{position:absolute;top:10px;right:10px;width:min(250px,48vw);background:#0b1220cc;border:1px solid #ff9a4d88;border-radius:12px;font:600 13px Arial;padding:6px 10px}
+#lb .r{display:flex}#lb .r span{flex:1;text-align:center}#lb .r span:first-child{flex:2;text-align:left}
+#lb .h{color:#9fb3c8;font-size:11px}#lb #lbN{color:#ff9a4d}
+#hp{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:min(180px,34vw);height:18px;background:#0b1220cc;border:1px solid #fff3;border-radius:10px;overflow:hidden}
+#hpf{height:100%;width:100%;background:linear-gradient(90deg,#34d399,#5eead4);transition:width .2s}
+#hpt{position:absolute;inset:0;text-align:center;font:700 12px/16px Arial;color:#fff;text-shadow:0 1px 2px #000}
+#tb{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);display:none;gap:6px;background:#0b1220aa;padding:6px;border-radius:16px}
+#tb.on{display:flex}
+.slot{width:42px;height:42px;background:#ffffff14;border:1px solid #fff2;border-radius:10px;font-size:22px;display:flex;align-items:center;justify-content:center;position:relative}
+.slot:first-child{border:2px solid #5eead4}
+.slot i{position:absolute;left:2px;bottom:0;font:10px Arial;color:#fffa}
+#joy{position:absolute;left:20px;bottom:70px;width:120px;height:120px;border-radius:50%;background:#fff1;border:2px solid #fff3;pointer-events:auto;touch-action:none}
+#joy .knob{position:absolute;left:50%;top:50%;width:54px;height:54px;border-radius:50%;background:#9aa0a6cc;transform:translate(-50%,-50%)}
+#bJump,#bShoot,#bEmote{position:absolute;width:70px;height:70px;border-radius:50%;border:2px solid #fff4;background:#0008;color:#fff;font-size:24px;font-weight:bold;pointer-events:auto;touch-action:none}
+#bJump{right:20px;bottom:70px}#bShoot{right:100px;bottom:70px;display:none}#bEmote{right:20px;bottom:150px}
+#chatBtn{position:absolute;left:10px;top:96px;width:40px;height:40px;border-radius:50%;border:2px solid #fff4;background:#000a;color:#fff;font-size:17px;pointer-events:auto}
+#chatPanel{position:fixed;left:12px;top:146px;width:min(300px,85vw);height:220px;background:#000d;border:1px solid #fff3;border-radius:12px;z-index:20;display:none;flex-direction:column;pointer-events:auto}
+#chatPanel.on{display:flex}
+#chatMsgs{flex:1;overflow-y:auto;padding:8px 12px;font-size:13px;line-height:1.4}
+#chatMsgs .from{color:#7dff9b;font-weight:bold}
+#chatRow{display:flex;gap:6px;padding:8px;border-top:1px solid #fff2}
+#chatInput{flex:1;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;padding:8px;color:#fff;font-size:14px;outline:none;margin:0}
+#chatSend{background:#9aa0a6;color:#000;border:none;border-radius:8px;padding:8px 12px;font-weight:bold}
+#spawnProt{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#0a0a;border:1px solid #4f4;color:#4f4;padding:6px 14px;border-radius:20px;font-size:13px;display:none;z-index:15}
+#toast{position:fixed;left:50%;top:80px;transform:translateX(-50%);background:#1a1a1a;border:1px solid #f0c040;border-radius:12px;padding:10px 18px;color:#f0c040;font-size:14px;z-index:30;opacity:0;transition:.3s;pointer-events:none}
+#toast.on{opacity:1}
+#deathScreen{position:fixed;inset:0;background:#8b0000e6;z-index:25;display:none;flex-direction:column;align-items:center;justify-content:center}
+#deathScreen.on{display:flex}#deathScreen h1{font-size:52px;letter-spacing:6px}
+#pauseMenu,#settingsPanel,#playersPanel{position:fixed;inset:0;background:#000e;z-index:22;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:12px}
+#pauseMenu.on,#settingsPanel.on,#playersPanel.on{display:flex}
+.pmBtn{width:100%;max-width:340px;padding:16px;background:#1c1c1c;color:#fff;border:1px solid #2a2a2a;border-radius:14px;font-size:16px;font-weight:bold;cursor:pointer}
+.pmBtn.danger{color:#e05050}.pmBtn.ghost{background:transparent;color:#9aa0a6}
+.settingRow{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:340px;padding:12px 16px;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;margin:6px 0}
+.settingRow input{width:auto;margin:0}
+#platform{position:fixed;inset:0;background:#0d0d0d;z-index:10;display:none;flex-direction:column}
+#platform.on{display:flex}
+#pTop{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#141414;border-bottom:1px solid #222;flex-wrap:wrap;gap:8px}
+#logo,#auth .logo{font-weight:900;letter-spacing:4px;background:linear-gradient(90deg,#e0e0e0,#9aa0a6);-webkit-background-clip:text;background-clip:text;color:transparent}
+#logo{font-size:22px}
+.tbtn{background:#000b;border:1px solid #fff3;border-radius:10px;padding:6px 12px;color:#fff;font-size:13px;cursor:pointer}
+#pContent{flex:1;overflow-y:auto;padding:20px}
+.tabbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:8px 14px;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;cursor:pointer;font-size:13px}
+.tab.on{background:#9aa0a6;color:#000;font-weight:bold}
+.page{display:none}.page.on{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.gameCard{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:14px;overflow:hidden;cursor:pointer}
+.gameCard .thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:48px}
+.gameCard .body{padding:12px}.gameCard .nm{font-weight:bold;margin-bottom:4px}
+.gameCard .ds{font-size:12px;opacity:.55;margin-bottom:8px}
+.playBtn{background:#9aa0a6;color:#000;border:none;border-radius:8px;padding:8px;width:100%;font-weight:bold}
+#auth{position:fixed;inset:0;background:linear-gradient(135deg,#141414,#1e1e1e);z-index:30;display:flex;align-items:center;justify-content:center;padding:20px}
+#auth .box{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:20px;padding:32px;max-width:400px;width:100%}
+#auth .logo{font-size:40px;letter-spacing:6px;text-align:center;margin-bottom:8px}
+.btn{padding:12px;background:#9aa0a6;color:#000;border:none;border-radius:10px;font-weight:bold;width:100%;cursor:pointer;font-size:15px}
+input{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12px;color:#fff;width:100%;font-size:16px;outline:none;margin-bottom:10px}
+#nametags{position:fixed;inset:0;pointer-events:none;z-index:6}
+.name{position:absolute;transform:translate(-50%,-100%);background:#000a;padding:2px 8px;border-radius:6px;font-size:12px;white-space:nowrap;color:#fff;pointer-events:none}
+#edUI{position:fixed;left:0;right:0;bottom:0;z-index:12;background:#0b1220ee;padding:6px;display:none;flex-direction:column;gap:6px}
+body.ed #edUI{display:flex}
+.edr{display:flex;gap:5px;align-items:center;justify-content:center;flex-wrap:wrap;color:#9fb3c8;font:600 13px Arial}
+.edr button{background:#1c2a44;color:#fff;border:1px solid #5eead466;border-radius:10px;padding:8px 10px;font:600 13px Arial}
+.edr button.on{background:#5eead4;color:#06201c}
+.edr button.sw{width:30px;height:30px;border-radius:8px;border:2px solid #fff3;padding:0}
+.edr button.sw.on{border-color:#fff}
+body.ed #tb,body.ed #hp,body.ed #lb,body.ed #bJump,body.ed #bShoot,body.ed #chatBtn,body.ed #st,body.ed #topbar{display:none!important}
+body.ed #joy{bottom:190px}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="nametags"></div>
+<div id="ui"><div id="hud">
+  <div id="topbar"><button id="btnPlayers">Игроки</button><button id="btnMenu">Меню</button></div>
+  <div class="chip" id="st">—</div>
+  <div id="lb"><div class="r h"><span>Игрок</span><span>Убийства</span><span>Падения</span></div>
+    <div class="r"><span id="lbN">Player</span><span id="lbK">0</span><span id="lbW">0</span></div></div>
+  <div id="hp"><div id="hpf"></div><span id="hpt">100</span></div>
+  <div id="spawnProt">ЗАЩИТА СПАВНА</div>
+  <div id="tb"><div class="slot" id="s1"><i>1</i></div></div>
+  <div id="joy"><div class="knob"></div></div>
+  <button id="bShoot">⚔</button><button id="bJump">⤒</button>
+  <button id="chatBtn">💬</button>
+</div></div>
+<div id="edUI">
+  <div class="edr"><button data-tool="place" class="on">➕ Блок</button><button data-tool="del">🗑 Убрать</button><button data-tool="spawn">🚩 Спавн</button><button id="edSize">📐 Плита</button></div>
+  <div class="edr"><button id="edUp">▲</button><span id="edLay">слой 0</span><button id="edDn">▼</button><button id="edZi">🔍+</button><button id="edZo">🔍−</button></div>
+  <div class="edr" id="edCols"></div>
+  <div class="edr"><button id="edTest">▶ Тест</button><button id="edSave">💾 Сохранить</button><button id="edPub">⬆ На сервер</button><button id="edExit">✖ Выйти</button></div>
 </div>
+<div id="chatPanel"><div id="chatMsgs"></div>
+  <div id="chatRow"><input id="chatInput" placeholder="Сообщение..." maxlength="100"><button id="chatSend">➤</button></div></div>
+<div id="toast"></div>
+<div id="deathScreen"><h1>ВЫ ПАЛИ</h1><p>Респавн через <span id="respawnTime">2.0</span>с</p></div>
 <div id="pauseMenu">
-  <h2>ПАУЗА</h2>
-  <button class="pmBtn" id="pmPlayers">👥 СПИСОК ИГРОКОВ</button>
+  <h2 style="letter-spacing:6px;margin-bottom:16px;color:#9aa0a6">ПАУЗА</h2>
+  <button class="pmBtn" id="pmPlayers">👥 ИГРОКИ</button>
   <button class="pmBtn" id="pmSettings">⚙ НАСТРОЙКИ</button>
   <button class="pmBtn" id="pmRespawn">⚰ РЕСПАВН</button>
-  <button class="pmBtn danger" id="pmLeave">🚪 ВЫЙТИ В МЕНЮ</button>
+  <button class="pmBtn danger" id="pmLeave">🚪 ВЫЙТИ</button>
   <button class="pmBtn ghost" id="pmStay">⬅ ОСТАТЬСЯ</button>
 </div>
 <div id="settingsPanel">
-  <h2>НАСТРОЙКИ</h2>
-  <div class="settingRow">
-    <label>Масштабирование / зум камеры</label>
-    <input type="checkbox" id="chkScale" checked>
-  </div>
-  <button class="pmBtn ghost" id="settingsClose" style="margin-top:20px">⬅ НАЗАД</button>
+  <h2 style="color:#9aa0a6;margin-bottom:12px">НАСТРОЙКИ</h2>
+  <div class="settingRow"><label>Зум камеры</label><input type="checkbox" id="chkScale" checked></div>
+  <div class="settingRow"><label>Чувствительность</label><input type="range" id="sensRange" min="3" max="14" value="6" style="width:110px"></div>
+  <div class="settingRow"><label>Музыка</label><input type="checkbox" id="chkMusic" checked></div>
+  <button class="pmBtn ghost" id="settingsClose">⬅ НАЗАД</button>
 </div>
-<div id="playersPanel">
-  <div class="ppHead"><h2>ИГРОКИ ОНЛАЙН</h2><button class="ppClose" id="ppClose">✕</button></div>
-  <div id="ppList"></div>
-</div>
-<div id="chatPanel">
-  <div id="chatMsgs"></div>
-  <div id="chatRow">
-    <input id="chatInput" placeholder="Сообщение..." maxlength="120">
-    <button id="chatSend">➤</button>
-  </div>
-</div>
-<div id="auth">
-  <div class="box">
-    <div class="logo">NERIX</div>
-    <div class="sub">Добро пожаловать</div>
-    <div class="tabs">
-      <div class="tb on" data-tab="login">ВХОД</div>
-      <div class="tb" data-tab="register">РЕГИСТРАЦИЯ</div>
-    </div>
-    <div class="field"><input id="inpNick" placeholder="Никнейм" maxlength="16"></div>
-    <div class="field"><input id="inpPass" type="password" placeholder="Пароль" maxlength="32"></div>
-    <div id="authMsg"></div>
-    <button class="btn" id="btnAuth" style="margin-top:14px">ВОЙТИ</button>
-  </div>
-</div>
+<div id="playersPanel"><h2 style="color:#9aa0a6;margin-bottom:16px">ИГРОКИ</h2>
+  <div id="ppList" style="width:100%;max-width:400px"></div><button class="pmBtn ghost" id="ppClose">⬅ НАЗАД</button></div>
+<div id="auth"><div class="box">
+  <div class="logo">NERIX</div>
+  <div style="text-align:center;opacity:.5;margin-bottom:20px;font-size:13px">Добро пожаловать</div>
+  <input id="inpSrv" placeholder="Адрес сервера wss://..." style="display:none">
+  <input id="inpNick" placeholder="Никнейм" maxlength="16">
+  <input id="inpPass" type="password" placeholder="Пароль" maxlength="32">
+  <div id="authMsg" style="color:#f77;font-size:13px;min-height:18px;margin:2px 0 6px"></div>
+  <button class="btn" id="btnAuth">ВОЙТИ</button>
+  <button class="btn" id="btnReg" style="margin-top:8px;background:#2a2a2a;color:#fff">РЕГИСТРАЦИЯ</button>
+  <button class="btn" id="btnGuest" style="margin-top:8px;background:transparent;color:#9aa0a6">Играть без сервера</button>
+</div></div>
 <div id="platform">
-  <div id="pTop">
-    <div id="logo">NERIX</div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <button id="bonusBtn">+50 🎁</button>
-      <div id="balance">💎 <span class="coin" id="balanceNerixs">0</span><span style="opacity:.3">|</span>💧 <span class="nls" id="balanceNelsi">0</span></div>
-    </div>
+  <div id="pTop"><div id="logo">NERIX</div>
     <div style="display:flex;gap:8px;align-items:center">
-      <div style="font-size:13px;opacity:.7" id="userLabel">—</div>
-      <button class="tbtn" id="btnLogout">ВЫЙТИ</button>
-    </div>
-  </div>
+      <div id="balance">💎 <span id="balanceNerixs">0</span> · 💧 <span id="balanceNelsi">0</span></div>
+      <button class="tbtn" id="btnBonus">🎁 Бонус</button><button class="tbtn" id="btnLogout">ВЫЙТИ</button></div></div>
   <div id="pContent">
     <div class="tabbar">
-      <div class="tab on" data-page="games">🎮 ИГРЫ</div>
-      <div class="tab" data-page="tasks">📋 ЗАДАНИЯ</div>
-      <div class="tab" data-page="avatar">🧍 АВАТАР</div>
-      <div class="tab" data-page="catalog">🛍 КАТАЛОГ</div>
-      <div class="tab" data-page="friends">👥 ДРУЗЬЯ</div>
-    </div>
-    <div class="page on" id="page-games"><h2>ИГРЫ</h2><div class="grid" id="gamesGrid"></div></div>
-    <div class="page" id="page-tasks"><h2>ЗАДАНИЯ</h2><div id="tasksList"></div></div>
-    <div class="page" id="page-avatar">
-      <h2>ВАШ АВАТАР</h2>
-      <div id="avatarPreview" style="height:260px;background:#141414;border-radius:14px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;font-size:64px">🧍</div>
-      <h3>НАДЕТО</h3><div id="equippedList"></div><h3>ИНВЕНТАРЬ</h3><div class="grid" id="invGrid"></div>
-    </div>
-    <div class="page" id="page-catalog"><h2>КАТАЛОГ</h2><div class="grid" id="catalogGrid"></div></div>
-    <div class="page" id="page-friends">
-      <h2>ДРУЗЬЯ</h2><p style="opacity:.6;font-size:13px;margin-bottom:16px">Найдите друзей по нику</p>
-      <div style="display:flex;gap:8px;margin-bottom:20px">
-        <input id="inpFriend" placeholder="Никнейм друга" style="flex:1">
-        <button class="btn small" id="btnAddFriend" style="width:auto">ДОБАВИТЬ</button>
-      </div>
-      <div id="friendMsg"></div><h3>ВАШИ ДРУЗЬЯ</h3><div id="friendsList"></div>
-    </div>
+      <div class="tab on" data-page="games">🎮 Игры</div><div class="tab" data-page="tasks">📋 Квесты</div>
+      <div class="tab" data-page="friends">👥 Друзья</div><div class="tab" data-page="studio">🛠 Студия</div><div class="tab" data-page="server">🌐 Сервер</div><div class="tab" data-page="avatar">🧍 Аватар</div></div>
+    <div class="page on" id="page-games"><h2>Игры</h2><div class="grid" id="gamesGrid"></div></div>
+    <div class="page" id="page-tasks"><h2>Ежедневные квесты</h2><div id="tasksList"></div></div>
+    <div class="page" id="page-friends"><h2>Друзья</h2>
+      <div style="display:flex;gap:8px;margin-bottom:12px"><input id="inpFriend" placeholder="Ник друга" style="flex:1">
+      <button class="btn" style="width:auto;padding:10px 16px" id="btnAddFriend">Добавить</button></div><div id="friendsList"></div></div>
+    <div class="page" id="page-studio"><h2>Nerix Studio</h2>
+      <div style="display:flex;gap:8px;margin:10px 0"><input id="stName" placeholder="Название игры" maxlength="24" style="flex:1;margin:0"><button class="btn" style="width:auto;padding:10px 16px" id="stNew">Создать</button></div>
+      <div id="stList"></div></div>
+    <div class="page" id="page-server"><h2>Сервер</h2>
+      <div id="srvSt" style="margin:10px 0;opacity:.8">Не подключено</div>
+      <h3 style="margin:12px 0">Игры других игроков</h3><div class="grid" id="srvGames"></div></div>
+    <div class="page" id="page-avatar"><h2>Аватар</h2><div style="opacity:.7">Скоро больше кастомизации</div></div>
   </div>
 </div>
-<script>
-let ws=null, myUser=null, otherPlayers=[], chatLog=[];
-let authMode='login';
-let allowPageScale = true;
-
-function connectWS(){
-  if (!location.host) return;
-  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  try { ws = new WebSocket(proto + '//' + location.host); } catch(e){ return; }
-  ws.onopen = () => { tryAutoLogin(); };
-  ws.onclose = () => { setTimeout(connectWS, 2000); };
-  ws.onmessage = ev => { let m; try { m = JSON.parse(ev.data); } catch { return; } handleServerMsg(m); };
-}
-function wsSend(obj){ if(ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); }
-
-function tryAutoLogin(){
-  const saved = localStorage.getItem('nerix_login');
-  if(!saved) return;
  
+<script>
+const canvas=document.getElementById('c');
+const gl=canvas.getContext('webgl',{antialias:true});
+if(!gl){document.body.innerHTML='<p style="color:#fff;padding:40px">WebGL не поддерживается</p>';throw 0;}
+let dpr=1;
+function resize(){dpr=Math.min(devicePixelRatio||1,1.5);canvas.width=innerWidth*dpr;canvas.height=innerHeight*dpr;gl.viewport(0,0,canvas.width,canvas.height);}
+addEventListener('resize',resize);resize();
+const VS=`attribute vec3 aPos,aNor,aCol;attribute vec2 aUV;uniform mat4 uV,uP;varying vec3 vCol,vNor,vW;varying vec2 vUV;
+void main(){vCol=aCol;vNor=aNor;vW=aPos;vUV=aUV;gl_Position=uP*uV*vec4(aPos,1.0);}`;
+const FS=`precision mediump float;varying vec3 vCol,vNor,vW;varying vec2 vUV;uniform vec3 uLight,uCam,uFog;uniform float uWorld;uniform sampler2D uTex;
+void main(){
+  vec3 N=normalize(vNor),c=vCol;
+  float dist=length(uCam-vW);
+  if(vUV.x>=0.0){vec4 t=texture2D(uTex,vUV);c=mix(c,t.rgb,t.a);}
+  if(uWorld>0.5){
+    float k=1.0-clamp(dist/30.0,0.0,1.0);
+    if(N.y>0.9){
+      vec2 g=fract(vW.xz/1.6),e=min(g,1.0-g);float m=min(e.x,e.y);
+      float chk=mod(floor(vW.x/1.6)+floor(vW.z/1.6),2.0);
+      c*=1.0+k*(0.04*chk-0.2*(1.0-smoothstep(0.0,0.04,m)));
+    }else if(abs(N.y)<0.5){
+      c*=0.78+0.22*smoothstep(-0.5,3.0,vW.y);
+    }
+  }
+  float d=max(dot(N,normalize(uLight)),0.0);
+  c*=0.46+0.54*d;c*=mix(vec3(0.85,0.9,1.0),vec3(1.05,1.0,0.95),d);
+  c=mix(c,uFog,clamp((dist-35.0)/100.0,0.0,1.0)*0.85);
+  gl_FragColor=vec4(c,1.0);
+}`;
+function compile(t,s){const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);return o;}
+const prog=gl.createProgram();
+gl.attachShader(prog,compile(gl.VERTEX_SHADER,VS));gl.attachShader(prog,compile(gl.FRAGMENT_SHADER,FS));
+gl.linkProgram(prog);gl.useProgram(prog);
+const aPos=gl.getAttribLocation(prog,'aPos'),aNor=gl.getAttribLocation(prog,'aNor'),aCol=gl.getAttribLocation(prog,'aCol'),aUV=gl.getAttribLocation(prog,'aUV');
+const U=n=>gl.getUniformLocation(prog,n);
+const uV=U('uV'),uP=U('uP'),uLight=U('uLight'),uCam=U('uCam'),uFog=U('uFog'),uWorld=U('uWorld');
+(function(){
+  const cv=document.createElement('canvas');cv.width=cv.height=256;const g=cv.getContext('2d');
+  g.fillStyle='#141414';g.beginPath();g.ellipse(78,100,10,25,0,0,7);g.ellipse(178,100,10,25,0,0,7);g.fill();
+  g.strokeStyle='#141414';g.lineWidth=11;g.lineCap='round';g.beginPath();g.arc(128,118,72,0.17*Math.PI,0.83*Math.PI);g.stroke();
+  const t=gl.createTexture();gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,t);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,cv);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  gl.uniform1i(U('uTex'),0);
+})();
+const P=[],N=[],C=[];
+const wallBoxes=[],flatPlatforms=[],solids=[];
+let acidY=-999,skyCol=[0.45,0.65,0.95];
+const FACES=[
+  [[0,0,-1],[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1]],
+  [[0,0,1],[-1,-1,1],[-1,1,1],[1,1,1],[1,-1,1]],
+  [[-1,0,0],[-1,-1,1],[-1,1,1],[-1,1,-1],[-1,-1,-1]],
+  [[1,0,0],[1,-1,-1],[1,1,-1],[1,1,1],[1,-1,1]],
+  [[0,-1,0],[-1,-1,-1],[-1,-1,1],[1,-1,1],[1,-1,-1]],
+  [[0,1,0],[-1,1,-1],[1,1,-1],[1,1,1],[-1,1,1]]
+];
+function box(x,y,z,sx,sy,sz,col,f=0){
+  for(const fc of FACES){const n=fc[0],v=fc.slice(1);
+    for(const i of [0,1,2,0,2,3]){P.push(x+v[i][0]*sx,y+v[i][1]*sy,z+v[i][2]*sz);N.push(n[0],n[1],n[2]);C.push(col[0],col[1],col[2]);}}
+  if(f===1){acidY=y+sy;return;}
+  solids.push({x,y,z,sx,sy,sz});
+  if(f===2)return;
+  if(sy>0.6)wallBoxes.push({x,z,hw:sx+0.1,hd:sz+0.1,y0:y-sy,y1:y+sy});
+  flatPlatforms.push({x,z,hw:sx+0.15,hd:sz+0.15,top:y+sy});
+}
+function sphere(x,y,z,r,col){
+  const LA=6,LO=10,pt=(a,b)=>{const s=Math.sin(a*Math.PI/LA);return[s*Math.cos(b*6.2832/LO),Math.cos(a*Math.PI/LA),s*Math.sin(b*6.2832/LO)];};
+  for(let a=0;a<LA;a++)for(let b=0;b<LO;b++){
+    const q=[pt(a,b),pt(a+1,b),pt(a+1,b+1),pt(a,b+1)];
+    for(const i of [0,1,2,0,2,3]){const p=q[i];P.push(x+p[0]*r,y+p[1]*r,z+p[2]*r);N.push(...p);C.push(...col);}}
+}
+const GRY=[0.55,0.56,0.68],BRN=[0.3,0.34,0.5],GRN=[0.2,0.58,0.5],YLW=[1,0.7,0.3];
+function cone(x,y,z,r,h,col){const n=9;for(let i=0;i<n;i++){const a=i/n*6.2832,b=(i+1)/n*6.2832,m=(a+b)/2,nx=Math.cos(m)*h,nz=Math.sin(m)*h,l=Math.hypot(nx,r,nz);
+  for(const p of [[x+Math.cos(a)*r,y,z+Math.sin(a)*r],[x+Math.cos(b)*r,y,z+Math.sin(b)*r],[x,y+h,z]]){P.push(p[0],p[1],p[2]);N.push(nx/l,r/l,nz/l);C.push(col[0],col[1],col[2]);}}}
+function tree(x,z){box(x,0.5,z,0.18,0.5,0.18,[0.35,0.3,0.4],2);cone(x,0.8,z,1.2,1.7,GRN);cone(x,1.9,z,0.85,1.4,[0.25,0.68,0.55]);}
+function wall(x,z,L,win,v){
+  const b=(a,y,hl,hy,f)=>v?box(x,y,z+a,0.3,hy,hl,GRY,f):box(x+a,y,z,hl,hy,0.3,GRY,f);
+  if(!win){b(0,1.6,L,1.6,0);return;}
+  b(0,0.7,L,0.7,0);b(0,2.8,L,0.4,2);
+  const pw=(L-1.2)/2;b(-L+pw,1.9,pw,0.5,2);b(L-pw,1.9,pw,0.5,2);
+}
+function buildBase(){
+  acidY=-999;
+  box(0,-0.5,0,40,0.5,40,[0.3,0.62,0.52]);
+  for(let i=0;i<12;i++){const a=i/12*Math.PI*2,r=18;box(Math.cos(a)*r,1.5,Math.sin(a)*r,2,1.5,2,[0.55,0.4,0.3]);}
+  box(0,0.3,12,4,0.3,4,[0.9,0.75,0.3]);box(8,1.5,8,3,0.3,3,[0.4,0.6,0.9]);box(-8,2.2,10,2.5,0.3,2.5,[0.9,0.4,0.4]);
+  box(0,0.05,-10,4,0.05,4,[0.3,0.34,0.5],2);
+  wall(0,-14,4.3,false,false);wall(-4,-10,4.3,true,true);wall(4,-10,4.3,true,true);
+  box(-2.7,1.6,-6,1.6,1.6,0.3,GRY);box(2.7,1.6,-6,1.6,1.6,0.3,GRY);box(0,2.8,-6,1.1,0.4,0.3,GRY,2);
+  box(0,3.6,-10,4.7,0.2,4.7,[0.25,0.27,0.4],2);
+  [[-8,-2],[10,-6],[14,6],[-14,8],[6,12],[-12,-16],[16,-14],[-18,-6],[-6,16]].forEach(p=>tree(p[0],p[1]));
+  box(12,1.3,-4,0.1,1.3,0.1,[0.3,0.32,0.4],2);sphere(12,2.8,-4,0.35,YLW);
+  return{sky:[0.45,0.65,0.95],spawn:{x:0,z:0,y:1}};
+}
+function buildMegaObby(hard=false){
+  acidY=-999;
+  box(0,-0.5,0,8,0.5,8,[0.36,0.66,0.3]);
+  let z=-6,y=0.3;const steps=hard?45:28;
+  for(let i=0;i<steps;i++){
+    z-=hard?1.6:1.9;y+=hard?0.35:0.22;const w=hard?0.9:1.4;
+    box((i%2===0?1:-1)*(hard?1.8:1.2),y,z,w,0.25,w,hard?[0.85,0.25,0.2]:[0.96,0.76,0.2]);
+  }
+  box(0,y+1,z-3,3,0.3,3,[0.3,0.9,0.5]);
+  return{sky:hard?[0.6,0.4,0.45]:[0.45,0.65,0.95],spawn:{x:0,z:0,y:1}};
+}
+function buildSwordHeights(){
+  box(0,-8,0,90,0.4,90,[0.12,0.65,0.18],1);
+  box(0,6,0,4.5,6,4.5,[0.55,0.45,0.35]);box(0,12.6,0,8,0.6,8,[0.62,0.52,0.4]);
+  for(const t of [{x:20,z:20,h:10},{x:-20,z:20,h:9},{x:20,z:-20,h:11},{x:-20,z:-20,h:8},{x:26,z:0,h:7},{x:-26,z:0,h:7}]){
+    box(t.x,t.h/2,t.z,2.3,t.h/2,2.3,[0.5,0.4,0.3]);box(t.x,t.h+0.4,t.z,3.8,0.45,3.8,[0.58,0.48,0.36]);}
+  [[10,7.8,10],[-10,7.3,10],[10,8.3,-10],[-10,6.8,-10]].forEach(([x,y,z])=>box(x,y,z,11,0.45,2.2,[0.7,0.5,0.28]));
+  return{sky:[0.4,0.6,0.85],spawn:{x:0,z:0,y:13.5}};
+}
+function buildCrossroad(){
+  acidY=-999;
+  box(0,-0.5,0,80,0.5,80,[0.22,0.22,0.24]);box(0,0.05,0,14,0.05,14,[0.5,0.5,0.5]);
+  return{sky:[0.5,0.6,0.8],spawn:{x:0,z:0,y:1}};
+}
+const GAMES=[
+  {name:'Песочница',ds:'Дом, деревья и творчество',build:buildBase,ic:'🟩'},
+  {name:'Obby Лёгкий',ds:'Простая полоса препятствий',build:()=>buildMegaObby(false),ic:'🏃'},
+  {name:'Obby Сложный',ds:'Сложная длинная полоса',build:()=>buildMegaObby(true),ic:'🔥'},
+  {name:'Битва на мечах',ds:'Высоты + кислота + мечи',build:buildSwordHeights,ic:'🗡'},
+  {name:'Crossroad',ds:'Перекрёсток',build:buildCrossroad,ic:'🏙'}
+];
+const player={x:0,y:1,z:0,vy:0,yaw:0,onGround:true,speed:6.8,walkPhase:0,walking:false,health:100,place:0,dead:false,respawnAt:0,spawnProt:0,emote:0,wipeouts:0,kos:0};
+let camYaw=0,camPitch=0.35,camDistance=7,lookSens=0.006,musicOn=true,allowZoom=true;
+let running=false,gamePaused=false,playerHasSword=false,lastSlash=0,chatLog=[],curSpawn={x:0,y:1,z:0};
+let myUser={nick:'Player',nerixs:100,nelsi:50,friends:[]};
+function getDailyQuests(){
+  const day=new Date().toDateString();
+  let s=JSON.parse(localStorage.getItem('nerix_quests')||'{}');
+  if(s.day!==day){s={day,list:[
+    {id:'login',name:'Зайти в игру',reward:10,done:false},
+    {id:'play',name:'Сыграть 2 матча',reward:25,done:false,progress:0,need:2},
+    {id:'walk',name:'Пройти 200 метров',reward:15,done:false,progress:0,need:200},
+    {id:'hard',name:'Сложный квест: убить 3 игрока',reward:40,done:false,progress:0,need:3,hard:true}]};
+    localStorage.setItem('nerix_quests',JSON.stringify(s));}
+  return s.list;
+}
+const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+function playTone(f,d,t='square'){
+  if(!musicOn)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type=t;o.frequency.value=f;g.gain.setValueAtTime(0.03,audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d);
+}
+let dPv=[],dNv=[],dCv=[],dUv=[];
+const dP=gl.createBuffer(),dN=gl.createBuffer(),dC=gl.createBuffer(),dU=gl.createBuffer();
+function uploadDyn(){
+  [[dP,dPv],[dN,dNv],[dC,dCv],[dU,dUv]].forEach(([b,a])=>{gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(a),gl.DYNAMIC_DRAW);});
+}
+function pv(p,n,c,u){dPv.push(p[0],p[1],p[2]);dNv.push(n[0],n[1],n[2]);dCv.push(c[0],c[1],c[2]);dUv.push(u?u[0]:-1,u?u[1]:-1);}
+function mk(cx,cy,cz,yaw,px,py,pz,ang){
+  const cs=Math.cos(yaw),sn=Math.sin(yaw),ca=Math.cos(ang),sa=Math.sin(ang);
+  return(x,y,z,n)=>{const y2=y*ca-z*sa,z2=y*sa+z*ca;
+    if(n)return[x*cs+z2*sn,y2,-x*sn+z2*cs];
+    const X=x+px,Z=z2+pz;return[cx+X*cs+Z*sn,cy+py+y2,cz-X*sn+Z*cs];};
+}
+function part(cx,cy,cz,yaw,px,py,pz,ang,ox,oy,oz,sx,sy,sz,col,uv){
+  const T=mk(cx,cy,cz,yaw,px,py,pz,ang);
+  for(const f of FACES){const n=f[0],v=f.slice(1);
+    for(const i of [0,1,2,0,2,3]){const w=v[i];let u=null;
+      if(uv&&n[2]===1)u=[uv[0]+(w[0]+1)/2*(uv[2]-uv[0]),uv[1]+(1-w[1])/2*(uv[3]-uv[1])];
+      pv(T(w[0]*sx+ox,w[1]*sy+oy,w[2]*sz+oz),T(n[0],n[1],n[2],1),col,u);}}
+}
+const gid=id=>document.getElementById(id);
+const esc=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const save={nerixs:100,nelsi:150};
+function updBal(){gid('balanceNerixs').textContent=save.nerixs;gid('balanceNelsi').textContent=save.nelsi;}
+const hazards=[],remotes={},tagEls={};
+let mode='play',studioTest=false,customGames=[],srvGames=[],ws=null,myId=null,lastSend=0,srvUrl=localStorage.getItem('nerix_server')||'';
+try{customGames=JSON.parse(localStorage.getItem('nerix_studio')||'[]');}catch(e){}
+function saveCustom(){try{localStorage.setItem('nerix_studio',JSON.stringify(customGames));}catch(e){}}
+function uploadWorld(){
+  const buf=a=>{const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(a),gl.STATIC_DRAW);return b;};
+  bP=buf(P);bN=buf(N);bC=buf(C);worldCount=P.length/3;
+}
+function sanitize(g){
+  const n=(v,d,lo,hi)=>Math.max(lo,Math.min(hi,+v||d));
+  const blocks=(Array.isArray(g.blocks)?g.blocks:[]).slice(0,700).map(b=>({x:n(b.x,0,-500,500),y:n(b.y,0,-100,300),z:n(b.z,0,-500,500),sx:n(b.sx,1,0.1,60),sy:n(b.sy,1,0.1,60),sz:n(b.sz,1,0.1,60),
+    c:(Array.isArray(b.c)?b.c:[0.5,0.5,0.5]).slice(0,3).map(v=>n(v,0.5,0,1)),t:b.t==='acid'?'acid':'s'}));
+  const sp=g.spawn||{};
+  return{id:String(g.id||'x').replace(/[^\w-]/g,'').slice(0,40),name:String(g.name||'Игра').slice(0,24),blocks,spawn:{x:n(sp.x,0,-500,500),y:n(sp.y,1,-100,300),z:n(sp.z,0,-500,500)},sky:[0.45,0.65,0.95]};
+}
+function buildCustom(g){
+  wallBoxes.length=0;flatPlatforms.length=0;solids.length=0;P.length=0;N.length=0;C.length=0;hazards.length=0;acidY=-999;playerHasSword=false;
+  for(const b of g.blocks){if(b.t==='acid'){box(b.x,b.y,b.z,b.sx,b.sy,b.sz,b.c,2);hazards.push(b);}else box(b.x,b.y,b.z,b.sx,b.sy,b.sz,b.c);}
+  skyCol=g.sky||[0.45,0.65,0.95];curSpawn=g.spawn||{x:0,y:1,z:0};
+}
+function playCustom(g0,test,room='1'){
+  const g=sanitize(g0);
+  gid('platform').classList.remove('on');gid('hud').classList.add('on');
+  mode='play';studioTest=!!test;document.body.classList.remove('ed');
+  buildCustom(g);uploadWorld();camDistance=7;camPitch=0.35;
+  Object.assign(player,{x:curSpawn.x,z:curSpawn.z,y:curSpawn.y,vy:0,health:100,dead:false,spawnProt:4});
+  gid('deathScreen').classList.remove('on');gid('bShoot').style.display='none';
+  gid('s1').innerHTML='<i>1</i>🖐';gid('lbN').textContent=myUser.nick;
+  chatLog=[];renderChat();toast('▶ '+g.name);running=true;gamePaused=false;
+  if(!test)enterPlace('g'+g.id,room);gid('gamePage').classList.remove('on');
+}
+const SIZES=[['Плита',2,0.25,2],['Куб',1,1,1],['Стена',3,1.5,0.5],['Большая плита',5,0.25,5],['Столб',0.5,3,0.5],['Ступень',1,0.25,1]];
+const COLS=[[0.85,0.25,0.25],[0.95,0.75,0.25],[0.3,0.75,0.4],[0.3,0.6,0.9],[0.6,0.4,0.85],[0.95,0.95,0.95],[0.25,0.25,0.3],[0.55,0.38,0.25]];
+const ed={game:null,tx:0,tz:0,layer:0,tool:'place',size:0,color:0,acid:false,cam:[0,10,10]};
+const sn=v=>Math.round(v*2)/2;
+(function(){const box=gid('edCols');
+  COLS.forEach((c,i)=>{const b=document.createElement('button');b.className='sw';b.style.background=`rgb(${c.map(v=>Math.round(v*255))})`;b.onclick=()=>{ed.color=i;ed.acid=false;ed.tool='place';updEdUI();};box.appendChild(b);});
+  const a=document.createElement('button');a.className='sw';a.textContent='☠';a.style.background='#2d9d3a';a.onclick=()=>{ed.acid=true;ed.tool='place';updEdUI();};box.appendChild(a);
+})();
+function updEdUI(){
+  document.querySelectorAll('#edUI [data-tool]').forEach(b=>b.classList.toggle('on',b.dataset.tool===ed.tool));
+  document.querySelectorAll('#edCols .sw').forEach((b,i)=>b.classList.toggle('on',ed.acid?i===COLS.length:i===ed.color&&ed.tool==='place'));
+  gid('edSize').textContent='📐 '+SIZES[ed.size][0];gid('edLay').textContent='слой '+ed.layer;
+}
+function rebuildEdit(){buildCustom(ed.game);uploadWorld();}
+function enterEditor(g){
+  ed.game=g;mode='edit';studioTest=false;document.body.classList.add('ed');
+  gid('platform').classList.remove('on');gid('hud').classList.add('on');gid('nametags').innerHTML='';for(const k in tagEls)delete tagEls[k];
+  running=true;gamePaused=false;ed.tx=g.spawn.x;ed.tz=g.spawn.z;ed.layer=0;camDistance=18;camPitch=0.6;
+  gid('spawnProt').style.display='none';gid('deathScreen').classList.remove('on');rebuildEdit();updEdUI();
+}
+function edRay(sx,sy){
+  const c=ed.cam,fx0=ed.tx-c[0],fy0=ed.layer-c[1],fz0=ed.tz-c[2],l=Math.hypot(fx0,fy0,fz0),fx=fx0/l,fy=fy0/l,fz=fz0/l;
+  let rx=-fz,rz=fx;const l2=Math.hypot(rx,rz)||1;rx/=l2;rz/=l2;
+  const ux=-rz*fy,uy=rz*fx-rx*fz,uz=rx*fy;
+  const th=Math.tan(Math.PI/6),a=canvas.width/canvas.height,nx=(sx/innerWidth*2-1)*th*a,ny=(1-sy/innerHeight*2)*th;
+  return{o:c,d:[fx+rx*nx+ux*ny,fy+uy*ny,fz+rz*nx+uz*ny]};
+}
+function rayBox(o,d,b){
+  let t0=0,t1=1e9,ax=-1,sg=0;const mn=[b.x-b.sx,b.y-b.sy,b.z-b.sz],mx=[b.x+b.sx,b.y+b.sy,b.z+b.sz];
+  for(let i=0;i<3;i++){const di=d[i];
+    if(Math.abs(di)<1e-8){if(o[i]<mn[i]||o[i]>mx[i])return null;continue;}
+    let ta=(mn[i]-o[i])/di,tb=(mx[i]-o[i])/di,s=-1;if(ta>tb){const q=ta;ta=tb;tb=q;s=1;}
+    if(ta>t0){t0=ta;ax=i;sg=s;}if(tb<t1)t1=tb;if(t0>t1)return null;}
+  return ax<0?null:{t:t0,ax,sg};
+}
+function edTap(sx,sy){
+  const g=ed.game,r=edRay(sx,sy);let best=null,bi=-1;
+  g.blocks.forEach((b,i)=>{const h=rayBox(r.o,r.d,b);if(h&&(!best||h.t<best.t)){best=h;bi=i;}});
+  if(ed.tool==='del'){if(bi>=0){g.blocks.splice(bi,1);rebuildEdit();}return;}
+  let tp=1e9;if(r.d[1]<-1e-6){const t=(ed.layer-r.o[1])/r.d[1];if(t>0)tp=t;}
+  let p,face=null;
+  if(best&&best.t<=tp){p=[r.o[0]+r.d[0]*best.t,r.o[1]+r.d[1]*best.t,r.o[2]+r.d[2]*best.t];face=best;}
+  else if(tp<1e9)p=[r.o[0]+r.d[0]*tp,ed.layer,r.o[2]+r.d[2]*tp];
+  else return;
+  if(ed.tool==='spawn'){g.spawn={x:sn(p[0]),y:p[1]+0.5,z:sn(p[2])};return;}
+  const S=SIZES[ed.size],nh=[S[1],S[2],S[3]];let c=[sn(p[0]),0,sn(p[2])];
+  if(face){const hb=g.blocks[bi],hh=[hb.sx,hb.sy,hb.sz],hv=[hb.x,hb.y,hb.z];
+    c=[sn(p[0]),sn(p[1]),sn(p[2])];c[face.ax]=hv[face.ax]+face.sg*(hh[face.ax]+nh[face.ax]);}
+  else c[1]=ed.layer+nh[1];
+  if(g.blocks.length>=700){toast('Лимит блоков (700)');return;}
+  g.blocks.push({x:c[0],y:c[1],z:c[2],sx:nh[0],sy:nh[1],sz:nh[2],c:ed.acid?[0.3,1,0.3]:COLS[ed.color],t:ed.acid?'acid':'s'});rebuildEdit();
+}
+function drawPass(){
+  gl.uniform1f(uWorld,1);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bP);gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bN);gl.enableVertexAttribArray(aNor);gl.vertexAttribPointer(aNor,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bC);gl.enableVertexAttribArray(aCol);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,0,0);
+  gl.disableVertexAttribArray(aUV);gl.vertexAttrib2f(aUV,-1,-1);
+  gl.drawArrays(gl.TRIANGLES,0,worldCount);
+}
+function drawDyn(){
+  uploadDyn();gl.uniform1f(uWorld,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,dP);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,dN);gl.vertexAttribPointer(aNor,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,dC);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,0,0);
+  gl.enableVertexAttribArray(aUV);gl.bindBuffer(gl.ARRAY_BUFFER,dU);gl.vertexAttribPointer(aUV,2,gl.FLOAT,false,0,0);
+  gl.drawArrays(gl.TRIANGLES,0,dPv.length/3);
+}
+function editFrame(dt){
+  if(Math.hypot(joyX,joyY)>0.15){const fx=-Math.sin(camYaw),fz=-Math.cos(camYaw),rx=-fz,rz=fx;ed.tx+=(fx*joyY+rx*joyX)*14*dt;ed.tz+=(fz*joyY+rz*joyX)*14*dt;}
+  const e=Math.max(0.12,0.2+camPitch*0.9),D=camDistance;
+  const cx=ed.tx+Math.sin(camYaw)*D*Math.cos(e),cz=ed.tz+Math.cos(camYaw)*D*Math.cos(e),cy=ed.layer+Math.sin(e)*D;ed.cam=[cx,cy,cz];
+  gl.clearColor(skyCol[0],skyCol[1],skyCol[2],1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.useProgram(prog);
+  gl.uniformMatrix4fv(uV,false,matLook(cx,cy,cz,ed.tx,ed.layer,ed.tz));gl.uniformMatrix4fv(uP,false,persp(Math.PI/3,canvas.width/canvas.height,0.1,500));
+  gl.uniform3f(uLight,0.5,1.0,0.4);gl.uniform3f(uCam,cx,cy,cz);gl.uniform3f(uFog,skyCol[0],skyCol[1],skyCol[2]);
+  drawPass();
+  dPv=[];dNv=[];dCv=[];dUv=[];
+  const Z=(x,y,z,sx,sy,sz,c)=>part(0,0,0,0,0,0,0,0,x,y,z,sx,sy,sz,c),sp=ed.game.spawn;
+  Z(ed.tx,ed.layer+0.04,ed.tz,0.35,0.04,0.35,[1,0.6,0.2]);
+  Z(sp.x,sp.y,sp.z,0.08,1,0.08,[0.3,1,0.95]);Z(sp.x+0.4,sp.y+0.8,sp.z,0.4,0.2,0.04,[0.3,1,0.95]);
+  drawDyn();
+}
+gid('stNew').onclick=()=>{const nm=gid('stName').value.trim()||'Моя игра';
+  const g={id:'c'+Date.now().toString(36)+Math.floor(Math.random()*1e4),name:nm,blocks:[{x:0,y:-0.5,z:0,sx:20,sy:0.5,sz:20,c:[0.3,0.62,0.52],t:'s'}],spawn:{x:0,y:1,z:0},sky:[0.45,0.65,0.95]};
+  customGames.push(g);saveCustom();gid('stName').value='';enterEditor(g);};
+function renderStudio(){
+  const el=gid('stList');el.innerHTML='';
+  if(!customGames.length)el.innerHTML='<div style="opacity:.6">Игр пока нет. Придумай название и нажми «Создать».</div>';
+  customGames.forEach((g,i)=>{const d=document.createElement('div');d.style.cssText='background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;padding:12px;margin-bottom:8px';
+    d.innerHTML=`<b>${esc(g.name)}</b> <small style="opacity:.5">${g.blocks.length} блоков</small><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="tbtn" data-a="play">▶ Играть</button><button class="tbtn" data-a="edit">✏ Править</button><button class="tbtn" data-a="pub">⬆ На сервер</button><button class="tbtn" data-a="del">🗑</button></div>`;
+    d.querySelectorAll('button').forEach(b=>b.onclick=()=>{const a=b.dataset.a;
+      if(a==='play')playCustom(g);else if(a==='edit')enterEditor(g);else if(a==='pub')publish(g);
+      else if(a==='del'&&confirm('Удалить «'+g.name+'»?')){customGames.splice(i,1);saveCustom();renderStudio();renderGames();}});
+    el.appendChild(d);});
+}
+function publish(g){
+  if(!ws||ws.readyState!==1||!authed){toast('Для публикации нужен вход на сервер');return;}
+  send({type:'publish',game:{id:g.id,name:g.name,blocks:g.blocks,spawn:g.spawn,sky:g.sky}});
+}
+document.querySelectorAll('#edUI [data-tool]').forEach(b=>b.onclick=()=>{ed.tool=b.dataset.tool;updEdUI();});
+gid('edSize').onclick=()=>{ed.size=(ed.size+1)%SIZES.length;updEdUI();};
+gid('edUp').onclick=()=>{ed.layer+=0.5;updEdUI();};gid('edDn').onclick=()=>{ed.layer-=0.5;updEdUI();};
+gid('edZi').onclick=()=>{camDistance=Math.max(4,camDistance-3);};gid('edZo').onclick=()=>{camDistance=Math.min(50,camDistance+3);};
+gid('edTest').onclick=()=>playCustom(ed.game,true);
+gid('edSave').onclick=()=>{saveCustom();toast('💾 Сохранено');};
+gid('edPub').onclick=()=>{saveCustom();publish(ed.game);};
+gid('edExit').onclick=()=>{saveCustom();showPlatform();};
+let authed=false,pending=null,curPlace=null,myPlace=null;
+function send(m){if(ws&&ws.readyState===1)ws.send(JSON.stringify(m));}
+function srvStatus(t){const e=gid('srvSt');if(e)e.textContent=t;}
+function authMsg(t){gid('authMsg').textContent=t;}
+function wsUrl(){return srvUrl||(location.protocol.indexOf('http')===0?(location.protocol==='https:'?'wss://':'ws://')+location.host:'');}
+function addRemote(nick){return remotes[nick]=remotes[nick]||{nick:String(nick).slice(0,16),x:0,y:0,z:0,yaw:0,ph:0,w:false,tx:0,ty:0,tz:0,tyaw:0,first:true};}
+function enterPlace(key,room){myPlace=String(key);curPlace=String(key)+'#'+(room||'1');for(const k in remotes)delete remotes[k];send({type:'visit',place:myPlace});}
+function openWs(onopen){
+  const url=wsUrl();if(!url){authMsg('Укажи адрес сервера');return;}
+  if(ws){try{ws.onclose=null;ws.close();}catch(e){}ws=null;}
+  authMsg('Подключение...');
+  try{ws=new WebSocket(url);}catch(e){authMsg('Неверный адрес сервера');ws=null;return;}
+  ws.onopen=()=>{authMsg('');srvStatus('✅ Подключено');onopen();};
+  ws.onclose=()=>{srvStatus('Отключено');ws=null;for(const k in remotes)delete remotes[k];if(!authed)authMsg('Нет соединения с сервером');else toast('Соединение потеряно');authed=false;};
+  ws.onerror=()=>{};
+  ws.onmessage=ev=>{let m;try{m=JSON.parse(ev.data);}catch(e){return;}handleMsg(m);};
+}
+function doAuth(type){
+  const nick=gid('inpNick').value.trim(),pass=gid('inpPass').value;
+  if(!nick||!pass){authMsg('Введи ник и пароль');return;}
+  const sv=gid('inpSrv').value.trim();if(sv){srvUrl=sv;localStorage.setItem('nerix_server',sv);}
+  pending={nick,pass};openWs(()=>send({type,nick,pass}));
+}
+function applyUser(u){
+  if(!u)return;myUser=Object.assign(myUser,u);save.nerixs=+u.nerixs||0;save.nelsi=+u.nelsi||0;updBal();renderFriends();
+}
+function renderFriends(){
+  const el=gid('friendsList');if(!el)return;el.innerHTML='';
+  const fr=Array.isArray(myUser.friends)?myUser.friends:[];
+  if(!fr.length){el.innerHTML='<div style="opacity:.6">Друзей пока нет</div>';return;}
+  fr.forEach(f=>{const n=typeof f==='string'?f:f.nick,d=document.createElement('div');d.className='settingRow';d.style.maxWidth='none';
+    d.innerHTML=`<span>${esc(n)}</span><button class="tbtn">✖</button>`;d.querySelector('button').onclick=()=>send({type:'removeFriend',nick:n});el.appendChild(d);});
+}
+function handleMsg(m){
+  switch(m.type){
+    case 'authResult':
+      if(m.ok){authed=true;if(pending){myUser.nick=pending.nick;localStorage.setItem('nerix_nick',pending.nick);localStorage.setItem('nerix_pass',pending.pass);}
+        applyUser(m.user);gid('auth').style.display='none';showPlatform();toast('Добро пожаловать, '+myUser.nick);}
+      else authMsg(m.msg||'Ошибка входа');
+      break;
+    case 'userUpdate':applyUser(m.user);break;
+    case 'players':{
+      lastPlayers=m.list||[];
+      if(!running||mode!=='play'||studioTest)break;const seen={};
+      for(const p of m.list||[]){
+        if(p.nick===myUser.nick)continue;
+        if(myPlace!=null&&String(p.place)!==String(myPlace))continue;
+        seen[p.nick]=1;
+        const r=remotes[p.nick]||addRemote(p.nick);r.tx=+p.x||0;r.ty=+p.y||0;r.tz=+p.z||0;r.tyaw=+p.yaw||0;r.w=!!p.walking;
+        if(r.first){r.x=r.tx;r.y=r.ty;r.z=r.tz;r.yaw=r.tyaw;r.first=false;}
+      }
+      for(const k in remotes)if(!seen[k])delete remotes[k];
+      break;}
+    case 'chat':
+      if(m.system)chatLog.push({system:true,text:esc(m.text)});
+      else if(m.from!==myUser.nick)chatLog.push({from:esc(m.from),text:esc(m.text)});
+      renderChat();break;
+    case 'buyResult':case 'bonusResult':case 'friendResult':
+      if(m.user)applyUser(m.user);if(m.msg)toast(m.msg);break;
+    case 'taskNotify':toast('✔ '+m.name+' +'+m.reward);break;
+    case 'games':srvGames=m.list||[];renderSrvGames();break;
+    case 'game':if(m.game){gameCache[m.game.id]=m.game;const rm=pendingJoin?pendingJoin.room:'1';pendingJoin=null;playCustom(m.game,false,rm);}break;
+    case 'published':toast('✔ Игра опубликована для всех');break;
+  }
+}
+function renderSrvGames(){
+  const el=gid('srvGames');if(!el)return;el.innerHTML='';
+  if(!srvGames.length){el.innerHTML='<div style="opacity:.6">Пока пусто (или нет соединения)</div>';return;}
+  srvGames.forEach(sg=>{const d=document.createElement('div');d.className='gameCard';
+    d.innerHTML=`<div class="thumb">🌐</div><div class="body"><div class="nm">${esc(sg.name)}</div><div class="ds">от ${esc(sg.by)} · ${+sg.n||0} блоков</div><button class="playBtn">ИГРАТЬ</button></div>`;
+    d.onclick=()=>{const c=gameCache[sg.id];if(c)playCustom(c,false,'1');else{gameCache[sg.id]=null;pendingJoin={room:'1'};send({type:'getgame',id:sg.id});toast('Загрузка карты...');}};el.appendChild(d);});
+}
+const ABOUT=['Свободная карта с домом, деревьями и платформами.','Прыгай по платформам вверх до финиша.','Длинная полоса с мелкими платформами.','Сражайся на высоте над кислотой.','Большой перекрёсток — открытая площадка.'];
+let gpInfo=null,pendingJoin=null,lastPlayers=[];const gameCache={};const MAXP=12;
+function mineInfo(g){return{key:'g'+g.id,kind:'mine',game:g,name:g.name,ic:'🛠',by:myUser.nick,about:'Игра из Nerix Studio. Блоков: '+g.blocks.length+'.'};}
+function isOnline(){return ws&&ws.readyState===1&&authed;}
+function roomsFor(key){const c={},pre=String(key)+'#';for(const p of lastPlayers){const pl=String(p.place);if(pl.indexOf(pre)===0){const r=pl.slice(pre.length)||'1';c[r]=(c[r]||0)+1;}}if(!c['1'])c['1']=0;return Object.keys(c).sort((a,b)=>a-b).map(r=>({r,n:c[r]}));}
+function nextRoom(list){let i=1;while(list.some(x=>+x.r===i))i++;return String(i);}
+function bestRoom(key){if(!isOnline())return '1';const l=roomsFor(key),ok=l.filter(x=>x.n<MAXP).sort((a,b)=>b.n-a.n);return ok.length?ok[0].r:nextRoom(l);}
+function openGamePage(info){
+  gpInfo=info;gid('gamePage').classList.add('on');gid('gpIc').textContent=info.ic;gid('gpName').textContent=info.name;gid('gpBy').textContent='Создатель: '+info.by;
+  gid('gpAbout').innerHTML=`<p style="opacity:.8;line-height:1.5;margin:6px 0 16px">${esc(info.about||'')}</p><button class="btn" id="gpPlay" style="font-size:17px;padding:16px">▶ ИГРАТЬ</button>`;
+  gid('gpPlay').onclick=()=>joinGame(info,bestRoom(info.key));gpTab('about');
+}
+function gpTab(n){document.querySelectorAll('.gtab').forEach(t=>t.classList.toggle('on',t.dataset.gp===n));gid('gpAbout').style.display=n==='about'?'block':'none';gid('gpRooms').style.display=n==='rooms'?'block':'none';if(n==='rooms')renderRooms();}
+function renderRooms(){const el=gid('gpRooms');if(!gpInfo)return;const l=roomsFor(gpInfo.key);el.innerHTML=isOnline()?'':'<div style="opacity:.6;margin:8px 0">Нет связи с сервером.</div>';l.forEach(x=>{const d=document.createElement('div');d.className='settingRow';d.style.maxWidth='none';d.innerHTML=`<div><b>Сервер ${x.r}</b><br><small style="opacity:.6">${x.n}/${MAXP} игроков</small></div><button class="tbtn">${x.n>=MAXP?'Полный':'Войти'}</button>`;const b=d.querySelector('button');if(x.n>=MAXP)b.disabled=true;else b.onclick=()=>joinGame(gpInfo,x.r);el.appendChild(d);});if(isOnline()&&l.length<20){const b=document.createElement('button');b.className='btn';b.style.marginTop='8px';b.textContent='➕ Создать новый сервер';b.onclick=()=>joinGame(gpInfo,nextRoom(l));el.appendChild(b);}}
+function joinGame(info,room){
+  if(info.kind==='builtin'){gid('gamePage').classList.remove('on');gid('platform').classList.remove('on');gid('hud').classList.add('on');mode='play';studioTest=false;document.body.classList.remove('ed');loadGame(info.idx,room);running=true;}
+  else if(info.kind==='mine')playCustom(info.game,false,room);
+  else{const g=gameCache[info.id];if(g)playCustom(g,false,room);else{pendingJoin={room};send({type:'getgame',id:info.id});toast('Загрузка карты...');}}
+}
+document.querySelectorAll('.gtab').forEach(t=>t.onclick=()=>gpTab(t.dataset.gp));
+gid('gpBack').onclick=()=>gid('gamePage').classList.remove('on');
+function proj2(v,p,x,y,z){const vx=v[0]*x+v[4]*y+v[8]*z+v[12],vy=v[1]*x+v[5]*y+v[9]*z+v[13],vz=v[2]*x+v[6]*y+v[10]*z+v[14],vw=v[3]*x+v[7]*y+v[11]*z+v[15];const cx=p[0]*vx+p[4]*vy+p[8]*vz+p[12]*vw,cy=p[1]*vx+p[5]*vy+p[9]*vz+p[13]*vw,cw=p[3]*vx+p[7]*vy+p[11]*vz+p[15]*vw;if(cw<=0.01)return null;return[(cx/cw*0.5+0.5)*innerWidth,(1-(cy/cw*0.5+0.5))*innerHeight];}
+function updateTags(view,proj){
+  const box=gid('nametags'),seen={};
+  const items=[{id:'me',nick:myUser.nick,x:player.x,y:player.y+2.4,z:player.z,vis:!player.dead}];
+  for(const id in remotes){const r=remotes[id];if(!r.first)items.push({id,nick:r.nick,x:r.x,y:r.y+2.4,z:r.z,vis:true});}
+  for(const it of items){seen[it.id]=1;let el=tagEls[it.id];if(!el){el=document.createElement('div');el.className='name';box.appendChild(el);tagEls[it.id]=el;}const p=it.vis?proj2(view,proj,it.x,it.y,it.z):null;if(!p){el.style.display='none';continue;}el.style.display='block';el.textContent=it.nick;el.style.left=p[0]+'px';el.style.top=p[1]+'px';}
+  for(const id in tagEls)if(!seen[id]){tagEls[id].remove();delete tagEls[id];}
+}
+function drawR6(cx,cy,cz,yaw,ph,walk,emote,sword){
+  const sw=walk?Math.sin(ph)*0.3:0;const y=cy+(walk?Math.abs(Math.sin(ph*2))*0.02:0);
+  const sk=[0.95,0.85,0.15],sh=[0.2,0.4,0.85],pa=[0.15,0.6,0.15],K=1.42,B=(x,yy,z,sx,sy,sz,col)=>part(cx,y,cz,yaw,0,0,0,0,x*K,yy*K,z*K,sx*K,sy*K,sz*K,col);
+  part(cx,0.02,cz,0,0,0,0,0,0,0,0,0.4,0.02,0.4,[0.1,0.1,0.1]);
+  B(-0.16,0.26,sw*0.22,0.12,0.26,0.12,pa);
+  B(0.16,0.26,-sw*0.22,0.12,0.26,0.12,pa);
+  B(0,0.78,0,0.26,0.26,0.15,sh);
+  B(-0.36,0.78,-sw*0.18,0.08,0.26,0.08,sk);
+  B(0.36,0.78,sw*0.18,0.08,0.26,0.08,sk);
+  B(0,1.16,0,0.16,0.16,0.16,sk);
+  B(-0.05,1.19,0.165,0.025,0.025,0.01,[0.1,0.1,0.1]);
+  B(0.05,1.19,0.165,0.025,0.025,0.01,[0.1,0.1,0.1]);
+  if(sword)B(0.45,0.86,0.1,0.04,0.04,0.55,[0.75,0.75,0.8]);
+}
+function collideHoriz(px,pz,py=0){const r=0.4;for(const w of wallBoxes){if(py>=w.y1-0.35||py+1.8<=w.y0)continue;const a0=w.x-w.hw-r,a1=w.x+w.hw+r,b0=w.z-w.hd-r,b1=w.z+w.hd+r;if(px>a0&&px<a1&&pz>b0&&pz<b1){const a=px-a0,b=a1-px,e=pz-b0,f=b1-pz,m=Math.min(a,b,e,f);if(m===a)px=a0;else if(m===b)px=a1;else if(m===e)pz=b0;else pz=b1;}}return[px,pz];}
+function groundTop(px,pz,cy){let best=-100;for(const p of flatPlatforms)if(Math.abs(px-p.x)<p.hw+0.5&&Math.abs(pz-p.z)<p.hd+0.5&&p.top<=cy+0.8&&p.top>best)best=p.top;return best;}
+let bP,bN,bC,worldCount=0;
+function loadGame(idx,room='1'){
+  wallBoxes.length=0;flatPlatforms.length=0;solids.length=0;P.length=0;N.length=0;C.length=0;acidY=-999;playerHasSword=false;
+  const g=GAMES[idx],data=g.build();skyCol=data.sky;curSpawn=data.spawn;
+  const buf=a=>{const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(a),gl.STATIC_DRAW);return b;};
+  bP=buf(P);bN=buf(N);bC=buf(C);worldCount=P.length/3;
+  Object.assign(player,{x:data.spawn.x,z:data.spawn.z,y:data.spawn.y,vy:0,health:100,dead:false,spawnProt:4,place:idx});
+  document.getElementById('deathScreen').classList.remove('on');
+  const SWORD_MAPS=[3,4];
+  document.getElementById('bShoot').style.display=SWORD_MAPS.includes(idx)?'block':'none';
+  if(SWORD_MAPS.includes(idx))playerHasSword=true;
+  document.getElementById('s1').innerHTML='<i>1</i>'+(SWORD_MAPS.includes(idx)?'🗡':'🖐');
+  document.getElementById('lbN').textContent=myUser.nick;
+  chatLog=[];renderChat();toast('▶ '+g.name);playTone(440,0.1);camDistance=7;camPitch=0.35;enterPlace(idx,room);
+}
+function die(){if(player.dead)return;player.dead=true;player.respawnAt=performance.now()+2000;player.wipeouts++;document.getElementById('lbW').textContent=player.wipeouts;document.getElementById('deathScreen').classList.add('on');}
+const joy=document.getElementById('joy'),knob=joy.querySelector('.knob');
+let joyX=0,joyY=0,joyId=null;
+joy.addEventListener('pointerdown',e=>{e.preventDefault();joyId=e.pointerId;joy.setPointerCapture(e.pointerId);moveJoy(e);});
+joy.addEventListener('pointermove',e=>{if(e.pointerId===joyId)moveJoy(e);});
+joy.addEventListener('pointerup',()=>{joyId=null;joyX=joyY=0;knob.style.transform='translate(-50%,-50%)';});
+function moveJoy(e){const r=joy.getBoundingClientRect();let dx=(e.clientX-r.left-r.width/2)/(r.width/2),dy=(e.clientY-r.top-r.height/2)/(r.height/2);const l=Math.hypot(dx,dy)||1;if(l>1){dx/=l;dy/=l;}joyX=dx;joyY=-dy;knob.style.transform=`translate(calc(-50% + ${dx*34}px), calc(-50% + ${dy*34}px))`;}
+let lookId=null,lx=0,ly=0,tapX=0,tapY=0,tapT=0;
+canvas.addEventListener('pointerdown',e=>{lookId=e.pointerId;lx=e.clientX;ly=e.clientY;tapX=e.clientX;tapY=e.clientY;tapT=performance.now();canvas.setPointerCapture(e.pointerId);});
+canvas.addEventListener('pointermove',e=>{if(e.pointerId!==lookId)return;camYaw-=(e.clientX-lx)*lookSens;camPitch=Math.max(-0.4,Math.min(1.1,camPitch+(e.clientY-ly)*lookSens));lx=e.clientX;ly=e.clientY;});
+canvas.addEventListener('pointerup',e=>{if(e.pointerId===lookId){lookId=null;if(mode==='edit'&&Math.hypot(e.clientX-tapX,e.clientY-tapY)<10&&performance.now()-tapT<450)edTap(e.clientX,e.clientY);}});
+canvas.addEventListener('wheel',e=>{if(allowZoom)camDistance=Math.max(3,Math.min(14,camDistance+e.deltaY*0.01));});
+document.getElementById('bJump').onpointerdown=e=>{e.preventDefault();if(player.onGround&&!player.dead){player.vy=9.5;player.onGround=false;}};
+document.getElementById('bShoot').onpointerdown=e=>{e.preventDefault();if(playerHasSword&&performance.now()-lastSlash>400){lastSlash=performance.now();toast('⚔ Удар!');playTone(200,0.08);}};
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2200);}
+function renderChat(){const box=document.getElementById('chatMsgs');box.innerHTML='';chatLog.slice(-30).forEach(m=>{const d=document.createElement('div');d.innerHTML=m.system?`<span style="color:#f0c040">${m.text}</span>`:`<span class="from">${m.from}:</span> ${m.text}`;box.appendChild(d);});box.scrollTop=box.scrollHeight;}
+document.getElementById('chatBtn').onclick=()=>document.getElementById('chatPanel').classList.toggle('on');
+document.getElementById('chatSend').onclick=()=>{const i=document.getElementById('chatInput'),t=i.value.trim();if(!t)return;chatLog.push({from:myUser.nick,text:t.replace(/</g,'&lt;')});send({type:'chat',text:t});i.value='';renderChat();};
+function showPlatform(){
+  document.getElementById('hud').classList.remove('on');document.getElementById('platform').classList.add('on');
+  running=false;mode='play';studioTest=false;document.body.classList.remove('ed');
+  gid('nametags').innerHTML='';for(const k in tagEls)delete tagEls[k];
+  for(const k in remotes)delete remotes[k];curPlace=null;myPlace=null;
+  send({type:'visit',place:null});
+  send({type:'games'});renderFriends();
+  renderGames();renderTasks();renderStudio();updBal();
+}
+function renderGames(){
+  const g=gid('gamesGrid');g.innerHTML='';
+  const card=(info)=>{const d=document.createElement('div');d.className='gameCard';d.innerHTML=`<div class="thumb">${info.ic}</div><div class="body"><div class="nm">${esc(info.name)}</div><div class="ds">${esc(info.short)}</div><button class="playBtn">ОТКРЫТЬ</button></div>`;d.onclick=()=>openGamePage(info);g.appendChild(d);};
+  GAMES.forEach((game,i)=>card({key:i,kind:'builtin',idx:i,name:game.name,ic:game.ic,short:game.ds,by:'NERIX',about:ABOUT[i]||game.ds}));
+  customGames.forEach(cg=>{const i=mineInfo(cg);i.short='Моя игра · '+cg.blocks.length+' блоков';card(i);});
+}
+function renderTasks(){const el=document.getElementById('tasksList');el.innerHTML='';getDailyQuests().forEach(t=>{const div=document.createElement('div');div.style.cssText='background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center';div.innerHTML=`<div><b>${t.name}</b>${t.hard?' <span style="color:#f44">СЛОЖНЫЙ</span>':''}<br><small style="opacity:.6">+${t.reward} 💧</small></div><div>${t.done?'✅':'⬜'}</div>`;el.appendChild(div);});}
+gid('btnAuth').onclick=()=>doAuth('login');
+gid('btnReg').onclick=()=>doAuth('register');
+gid('btnGuest').onclick=()=>{myUser.nick=gid('inpNick').value.trim()||'Guest';gid('auth').style.display='none';showPlatform();toast('Офлайн-режим: без сервера');};
+gid('btnBonus').onclick=()=>send({type:'bonus'});
+gid('btnAddFriend').onclick=()=>{const n=gid('inpFriend').value.trim();if(n)send({type:'addFriend',nick:n});gid('inpFriend').value='';};
+(function(){const web=location.protocol.indexOf('http')===0;gid('inpSrv').style.display=web?'none':'block';gid('inpSrv').value=srvUrl;const n=localStorage.getItem('nerix_nick'),p=localStorage.getItem('nerix_pass');if(n&&p){gid('inpNick').value=n;gid('inpPass').value=p;if(wsUrl()){pending={nick:n,pass:p};openWs(()=>send({type:'login',nick:n,pass:p}));}}})();
+const $=id=>document.getElementById(id);
+$('btnMenu').onclick=()=>{$('pauseMenu').classList.add('on');gamePaused=true;};
+$('pmStay').onclick=()=>{$('pauseMenu').classList.remove('on');gamePaused=false;};
+$('pmLeave').onclick=()=>{$('pauseMenu').classList.remove('on');gamePaused=false;if(studioTest)enterEditor(ed.game);else showPlatform();};
+$('pmRespawn').onclick=()=>{Object.assign(player,{health:100,dead:false,spawnProt:3,x:curSpawn.x,z:curSpawn.z,y:curSpawn.y,vy:0});$('deathScreen').classList.remove('on');$('pauseMenu').classList.remove('on');gamePaused=false;};
+$('pmSettings').onclick=()=>{$('pauseMenu').classList.remove('on');$('settingsPanel').classList.add('on');};
+$('settingsClose').onclick=()=>{$('settingsPanel').classList.remove('on');$('pauseMenu').classList.add('on');};
+$('sensRange').oninput=function(){lookSens=this.value*0.001;};
+$('chkMusic').onchange=function(){musicOn=this.checked;};
+$('chkScale').onchange=function(){allowZoom=this.checked;};
+$('btnLogout').onclick=()=>{localStorage.removeItem('nerix_nick');localStorage.removeItem('nerix_pass');location.reload();};
+const showPl=()=>{let h=`<div class="settingRow"><span>${esc(myUser.nick)} (ты)</span><span>${player.kos} / ${player.wipeouts}</span></div>`;for(const id in remotes)h+=`<div class="settingRow"><span>${esc(remotes[id].nick)}</span><span>онлайн</span></div>`;$('ppList').innerHTML=h;$('playersPanel').classList.add('on');};
+$('btnPlayers').onclick=showPl;$('pmPlayers').onclick=showPl;
+$('ppClose').onclick=()=>$('playersPanel').classList.remove('on');
+document.querySelectorAll('.tab').forEach(t=>{t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));t.classList.add('on');$('page-'+t.dataset.page).classList.add('on');if(t.dataset.page==='tasks')renderTasks();if(t.dataset.page==='studio')renderStudio();if(t.dataset.page==='server'){send({type:'games'});renderSrvGames();}};});
+function matLook(ex,ey,ez,cx,cy,cz){let fx=cx-ex,fy=cy-ey,fz=cz-ez;const l=Math.hypot(fx,fy,fz)||1;fx/=l;fy/=l;fz/=l;let rx=-fz,ry=0,rz=fx;const l2=Math.hypot(rx,rz)||1;rx/=l2;rz/=l2;const ux=ry*fz-rz*fy,uy=rz*fx-rx*fz,uz=rx*fy-ry*fx;return new Float32Array([rx,ux,-fx,0,ry,uy,-fy,0,rz,uz,-fz,0,-(rx*ex+ry*ey+rz*ez),-(ux*ex+uy*ey+uz*ez),fx*ex+fy*ey+fz*ez,1]);}
+function persp(fov,asp,n,f){const q=1/Math.tan(fov/2),d=n-f;return new Float32Array([q/asp,0,0,0,0,q,0,0,0,0,(f+n)/d,-1,0,0,2*f*n/d,0]);}
+let last=performance.now();
+function loop(t){
+  const dt=Math.min(0.033,(t-last)/1000);last=t;
+  if(running&&!gamePaused&&mode==='edit'){editFrame(dt);requestAnimationFrame(loop);return;}
+  if(running&&!gamePaused){
+    if(Math.hypot(joyX,joyY)>0.15&&!player.dead){
+      const fx=-Math.sin(camYaw),fz=-Math.cos(camYaw),rx=-fz,rz=fx;let wx=fx*joyY+rx*joyX,wz=fz*joyY+rz*joyX;const wl=Math.hypot(wx,wz)||1;wx/=wl;wz/=wl;player.yaw=Math.atan2(wx,wz);
+      const[nx,nz]=collideHoriz(player.x+wx*player.speed*dt,player.z+wz*player.speed*dt,player.y);player.x=nx;player.z=nz;player.walking=true;player.walkPhase+=dt*9;
+    }else player.walking=false;
+    player.vy-=24*dt;player.y+=player.vy*dt;
+    const gy=groundTop(player.x,player.z,player.y);
+    if(player.y<=gy+0.1){player.y=gy;player.vy=0;player.onGround=true;}else player.onGround=false;
+    if(acidY>-900&&player.y<acidY+0.5&&player.spawnProt<=0)die();
+    if(player.y<-25)die();
+    if(player.dead&&performance.now()>=player.respawnAt){Object.assign(player,{dead:false,health:100,spawnProt:3.5,x:curSpawn.x,z:curSpawn.z,y:curSpawn.y,vy:0});$('deathScreen').classList.remove('on');}
+    if(player.spawnProt>0){player.spawnProt-=dt;$('spawnProt').style.display='block';}else $('spawnProt').style.display='none';
+    if(player.emote>0)player.emote-=dt;
+    if(!player.dead&&player.health<100)player.health=Math.min(100,player.health+dt*2);
+    if(player.spawnProt<=0&&!player.dead)for(const h of hazards)if(Math.abs(player.x-h.x)<h.sx&&Math.abs(player.z-h.z)<h.sz&&player.y<h.y+h.sy&&player.y+1.5>h.y-h.sy){die();break;}
+    for(const id in remotes){const r=remotes[id];if(r.first)continue;const k=Math.min(1,dt*12);r.x+=(r.tx-r.x)*k;r.y+=(r.ty-r.y)*k;r.z+=(r.tz-r.z)*k;let d=r.tyaw-r.yaw;d=Math.atan2(Math.sin(d),Math.cos(d));r.yaw+=d*k;if(r.w)r.ph+=dt*9;}
+    if(ws&&ws.readyState===1&&t-lastSend>70&&!studioTest){lastSend=t;send({type:'move',x:+player.x.toFixed(2),y:+player.y.toFixed(2),z:+player.z.toFixed(2),yaw:+player.yaw.toFixed(2),walking:!!player.walking,walkPhase:+player.walkPhase.toFixed(2),place:myPlace,health:Math.round(player.health)});}
+    let cx=player.x+Math.sin(camYaw)*camDistance,cz=player.z+Math.cos(camYaw)*camDistance,cy=player.y+2.3+Math.sin(camPitch)*camDistance*0.4;
+    {const tx=player.x,ty=player.y+1.4,tz=player.z,m=0.3;let te=1;const hit=(o,x,y,z)=>Math.abs(x-o.x)<o.sx+m&&Math.abs(y-o.y)<o.sy+m&&Math.abs(z-o.z)<o.sz+m;const act=solids.filter(o=>!hit(o,tx,ty,tz));for(let i=1;i<=24&&te===1;i++){const f=i/24,px=tx+(cx-tx)*f,py=ty+(cy-ty)*f,pz=tz+(cz-tz)*f;if(act.some(o=>hit(o,px,py,pz)))te=Math.max(0.12,(i-1)/24);}cx=tx+(cx-tx)*te;cy=ty+(cy-ty)*te;cz=tz+(cz-tz)*te;}
+    gl.clearColor(skyCol[0],skyCol[1],skyCol[2],1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.useProgram(prog);
+    const view=matLook(cx,cy,cz,player.x,player.y+1.2,player.z);gl.uniformMatrix4fv(uV,false,view);
+    const proj=persp(Math.PI/3,canvas.width/canvas.height,0.1,500);gl.uniformMatrix4fv(uP,false,proj);
+    gl.uniform3f(uLight,0.5,1.0,0.4);gl.uniform3f(uCam,cx,cy,cz);gl.uniform3f(uFog,skyCol[0],skyCol[1],skyCol[2]);
+    drawPass();
+    dPv=[];dNv=[];dCv=[];dUv=[];
+    if(!player.dead)drawR6(player.x,player.y,player.z,player.yaw,player.walkPhase,player.walking,player.emote,playerHasSword);
+    for(const id in remotes){const r=remotes[id];if(!r.first)drawR6(r.x,r.y,r.z,r.yaw,r.ph,r.w,0,false);}
+    drawDyn();
+    updateTags(view,proj);$('hpf').style.width=Math.max(0,player.health)+'%';$('hpt').textContent='❤ '+Math.round(player.health);
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
