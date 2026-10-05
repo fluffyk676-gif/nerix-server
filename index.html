@@ -148,7 +148,12 @@ input{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12p
     <div class="tabbar">
       <div class="tab on" data-page="games">🎮 Игры</div>
       <div class="tab" data-page="tasks">📋 Квесты</div>
+      <div class="tab" data-page="friends">👥 Друзья</div>
+      <div class="tab" data-page="studio">🛠 Студия</div>
+      <div class="tab" data-page="server">🌐 Сервер</div>
+      <div class="tab" data-page="avatar">🧍 Аватар</div>
     </div>
+
     <div class="page on" id="page-games">
       <h2>Игры</h2>
       <div class="grid" id="gamesGrid"></div>
@@ -157,11 +162,30 @@ input{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12p
       <h2>Ежедневные квесты</h2>
       <div id="tasksList"></div>
     </div>
+    <div class="page" id="page-friends">
+      <h2>Друзья</h2>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input id="inpFriend" placeholder="Ник друга" style="flex:1;margin:0">
+        <button class="btn" style="width:auto;padding:10px 16px" id="btnAddFriend">Добавить</button>
+      </div>
+      <div id="friendsList"><div style="opacity:.6">Пока нет друзей</div></div>
+    </div>
+    <div class="page" id="page-studio">
+      <h2>Nerix Studio</h2>
+      <div style="opacity:.7;margin-top:12px">Редактор карт скоро будет доступен</div>
+    </div>
+    <div class="page" id="page-server">
+      <h2>Сервер</h2>
+      <div id="srvSt" style="margin:10px 0;opacity:.8">Подключение...</div>
+    </div>
+    <div class="page" id="page-avatar">
+      <h2>Аватар</h2>
+      <div style="opacity:.7">Скоро больше кастомизации</div>
+    </div>
   </div>
 </div>
 
 <script>
-// ========== НАСТРОЙКИ СЕРВЕРА ==========
 const SERVER_URL = 'wss://nerix-server.onrender.com';
 
 const canvas = document.getElementById('c');
@@ -181,7 +205,6 @@ function resize() {
 addEventListener('resize', resize);
 resize();
 
-// Shaders
 const VS = `attribute vec3 aPos,aNor,aCol;uniform mat4 uV,uP;varying vec3 vCol,vNor,vW;
 void main(){vCol=aCol;vNor=aNor;vW=aPos;gl_Position=uP*uV*vec4(aPos,1.0);}`;
 const FS = `precision mediump float;varying vec3 vCol,vNor,vW;uniform vec3 uLight,uCam,uFog;
@@ -215,7 +238,6 @@ const uLight = gl.getUniformLocation(prog, 'uLight');
 const uCam = gl.getUniformLocation(prog, 'uCam');
 const uFog = gl.getUniformLocation(prog, 'uFog');
 
-// World
 const P = [], N = [], C = [];
 const wallBoxes = [], flatPlatforms = [];
 let acidY = -999, skyCol = [0.45, 0.65, 0.95];
@@ -256,6 +278,21 @@ function buildBase() {
   return {sky: [0.45, 0.65, 0.95], spawn: {x:0, z:0, y:1}};
 }
 
+function buildMegaObby(hard = false) {
+  acidY = -999;
+  box(0, -0.5, 0, 8, 0.5, 8, [0.36, 0.66, 0.3]);
+  let z = -6, y = 0.3;
+  const steps = hard ? 45 : 28;
+  for (let i = 0; i < steps; i++) {
+    z -= hard ? 1.6 : 1.9;
+    y += hard ? 0.35 : 0.22;
+    const w = hard ? 0.9 : 1.4;
+    box((i % 2 === 0 ? 1 : -1) * (hard ? 1.8 : 1.2), y, z, w, 0.25, w, hard ? [0.85, 0.25, 0.2] : [0.96, 0.76, 0.2]);
+  }
+  box(0, y + 1, z - 3, 3, 0.3, 3, [0.3, 0.9, 0.5]);
+  return {sky: hard ? [0.6, 0.4, 0.45] : [0.45, 0.65, 0.95], spawn: {x:0, z:0, y:1}};
+}
+
 function buildSwordHeights() {
   box(0, -8, 0, 90, 0.4, 90, [0.12, 0.65, 0.18], true);
   box(0, 6, 0, 4.5, 6, 4.5, [0.55, 0.45, 0.35]);
@@ -263,12 +300,21 @@ function buildSwordHeights() {
   return {sky: [0.4, 0.6, 0.85], spawn: {x:0, z:0, y:13.5}};
 }
 
+function buildCrossroad() {
+  acidY = -999;
+  box(0, -0.5, 0, 80, 0.5, 80, [0.22, 0.22, 0.24]);
+  box(0, 0.05, 0, 14, 0.05, 14, [0.5, 0.5, 0.5]);
+  return {sky: [0.5, 0.6, 0.8], spawn: {x:0, z:0, y:1}};
+}
+
 const GAMES = [
   {name: 'Песочница', ds: 'Дом, деревья и творчество', build: buildBase, ic: '🟩'},
-  {name: 'Битва на мечах', ds: 'Высоты + кислота + мечи', build: buildSwordHeights, ic: '🗡'}
+  {name: 'Obby Лёгкий', ds: 'Простая полоса препятствий', build: () => buildMegaObby(false), ic: '🏃'},
+  {name: 'Obby Сложный', ds: 'Сложная длинная полоса', build: () => buildMegaObby(true), ic: '🔥'},
+  {name: 'Битва на мечах', ds: 'Высоты + кислота + мечи', build: buildSwordHeights, ic: '🗡'},
+  {name: 'Crossroad', ds: 'Перекрёсток', build: buildCrossroad, ic: '🏙'}
 ];
 
-// Player
 const player = {
   x:0, y:1, z:0, vy:0, yaw:0, onGround:true, speed:6.8,
   walkPhase:0, walking:false, health:100, place:0, dead:false,
@@ -281,7 +327,6 @@ let chatLog = [], curSpawn = {x:0, y:1, z:0};
 let myUser = {nick: 'Player', nerixs: 100, nelsi: 50};
 let ws = null, authed = false, pending = null;
 
-// Dynamic
 let dPv = [], dNv = [], dCv = [];
 const dP = gl.createBuffer(), dN = gl.createBuffer(), dC = gl.createBuffer();
 
@@ -310,29 +355,16 @@ function drawR6(cx, cy, cz, yaw, walkPhase, walking) {
   const legCol = [0.12, 0.12, 0.16];
   const hatCol = [0.07, 0.07, 0.07];
 
-  // Тень
   lbox(cx, 0.02, cz, 0, 0, 0, 0, 0.7, 0.02, 0.7, [0.05, 0.05, 0.05]);
-
-  // Ноги
   lbox(cx, y, cz, yaw, -0.25, 0.5, sw * 0.4, 0.25, 1.0, 0.25, legCol);
   lbox(cx, y, cz, yaw, 0.25, 0.5, -sw * 0.4, 0.25, 1.0, 0.25, legCol);
-
-  // Торс
   lbox(cx, y, cz, yaw, 0, 1.5, 0, 0.5, 1.0, 0.25, torsoCol);
-
-  // Руки
   lbox(cx, y, cz, yaw, -0.75, 1.5, -sw * 0.3, 0.25, 1.0, 0.25, armCol);
   lbox(cx, y, cz, yaw, 0.75, 1.5, sw * 0.3, 0.25, 1.0, 0.25, armCol);
-
-  // Голова
   lbox(cx, y, cz, yaw, 0, 2.5, 0, 0.5, 0.5, 0.5, headCol);
-
-  // Глаза и рот
   lbox(cx, y, cz, yaw, -0.15, 2.58, 0.51, 0.09, 0.14, 0.03, [0.1, 0.1, 0.1]);
   lbox(cx, y, cz, yaw, 0.15, 2.58, 0.51, 0.09, 0.14, 0.03, [0.1, 0.1, 0.1]);
   lbox(cx, y, cz, yaw, 0, 2.37, 0.51, 0.22, 0.07, 0.03, [0.1, 0.1, 0.1]);
-
-  // Шляпа
   lbox(cx, y, cz, yaw, 0, 2.95, 0, 0.7, 0.12, 0.7, hatCol);
   lbox(cx, y, cz, yaw, 0, 3.2, 0, 0.4, 0.28, 0.4, hatCol);
   lbox(cx, y, cz, yaw, 0.4, 3.5, 0, 0.07, 0.35, 0.07, [0.93, 0.93, 0.9]);
@@ -365,7 +397,6 @@ function groundTop(px, pz, curY) {
   return best;
 }
 
-// Load game
 let bP, bN, bC, worldCount = 0;
 function loadGame(idx) {
   wallBoxes.length = 0;
@@ -395,8 +426,8 @@ function loadGame(idx) {
   });
 
   document.getElementById('deathScreen').classList.remove('on');
-  document.getElementById('bShoot').style.display = (idx === 1) ? 'block' : 'none';
-  if (idx === 1) playerHasSword = true;
+  document.getElementById('bShoot').style.display = (idx === 3) ? 'block' : 'none';
+  if (idx === 3) playerHasSword = true;
 
   document.getElementById('lbN').textContent = myUser.nick;
   chatLog = [];
@@ -404,7 +435,6 @@ function loadGame(idx) {
   toast('▶ ' + GAMES[idx].name);
 }
 
-// WebSocket
 function send(m) {
   if (ws && ws.readyState === 1) ws.send(JSON.stringify(m));
 }
@@ -428,10 +458,12 @@ function openWs(onopen) {
 
   ws.onopen = () => {
     authMsg('');
+    document.getElementById('srvSt').textContent = '✅ Подключено';
     if (onopen) onopen();
   };
   ws.onclose = () => {
     ws = null;
+    document.getElementById('srvSt').textContent = 'Отключено';
     if (!authed) authMsg('Нет соединения с сервером');
     else toast('Соединение потеряно');
     authed = false;
@@ -477,7 +509,6 @@ function handleMsg(m) {
   }
 }
 
-// Input
 const joy = document.getElementById('joy');
 const knob = joy.querySelector('.knob');
 let joyX = 0, joyY = 0, joyId = null;
@@ -539,7 +570,6 @@ document.getElementById('bShoot').onpointerdown = e => {
   if (playerHasSword) toast('⚔ Удар!');
 };
 
-// UI helpers
 function toast(t) {
   const el = document.getElementById('toast');
   el.textContent = t;
@@ -578,6 +608,7 @@ function showPlatform() {
   document.getElementById('platform').classList.add('on');
   running = false;
   renderGames();
+  renderTasks();
   document.getElementById('balanceNerixs').textContent = myUser.nerixs;
   document.getElementById('balanceNelsi').textContent = myUser.nelsi;
 }
@@ -605,7 +636,28 @@ function renderGames() {
   });
 }
 
-// Auth buttons
+function renderTasks() {
+  const el = document.getElementById('tasksList');
+  const day = new Date().toDateString();
+  let s = JSON.parse(localStorage.getItem('nerix_quests') || '{}');
+  if (s.day !== day) {
+    s = {day, list: [
+      {name: 'Зайти в игру', reward: 10, done: true},
+      {name: 'Сыграть 2 матча', reward: 25, done: false},
+      {name: 'Пройти 200 метров', reward: 15, done: false},
+      {name: 'Сложный квест: убить 3 игрока', reward: 40, done: false}
+    ]};
+    localStorage.setItem('nerix_quests', JSON.stringify(s));
+  }
+  el.innerHTML = '';
+  s.list.forEach(t => {
+    const div = document.createElement('div');
+    div.style.cssText = 'background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center';
+    div.innerHTML = `<div><b>${t.name}</b><br><small style="opacity:.6">+${t.reward} 💧</small></div><div>${t.done ? '✅' : '⬜'}</div>`;
+    el.appendChild(div);
+  });
+}
+
 document.getElementById('btnAuth').onclick = () => doAuth('login');
 document.getElementById('btnReg').onclick = () => doAuth('register');
 document.getElementById('btnGuest').onclick = () => {
@@ -615,7 +667,6 @@ document.getElementById('btnGuest').onclick = () => {
   toast('Офлайн-режим');
 };
 
-// Auto login
 (function() {
   const n = localStorage.getItem('nerix_nick');
   const p = localStorage.getItem('nerix_pass');
@@ -627,7 +678,6 @@ document.getElementById('btnGuest').onclick = () => {
   }
 })();
 
-// Pause menu
 document.getElementById('btnMenu').onclick = () => {
   document.getElementById('pauseMenu').classList.add('on');
   gamePaused = true;
@@ -679,17 +729,16 @@ document.getElementById('ppClose').onclick = () => {
   document.getElementById('playersPanel').classList.remove('on');
 };
 
-// Tabs
 document.querySelectorAll('.tab').forEach(t => {
   t.onclick = () => {
     document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
     document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
     t.classList.add('on');
-    document.getElementById('page-' + t.dataset.page).classList.add('on');
+    const page = document.getElementById('page-' + t.dataset.page);
+    if (page) page.classList.add('on');
   };
 });
 
-// Matrix
 function matLook(ex, ey, ez, cx, cy, cz) {
   let fx = cx-ex, fy = cy-ey, fz = cz-ez;
   const l = Math.hypot(fx, fy, fz) || 1;
@@ -717,14 +766,12 @@ function persp(fov, asp, n, f) {
   ]);
 }
 
-// Main loop
 let last = performance.now();
 function loop(t) {
   const dt = Math.min(0.033, (t - last) / 1000);
   last = t;
 
   if (running && !gamePaused) {
-    // Movement
     if (Math.hypot(joyX, joyY) > 0.15 && !player.dead) {
       const fx = -Math.sin(camYaw), fz = -Math.cos(camYaw);
       const rx = -fz, rz = fx;
@@ -745,7 +792,6 @@ function loop(t) {
       player.walking = false;
     }
 
-    // Physics
     player.vy -= 24 * dt;
     player.y += player.vy * dt;
     const gy = groundTop(player.x, player.z, player.y);
@@ -757,7 +803,6 @@ function loop(t) {
       player.onGround = false;
     }
 
-    // Death
     if (acidY > -900 && player.y < acidY + 0.5 && player.spawnProt <= 0 && !player.dead) {
       player.dead = true;
       player.respawnAt = performance.now() + 2000;
@@ -785,7 +830,6 @@ function loop(t) {
       document.getElementById('spawnProt').style.display = 'none';
     }
 
-    // Render
     const cx = player.x + Math.sin(camYaw) * camDistance;
     const cz = player.z + Math.cos(camYaw) * camDistance;
     const cy = player.y + 2.4 + Math.sin(camPitch) * camDistance * 0.4;
@@ -803,7 +847,6 @@ function loop(t) {
     gl.uniform3f(uCam, cx, cy, cz);
     gl.uniform3f(uFog, skyCol[0], skyCol[1], skyCol[2]);
 
-    // World
     gl.bindBuffer(gl.ARRAY_BUFFER, bP);
     gl.enableVertexAttribArray(aPos);
     gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
@@ -815,7 +858,6 @@ function loop(t) {
     gl.vertexAttribPointer(aCol, 3, gl.FLOAT, false, 0, 0);
     gl.drawArrays(gl.TRIANGLES, 0, worldCount);
 
-    // Player
     dPv = []; dNv = []; dCv = [];
     if (!player.dead) {
       drawR6(player.x, player.y, player.z, player.yaw, player.walkPhase, player.walking);
