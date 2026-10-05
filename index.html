@@ -415,6 +415,11 @@ function playCustom(g0,test,room='1'){
   chatLog=[];renderChat();toast('▶ '+g.name);running=true;gamePaused=false;
   if(!test)enterPlace('g'+g.id,room);gid('gamePage').classList.remove('on');
 }
+ 
+// === ФИКС МУЛЬТИПЛЕЕРА: используем myPlace без # ===
+let myPlace=null;
+function enterPlace(key,room){myPlace=String(key);curPlace=String(key)+'#'+(room||'1');for(const k in remotes)delete remotes[k];send({type:'visit',place:myPlace});}
+ 
 const SIZES=[['Плита',2,0.25,2],['Куб',1,1,1],['Стена',3,1.5,0.5],['Большая плита',5,0.25,5],['Столб',0.5,3,0.5],['Ступень',1,0.25,1]];
 const COLS=[[0.85,0.25,0.25],[0.95,0.75,0.25],[0.3,0.75,0.4],[0.3,0.6,0.9],[0.6,0.4,0.85],[0.95,0.95,0.95],[0.25,0.25,0.3],[0.55,0.38,0.25]];
 const ed={game:null,tx:0,tz:0,layer:0,tool:'place',size:0,color:0,acid:false,cam:[0,10,10],undo:[]};
@@ -471,6 +476,22 @@ function edTap(sx,sy){
   else c[1]=ed.layer+nh[1];
   if(g.blocks.length>=700){toast('Лимит блоков (700)');return;}
   pushUndo();g.blocks.push({x:c[0],y:c[1],z:c[2],sx:nh[0],sy:nh[1],sz:nh[2],c:ed.acid?[0.3,1,0.3]:COLS[ed.color],t:ed.acid?'acid':'s'});rebuildEdit();
+}
+function drawPass(){
+  gl.uniform1f(uWorld,1);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bP);gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bN);gl.enableVertexAttribArray(aNor);gl.vertexAttribPointer(aNor,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bC);gl.enableVertexAttribArray(aCol);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,0,0);
+  gl.disableVertexAttribArray(aUV);gl.vertexAttrib2f(aUV,-1,-1);
+  gl.drawArrays(gl.TRIANGLES,0,worldCount);
+}
+function drawDyn(){
+  uploadDyn();gl.uniform1f(uWorld,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,dP);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,dN);gl.vertexAttribPointer(aNor,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,dC);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,0,0);
+  gl.enableVertexAttribArray(aUV);gl.bindBuffer(gl.ARRAY_BUFFER,dU);gl.vertexAttribPointer(aUV,2,gl.FLOAT,false,0,0);
+  gl.drawArrays(gl.TRIANGLES,0,dPv.length/3);
 }
 function editFrame(dt){
   if(Math.hypot(joyX,joyY)>0.15){const fx=-Math.sin(camYaw),fz=-Math.cos(camYaw),rx=-fz,rz=fx;ed.tx+=(fx*joyY+rx*joyX)*14*dt;ed.tz+=(fz*joyY+rz*joyX)*14*dt;}
@@ -579,7 +600,6 @@ function srvStatus(t){const e=gid('srvSt');if(e)e.textContent=t;}
 function authMsg(t){gid('authMsg').textContent=t;}
 function wsUrl(){return srvUrl||(location.protocol.indexOf('http')===0?(location.protocol==='https:'?'wss://':'ws://')+location.host:'');}
 function addRemote(nick){return remotes[nick]=remotes[nick]||{nick:String(nick).slice(0,16),x:0,y:0,z:0,yaw:0,ph:0,w:false,tx:0,ty:0,tz:0,tyaw:0,first:true,equipped:{}};}
-function enterPlace(key,room){curPlace=key+'#'+(room||'1');for(const k in remotes)delete remotes[k];send({type:'visit',place:key});}
 function openWs(onopen){
   const url=wsUrl();if(!url){authMsg('Укажи адрес сервера');return;}
   if(ws){try{ws.onclose=null;ws.close();}catch(e){}ws=null;}
@@ -618,11 +638,16 @@ function handleMsg(m){
     case 'userUpdate':applyUser(m.user);break;
     case 'players':{
       lastPlayers=m.list||[];if(gid('gamePage').classList.contains('on'))renderRooms();
-      if(!running||mode!=='play'||studioTest)break;const seen={};
-      const myMap=String(curPlace||'').split('#')[0];
-for(const p of m.list||[]){if(p.nick===myUser.nick||String(p.place)!==myMap)continue;seen[p.nick]=1;
-        const r=remotes[p.nick]||addRemote(p.nick);r.tx=+p.x||0;r.ty=+p.y||0;r.tz=+p.z||0;r.tyaw=+p.yaw||0;r.w=!!p.walking;r.equipped=p.equipped||{};
-        if(r.first){r.x=r.tx;r.y=r.ty;r.z=r.tz;r.yaw=r.tyaw;r.first=false;}}
+      if(!running||mode!=='play'||studioTest)break;
+      const seen={};
+      for(const p of m.list||[]){
+        if(p.nick===myUser.nick)continue;
+        if(myPlace!=null&&String(p.place)!==String(myPlace))continue;
+        seen[p.nick]=1;
+        const r=remotes[p.nick]||addRemote(p.nick);
+        r.tx=+p.x||0;r.ty=+p.y||0;r.tz=+p.z||0;r.tyaw=+p.yaw||0;r.w=!!p.walking;r.equipped=p.equipped||{};
+        if(r.first){r.x=r.tx;r.y=r.ty;r.z=r.tz;r.yaw=r.tyaw;r.first=false;}
+      }
       for(const k in remotes)if(!seen[k])delete remotes[k];
       break;}
     case 'chat':
@@ -707,8 +732,6 @@ function updateTags(view,proj){
     el.style.display='block';el.textContent=it.nick;el.style.left=p[0]+'px';el.style.top=p[1]+'px';}
   for(const id in tagEls)if(!seen[id]){tagEls[id].remove();delete tagEls[id];}
 }
- 
-// Цвет футболки из equipped
 function equippedShirtColor(eq){
   const id=eq&&eq.shirt;if(!id)return null;
   const it=itemById(id);if(!it)return null;
@@ -716,7 +739,6 @@ function equippedShirtColor(eq){
 }
 function equippedHat(eq){const id=eq&&eq.hat;return id?itemById(id):null;}
 function equippedFace(eq){const id=eq&&eq.face;return id?itemById(id):null;}
- 
 function drawR6(cx,cy,cz,yaw,ph,walk,emote,sword,equipped){
   const sw=walk?Math.sin(ph)*0.3:0;
   const y=cy+(walk?Math.abs(Math.sin(ph*2))*0.02:0);
@@ -732,14 +754,12 @@ function drawR6(cx,cy,cz,yaw,ph,walk,emote,sword,equipped){
   B(0,1.16,0,0.16,0.16,0.16,sk);
   B(-0.05,1.19,0.165,0.025,0.025,0.01,[0.1,0.1,0.1]);
   B(0.05,1.19,0.165,0.025,0.025,0.01,[0.1,0.1,0.1]);
-  // шапка
   const hat=equippedHat(equipped);
   if(hat){
-    B(0,1.32,0,0.19,0.04,0.19,hat.color);       // подложка
-    B(0,1.36,0,0.15,0.05,0.15,hat.color);       // тело шапки
+    B(0,1.32,0,0.19,0.04,0.19,hat.color);
+    B(0,1.36,0,0.15,0.05,0.15,hat.color);
     if(hat.id==='crown'){B(-0.10,1.44,0,0.03,0.06,0.03,[1,0.85,0.1]);B(0,1.46,0,0.03,0.08,0.03,[1,0.85,0.1]);B(0.10,1.44,0,0.03,0.06,0.03,[1,0.85,0.1]);}
   }
-  // очки
   const face=equippedFace(equipped);
   if(face&&face.id==='sunglasses'){B(0,1.20,0.17,0.15,0.04,0.02,[0.05,0.05,0.05]);}
   if(sword)B(0.45,0.86,0.1,0.04,0.04,0.55,[0.75,0.75,0.8]);
@@ -761,22 +781,6 @@ function groundTop(px,pz,cy){
     if(Math.abs(px-p.x)<p.hw+0.5&&Math.abs(pz-p.z)<p.hd+0.5&&p.top<=cy+0.8&&p.top>best)best=p.top;
   return best;
 }
-function drawPass(){
-  gl.uniform1f(uWorld,1);
-  gl.bindBuffer(gl.ARRAY_BUFFER,bP);gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);
-  gl.bindBuffer(gl.ARRAY_BUFFER,bN);gl.enableVertexAttribArray(aNor);gl.vertexAttribPointer(aNor,3,gl.FLOAT,false,0,0);
-  gl.bindBuffer(gl.ARRAY_BUFFER,bC);gl.enableVertexAttribArray(aCol);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,0,0);
-  gl.disableVertexAttribArray(aUV);gl.vertexAttrib2f(aUV,-1,-1);
-  gl.drawArrays(gl.TRIANGLES,0,worldCount);
-}
-function drawDyn(){
-  uploadDyn();gl.uniform1f(uWorld,0);
-  gl.bindBuffer(gl.ARRAY_BUFFER,dP);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);
-  gl.bindBuffer(gl.ARRAY_BUFFER,dN);gl.vertexAttribPointer(aNor,3,gl.FLOAT,false,0,0);
-  gl.bindBuffer(gl.ARRAY_BUFFER,dC);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,0,0);
-  gl.enableVertexAttribArray(aUV);gl.bindBuffer(gl.ARRAY_BUFFER,dU);gl.vertexAttribPointer(aUV,2,gl.FLOAT,false,0,0);
-  gl.drawArrays(gl.TRIANGLES,0,dPv.length/3);
-}
  
 let bP,bN,bC,worldCount=0;
 function loadGame(idx,room='1'){
@@ -786,9 +790,10 @@ function loadGame(idx,room='1'){
   bP=buf(P);bN=buf(N);bC=buf(C);worldCount=P.length/3;
   Object.assign(player,{x:data.spawn.x,z:data.spawn.z,y:data.spawn.y,vy:0,health:100,dead:false,spawnProt:4,place:idx});
   document.getElementById('deathScreen').classList.remove('on');
-  document.getElementById('bShoot').style.display=(idx===3)?'block':'none';
-  if(idx===3)playerHasSword=true;
-  document.getElementById('s1').innerHTML='<i>1</i>'+(idx===3?'🗡':'🖐');
+  const SWORD_MAPS=[3,4];
+  document.getElementById('bShoot').style.display=SWORD_MAPS.includes(idx)?'block':'none';
+  if(SWORD_MAPS.includes(idx))playerHasSword=true;
+  document.getElementById('s1').innerHTML='<i>1</i>'+(SWORD_MAPS.includes(idx)?'🗡':'🖐');
   document.getElementById('lbN').textContent=myUser.nick;
   chatLog=[];renderChat();toast('▶ '+g.name);playTone(440,0.1);camDistance=7;camPitch=0.35;enterPlace(idx,room);
 }
@@ -837,7 +842,7 @@ function showPlatform(){
   document.getElementById('hud').classList.remove('on');document.getElementById('platform').classList.add('on');
   running=false;mode='play';studioTest=false;document.body.classList.remove('ed');
   gid('nametags').innerHTML='';for(const k in tagEls)delete tagEls[k];
-  for(const k in remotes)delete remotes[k];curPlace=null;
+  for(const k in remotes)delete remotes[k];curPlace=null;myPlace=null;
   send({type:'visit',place:null});
   send({type:'games'});renderFriends();renderCatalog();
   renderGames();renderTasks();renderStudio();updBal();
@@ -925,7 +930,7 @@ function loop(t){
     if(player.spawnProt<=0&&!player.dead)for(const h of hazards)if(Math.abs(player.x-h.x)<h.sx&&Math.abs(player.z-h.z)<h.sz&&player.y<h.y+h.sy&&player.y+1.5>h.y-h.sy){die();break;}
     for(const id in remotes){const r=remotes[id];if(r.first)continue;const k=Math.min(1,dt*12);r.x+=(r.tx-r.x)*k;r.y+=(r.ty-r.y)*k;r.z+=(r.tz-r.z)*k;
       let d=r.tyaw-r.yaw;d=Math.atan2(Math.sin(d),Math.cos(d));r.yaw+=d*k;if(r.w)r.ph+=dt*9;}
-    if(ws&&ws.readyState===1&&t-lastSend>70&&!studioTest){lastSend=t;send({type:'move',x:+player.x.toFixed(2),y:+player.y.toFixed(2),z:+player.z.toFixed(2),yaw:+player.yaw.toFixed(2),walking:!!player.walking,walkPhase:+player.walkPhase.toFixed(2),place:curPlace,health:Math.round(player.health)});}
+    if(ws&&ws.readyState===1&&t-lastSend>70&&!studioTest){lastSend=t;send({type:'move',x:+player.x.toFixed(2),y:+player.y.toFixed(2),z:+player.z.toFixed(2),yaw:+player.yaw.toFixed(2),walking:!!player.walking,walkPhase:+player.walkPhase.toFixed(2),place:myPlace,health:Math.round(player.health)});}
  
     let cx=player.x+Math.sin(camYaw)*camDistance,cz=player.z+Math.cos(camYaw)*camDistance,cy=player.y+2.3+Math.sin(camPitch)*camDistance*0.4;
     {const tx=player.x,ty=player.y+1.4,tz=player.z,m=0.3;let te=1;
