@@ -467,7 +467,6 @@ gid('edTest').onclick=()=>playCustom(ed.game,true);
 gid('edSave').onclick=()=>{saveCustom();toast('💾 Сохранено');};
 gid('edPub').onclick=()=>{saveCustom();publish(ed.game);};
 gid('edExit').onclick=()=>{saveCustom();showPlatform();};
-// ---- Multiplayer ----
 let authed=false,pending=null,curPlace=null,myPlace=null;
 function send(m){if(ws&&ws.readyState===1)ws.send(JSON.stringify(m));}
 function srvStatus(t){const e=gid('srvSt');if(e)e.textContent=t;}
