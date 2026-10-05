@@ -10,37 +10,46 @@ html,body{height:100%;overflow:hidden;background:#0d0d0d;font-family:-apple-syst
 canvas#c{width:100%;height:100%;display:block}
 #ui{position:fixed;inset:0;pointer-events:none;z-index:10}
 #hud{display:none}#hud.on{display:block}
-#topbar{position:absolute;top:10px;left:10px;display:flex;gap:6px;pointer-events:auto}
-#topbar button{background:#0b1220cc;border:1px solid #5eead466;color:#e6fffb;font:600 13px Arial;padding:8px 14px;border-radius:12px;cursor:pointer}
-.chip{position:absolute;top:56px;left:10px;background:#0008;border-radius:6px;padding:3px 8px;font-size:11px}
-#lb{position:absolute;top:10px;right:10px;width:min(250px,48vw);background:#0b1220cc;border:1px solid #ff9a4d88;border-radius:12px;font:600 13px Arial;padding:6px 10px}
+
+#topbar{position:absolute;top:10px;left:10px;display:flex;gap:6px;pointer-events:auto;z-index:5}
+#topbar button{background:#0b1220cc;border:1px solid #5eead466;color:#e6fffb;font:600 12px Arial;padding:6px 10px;border-radius:10px;cursor:pointer}
+
+.chip{position:absolute;top:52px;left:10px;background:#0008;border-radius:6px;padding:3px 8px;font-size:11px}
+
+#lb{position:absolute;top:10px;right:10px;width:min(160px,40vw);background:#0b1220cc;border:1px solid #ff9a4d88;border-radius:10px;font:600 12px Arial;padding:5px 8px;z-index:5}
 #lb .r{display:flex}#lb .r span{flex:1;text-align:center}#lb .r span:first-child{flex:2;text-align:left}
-#lb .h{color:#9fb3c8;font-size:11px}#lb #lbN{color:#ff9a4d}
-#hp{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:min(180px,34vw);height:18px;background:#0b1220cc;border:1px solid #fff3;border-radius:10px;overflow:hidden}
+#lb .h{color:#9fb3c8;font-size:10px}#lb #lbN{color:#ff9a4d}
+
+#hp{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:min(140px,30vw);height:16px;background:#0b1220cc;border:1px solid #fff3;border-radius:8px;overflow:hidden;z-index:4}
 #hpf{height:100%;width:100%;background:linear-gradient(90deg,#34d399,#5eead4);transition:width .2s}
-#hpt{position:absolute;inset:0;text-align:center;font:700 12px/16px Arial;color:#fff;text-shadow:0 1px 2px #000}
+#hpt{position:absolute;inset:0;text-align:center;font:700 11px/16px Arial;color:#fff;text-shadow:0 1px 2px #000}
+
 #joy{position:absolute;left:20px;bottom:70px;width:120px;height:120px;border-radius:50%;background:#fff1;border:2px solid #fff3;pointer-events:auto;touch-action:none}
 #joy .knob{position:absolute;left:50%;top:50%;width:54px;height:54px;border-radius:50%;background:#9aa0a6cc;transform:translate(-50%,-50%)}
 #bJump,#bShoot{position:absolute;width:70px;height:70px;border-radius:50%;border:2px solid #fff4;background:#0008;color:#fff;font-size:24px;font-weight:bold;pointer-events:auto;touch-action:none}
 #bJump{right:20px;bottom:70px}#bShoot{right:100px;bottom:70px;display:none}
-#chatBtn{position:absolute;left:10px;top:96px;width:40px;height:40px;border-radius:50%;border:2px solid #fff4;background:#000a;color:#fff;font-size:17px;pointer-events:auto}
-#chatPanel{position:fixed;left:12px;top:146px;width:min(300px,85vw);height:220px;background:#000d;border:1px solid #fff3;border-radius:12px;z-index:20;display:none;flex-direction:column;pointer-events:auto}
+#chatBtn{position:absolute;left:10px;top:90px;width:40px;height:40px;border-radius:50%;border:2px solid #fff4;background:#000a;color:#fff;font-size:17px;pointer-events:auto}
+
+#chatPanel{position:fixed;left:12px;top:140px;width:min(300px,85vw);height:220px;background:#000d;border:1px solid #fff3;border-radius:12px;z-index:20;display:none;flex-direction:column;pointer-events:auto}
 #chatPanel.on{display:flex}
 #chatMsgs{flex:1;overflow-y:auto;padding:8px 12px;font-size:13px;line-height:1.4}
 #chatMsgs .from{color:#7dff9b;font-weight:bold}
 #chatRow{display:flex;gap:6px;padding:8px;border-top:1px solid #fff2}
 #chatInput{flex:1;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;padding:8px;color:#fff;font-size:14px;outline:none;margin:0}
 #chatSend{background:#9aa0a6;color:#000;border:none;border-radius:8px;padding:8px 12px;font-weight:bold}
+
 #spawnProt{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#0a0a;border:1px solid #4f4;color:#4f4;padding:6px 14px;border-radius:20px;font-size:13px;display:none;z-index:15}
 #toast{position:fixed;left:50%;top:80px;transform:translateX(-50%);background:#1a1a1a;border:1px solid #f0c040;border-radius:12px;padding:10px 18px;color:#f0c040;font-size:14px;z-index:30;opacity:0;transition:.3s;pointer-events:none}
 #toast.on{opacity:1}
 #deathScreen{position:fixed;inset:0;background:#8b0000e6;z-index:25;display:none;flex-direction:column;align-items:center;justify-content:center}
 #deathScreen.on{display:flex}#deathScreen h1{font-size:52px;letter-spacing:6px}
+
 #pauseMenu,#settingsPanel,#playersPanel{position:fixed;inset:0;background:#000e;z-index:22;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:12px}
 #pauseMenu.on,#settingsPanel.on,#playersPanel.on{display:flex}
 .pmBtn{width:100%;max-width:340px;padding:16px;background:#1c1c1c;color:#fff;border:1px solid #2a2a2a;border-radius:14px;font-size:16px;font-weight:bold;cursor:pointer}
 .pmBtn.danger{color:#e05050}.pmBtn.ghost{background:transparent;color:#9aa0a6}
 .settingRow{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:340px;padding:12px 16px;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:12px;margin:6px 0}
+
 #platform{position:fixed;inset:0;background:#0d0d0d;z-index:10;display:none;flex-direction:column}
 #platform.on{display:flex}
 #pTop{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#141414;border-bottom:1px solid #222;flex-wrap:wrap;gap:8px}
@@ -58,18 +67,16 @@ canvas#c{width:100%;height:100%;display:block}
 .gameCard .body{padding:12px}.gameCard .nm{font-weight:bold;margin-bottom:4px}
 .gameCard .ds{font-size:12px;opacity:.55;margin-bottom:8px}
 .playBtn{background:#9aa0a6;color:#000;border:none;border-radius:8px;padding:8px;width:100%;font-weight:bold}
+
 #auth{position:fixed;inset:0;background:linear-gradient(135deg,#141414,#1e1e1e);z-index:30;display:flex;align-items:center;justify-content:center;padding:20px}
 #auth .box{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:20px;padding:32px;max-width:400px;width:100%}
 #auth .logo{font-size:40px;letter-spacing:6px;text-align:center;margin-bottom:8px}
 .btn{padding:12px;background:#9aa0a6;color:#000;border:none;border-radius:10px;font-weight:bold;width:100%;cursor:pointer;font-size:15px}
 input{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12px;color:#fff;width:100%;font-size:16px;outline:none;margin-bottom:10px}
-#nametags{position:fixed;inset:0;pointer-events:none;z-index:6}
-.name{position:absolute;transform:translate(-50%,-100%);background:#000a;padding:2px 8px;border-radius:6px;font-size:12px;white-space:nowrap;color:#fff}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="nametags"></div>
 <div id="ui">
   <div id="hud">
     <div id="topbar">
@@ -78,10 +85,10 @@ input{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12p
     </div>
     <div class="chip" id="st">—</div>
     <div id="lb">
-      <div class="r h"><span>Игрок</span><span>Убийства</span><span>Падения</span></div>
+      <div class="r h"><span>Игрок</span><span>К</span><span>П</span></div>
       <div class="r"><span id="lbN">Player</span><span id="lbK">0</span><span id="lbW">0</span></div>
     </div>
-    <div id="hp"><div id="hpf"></div><span id="hpt">100</span></div>
+    <div id="hp"><div id="hpf"></div><span id="hpt">❤ 100</span></div>
     <div id="spawnProt">ЗАЩИТА СПАВНА</div>
     <div id="joy"><div class="knob"></div></div>
     <button id="bShoot">⚔</button>
@@ -113,7 +120,6 @@ input{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12p
 <div id="settingsPanel">
   <h2 style="color:#9aa0a6;margin-bottom:12px">НАСТРОЙКИ</h2>
   <div class="settingRow"><label>Чувствительность</label><input type="range" id="sensRange" min="3" max="14" value="6" style="width:110px"></div>
-  <div class="settingRow"><label>Музыка</label><input type="checkbox" id="chkMusic" checked></div>
   <button class="pmBtn ghost" id="settingsClose">⬅ НАЗАД</button>
 </div>
 
@@ -153,35 +159,12 @@ input{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12p
       <div class="tab" data-page="server">🌐 Сервер</div>
       <div class="tab" data-page="avatar">🧍 Аватар</div>
     </div>
-
-    <div class="page on" id="page-games">
-      <h2>Игры</h2>
-      <div class="grid" id="gamesGrid"></div>
-    </div>
-    <div class="page" id="page-tasks">
-      <h2>Ежедневные квесты</h2>
-      <div id="tasksList"></div>
-    </div>
-    <div class="page" id="page-friends">
-      <h2>Друзья</h2>
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        <input id="inpFriend" placeholder="Ник друга" style="flex:1;margin:0">
-        <button class="btn" style="width:auto;padding:10px 16px" id="btnAddFriend">Добавить</button>
-      </div>
-      <div id="friendsList"><div style="opacity:.6">Пока нет друзей</div></div>
-    </div>
-    <div class="page" id="page-studio">
-      <h2>Nerix Studio</h2>
-      <div style="opacity:.7;margin-top:12px">Редактор карт скоро будет доступен</div>
-    </div>
-    <div class="page" id="page-server">
-      <h2>Сервер</h2>
-      <div id="srvSt" style="margin:10px 0;opacity:.8">Подключение...</div>
-    </div>
-    <div class="page" id="page-avatar">
-      <h2>Аватар</h2>
-      <div style="opacity:.7">Скоро больше кастомизации</div>
-    </div>
+    <div class="page on" id="page-games"><h2>Игры</h2><div class="grid" id="gamesGrid"></div></div>
+    <div class="page" id="page-tasks"><h2>Ежедневные квесты</h2><div id="tasksList"></div></div>
+    <div class="page" id="page-friends"><h2>Друзья</h2><div id="friendsList" style="opacity:.6">Пока нет друзей</div></div>
+    <div class="page" id="page-studio"><h2>Nerix Studio</h2><div style="opacity:.7;margin-top:12px">Редактор скоро будет доступен</div></div>
+    <div class="page" id="page-server"><h2>Сервер</h2><div id="srvSt" style="margin:10px 0;opacity:.8">Подключение...</div></div>
+    <div class="page" id="page-avatar"><h2>Аватар</h2><div style="opacity:.7">Скоро больше кастомизации</div></div>
   </div>
 </div>
 
@@ -189,11 +172,8 @@ input{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12p
 const SERVER_URL = 'wss://nerix-server.onrender.com';
 
 const canvas = document.getElementById('c');
-const gl = canvas.getContext('webgl', {antialias: true});
-if (!gl) {
-  document.body.innerHTML = '<p style="color:#fff;padding:40px">WebGL не поддерживается</p>';
-  throw 0;
-}
+const gl = canvas.getContext('webgl', {antialias:true});
+if (!gl) { document.body.innerHTML = '<p style="color:#fff;padding:40px">WebGL не поддерживается</p>'; throw 0; }
 
 let dpr = 1;
 function resize() {
@@ -217,12 +197,7 @@ void main(){
   col=mix(col,uFog,fog*0.8);
   gl_FragColor=vec4(col,1.0);
 }`;
-function compile(type, src) {
-  const s = gl.createShader(type);
-  gl.shaderSource(s, src);
-  gl.compileShader(s);
-  return s;
-}
+function compile(type, src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
 const prog = gl.createProgram();
 gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
 gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
@@ -238,11 +213,11 @@ const uLight = gl.getUniformLocation(prog, 'uLight');
 const uCam = gl.getUniformLocation(prog, 'uCam');
 const uFog = gl.getUniformLocation(prog, 'uFog');
 
-const P = [], N = [], C = [];
-const wallBoxes = [], flatPlatforms = [];
-let acidY = -999, skyCol = [0.45, 0.65, 0.95];
+const P=[], N=[], C=[];
+const wallBoxes=[], flatPlatforms=[];
+let acidY=-999, skyCol=[0.45,0.65,0.95];
 
-const FACES = [
+const FACES=[
   [[0,0,-1],[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1]],
   [[0,0,1],[-1,-1,1],[-1,1,1],[1,1,1],[1,-1,1]],
   [[-1,0,0],[-1,-1,1],[-1,1,1],[-1,1,-1],[-1,-1,-1]],
@@ -251,635 +226,403 @@ const FACES = [
   [[0,1,0],[-1,1,-1],[1,1,-1],[1,1,1],[-1,1,1]]
 ];
 
-function box(x, y, z, sx, sy, sz, col, isAcid = false) {
-  for (const f of FACES) {
-    const n = f[0], v = f.slice(1);
-    for (const i of [0,1,2,0,2,3]) {
-      P.push(x + v[i][0]*sx, y + v[i][1]*sy, z + v[i][2]*sz);
-      N.push(n[0], n[1], n[2]);
-      C.push(col[0], col[1], col[2]);
+function box(x,y,z,sx,sy,sz,col,isAcid=false){
+  for(const f of FACES){
+    const n=f[0],v=f.slice(1);
+    for(const i of [0,1,2,0,2,3]){
+      P.push(x+v[i][0]*sx,y+v[i][1]*sy,z+v[i][2]*sz);
+      N.push(n[0],n[1],n[2]);C.push(col[0],col[1],col[2]);
     }
   }
-  if (isAcid) { acidY = y + sy; return; }
-  if (sy > 0.6) wallBoxes.push({x, z, hw: sx+0.1, hd: sz+0.1});
-  if (sy <= 1.6) flatPlatforms.push({x, z, hw: sx+0.15, hd: sz+0.15, top: y+sy});
+  if(isAcid){acidY=y+sy;return;}
+  if(sy>0.6)wallBoxes.push({x,z,hw:sx+0.1,hd:sz+0.1});
+  if(sy<=1.6)flatPlatforms.push({x,z,hw:sx+0.15,hd:sz+0.15,top:y+sy});
 }
 
-function buildBase() {
-  acidY = -999;
-  box(0, -0.5, 0, 40, 0.5, 40, [0.3, 0.62, 0.52]);
-  for (let i = 0; i < 12; i++) {
-    const a = i / 12 * Math.PI * 2, r = 18;
-    box(Math.cos(a)*r, 1.5, Math.sin(a)*r, 2, 1.5, 2, [0.55, 0.4, 0.3]);
+function buildBase(){
+  acidY=-999;
+  box(0,-0.5,0,40,0.5,40,[0.3,0.62,0.52]);
+  for(let i=0;i<12;i++){
+    const a=i/12*Math.PI*2,r=18;
+    box(Math.cos(a)*r,1.5,Math.sin(a)*r,2,1.5,2,[0.55,0.4,0.3]);
   }
-  box(0, 0.3, 12, 4, 0.3, 4, [0.9, 0.75, 0.3]);
-  box(8, 1.5, 8, 3, 0.3, 3, [0.4, 0.6, 0.9]);
-  box(-8, 2.2, 10, 2.5, 0.3, 2.5, [0.9, 0.4, 0.4]);
-  return {sky: [0.45, 0.65, 0.95], spawn: {x:0, z:0, y:1}};
+  box(0,0.3,12,4,0.3,4,[0.9,0.75,0.3]);
+  box(8,1.5,8,3,0.3,3,[0.4,0.6,0.9]);
+  box(-8,2.2,10,2.5,0.3,2.5,[0.9,0.4,0.4]);
+  return{sky:[0.45,0.65,0.95],spawn:{x:0,z:0,y:1}};
 }
-
-function buildMegaObby(hard = false) {
-  acidY = -999;
-  box(0, -0.5, 0, 8, 0.5, 8, [0.36, 0.66, 0.3]);
-  let z = -6, y = 0.3;
-  const steps = hard ? 45 : 28;
-  for (let i = 0; i < steps; i++) {
-    z -= hard ? 1.6 : 1.9;
-    y += hard ? 0.35 : 0.22;
-    const w = hard ? 0.9 : 1.4;
-    box((i % 2 === 0 ? 1 : -1) * (hard ? 1.8 : 1.2), y, z, w, 0.25, w, hard ? [0.85, 0.25, 0.2] : [0.96, 0.76, 0.2]);
+function buildMegaObby(hard=false){
+  acidY=-999;
+  box(0,-0.5,0,8,0.5,8,[0.36,0.66,0.3]);
+  let z=-6,y=0.3;const steps=hard?45:28;
+  for(let i=0;i<steps;i++){
+    z-=hard?1.6:1.9;y+=hard?0.35:0.22;const w=hard?0.9:1.4;
+    box((i%2===0?1:-1)*(hard?1.8:1.2),y,z,w,0.25,w,hard?[0.85,0.25,0.2]:[0.96,0.76,0.2]);
   }
-  box(0, y + 1, z - 3, 3, 0.3, 3, [0.3, 0.9, 0.5]);
-  return {sky: hard ? [0.6, 0.4, 0.45] : [0.45, 0.65, 0.95], spawn: {x:0, z:0, y:1}};
+  box(0,y+1,z-3,3,0.3,3,[0.3,0.9,0.5]);
+  return{sky:hard?[0.6,0.4,0.45]:[0.45,0.65,0.95],spawn:{x:0,z:0,y:1}};
+}
+function buildSwordHeights(){
+  box(0,-8,0,90,0.4,90,[0.12,0.65,0.18],true);
+  box(0,6,0,4.5,6,4.5,[0.55,0.45,0.35]);
+  box(0,12.6,0,8,0.6,8,[0.62,0.52,0.4]);
+  return{sky:[0.4,0.6,0.85],spawn:{x:0,z:0,y:13.5}};
+}
+function buildCrossroad(){
+  acidY=-999;
+  box(0,-0.5,0,80,0.5,80,[0.22,0.22,0.24]);
+  box(0,0.05,0,14,0.05,14,[0.5,0.5,0.5]);
+  return{sky:[0.5,0.6,0.8],spawn:{x:0,z:0,y:1}};
 }
 
-function buildSwordHeights() {
-  box(0, -8, 0, 90, 0.4, 90, [0.12, 0.65, 0.18], true);
-  box(0, 6, 0, 4.5, 6, 4.5, [0.55, 0.45, 0.35]);
-  box(0, 12.6, 0, 8, 0.6, 8, [0.62, 0.52, 0.4]);
-  return {sky: [0.4, 0.6, 0.85], spawn: {x:0, z:0, y:13.5}};
-}
-
-function buildCrossroad() {
-  acidY = -999;
-  box(0, -0.5, 0, 80, 0.5, 80, [0.22, 0.22, 0.24]);
-  box(0, 0.05, 0, 14, 0.05, 14, [0.5, 0.5, 0.5]);
-  return {sky: [0.5, 0.6, 0.8], spawn: {x:0, z:0, y:1}};
-}
-
-const GAMES = [
-  {name: 'Песочница', ds: 'Дом, деревья и творчество', build: buildBase, ic: '🟩'},
-  {name: 'Obby Лёгкий', ds: 'Простая полоса препятствий', build: () => buildMegaObby(false), ic: '🏃'},
-  {name: 'Obby Сложный', ds: 'Сложная длинная полоса', build: () => buildMegaObby(true), ic: '🔥'},
-  {name: 'Битва на мечах', ds: 'Высоты + кислота + мечи', build: buildSwordHeights, ic: '🗡'},
-  {name: 'Crossroad', ds: 'Перекрёсток', build: buildCrossroad, ic: '🏙'}
+const GAMES=[
+  {name:'Песочница',ds:'Дом, деревья и творчество',build:buildBase,ic:'🟩'},
+  {name:'Obby Лёгкий',ds:'Простая полоса препятствий',build:()=>buildMegaObby(false),ic:'🏃'},
+  {name:'Obby Сложный',ds:'Сложная длинная полоса',build:()=>buildMegaObby(true),ic:'🔥'},
+  {name:'Битва на мечах',ds:'Высоты + кислота + мечи',build:buildSwordHeights,ic:'🗡'},
+  {name:'Crossroad',ds:'Перекрёсток',build:buildCrossroad,ic:'🏙'}
 ];
 
-const player = {
-  x:0, y:1, z:0, vy:0, yaw:0, onGround:true, speed:6.8,
-  walkPhase:0, walking:false, health:100, place:0, dead:false,
-  respawnAt:0, spawnProt:0, wipeouts:0, kos:0
-};
+const player={x:0,y:1,z:0,vy:0,yaw:0,onGround:true,speed:6.8,walkPhase:0,walking:false,health:100,place:0,dead:false,respawnAt:0,spawnProt:0,wipeouts:0,kos:0};
+let camYaw=0,camPitch=0.35,camDistance=7,lookSens=0.006;
+let running=false,gamePaused=false,playerHasSword=false;
+let chatLog=[],curSpawn={x:0,y:1,z:0};
+let myUser={nick:'Player',nerixs:100,nelsi:50};
+let ws=null,authed=false,pending=null;
 
-let camYaw = 0, camPitch = 0.35, camDistance = 7, lookSens = 0.006;
-let running = false, gamePaused = false, playerHasSword = false;
-let chatLog = [], curSpawn = {x:0, y:1, z:0};
-let myUser = {nick: 'Player', nerixs: 100, nelsi: 50};
-let ws = null, authed = false, pending = null;
+let dPv=[],dNv=[],dCv=[];
+const dP=gl.createBuffer(),dN=gl.createBuffer(),dC=gl.createBuffer();
 
-let dPv = [], dNv = [], dCv = [];
-const dP = gl.createBuffer(), dN = gl.createBuffer(), dC = gl.createBuffer();
-
-function lbox(cx, cy, cz, yaw, x, y, z, sx, sy, sz, col) {
-  const cs = Math.cos(yaw), sn = Math.sin(yaw);
-  const X = cx + x*cs - z*sn, Z = cz + x*sn + z*cs, Y = cy + y;
-  for (const f of FACES) {
-    const n = f[0], v = f.slice(1);
-    for (const i of [0,1,2,0,2,3]) {
-      const vx = v[i][0]*sx, vy = v[i][1]*sy, vz = v[i][2]*sz;
-      dPv.push(X + vx*cs - vz*sn, Y + vy, Z + vx*sn + vz*cs);
-      dNv.push(n[0]*cs - n[2]*sn, n[1], n[0]*sn + n[2]*cs);
-      dCv.push(col[0], col[1], col[2]);
+function lbox(cx,cy,cz,yaw,x,y,z,sx,sy,sz,col){
+  const cs=Math.cos(yaw),sn=Math.sin(yaw);
+  const X=cx+x*cs-z*sn,Z=cz+x*sn+z*cs,Y=cy+y;
+  for(const f of FACES){
+    const n=f[0],v=f.slice(1);
+    for(const i of [0,1,2,0,2,3]){
+      const vx=v[i][0]*sx,vy=v[i][1]*sy,vz=v[i][2]*sz;
+      dPv.push(X+vx*cs-vz*sn,Y+vy,Z+vx*sn+vz*cs);
+      dNv.push(n[0]*cs-n[2]*sn,n[1],n[0]*sn+n[2]*cs);
+      dCv.push(col[0],col[1],col[2]);
     }
   }
 }
 
-function drawR6(cx, cy, cz, yaw, walkPhase, walking) {
-  const sw = walking ? Math.sin(walkPhase) * 0.35 : 0;
-  const bob = walking ? Math.abs(Math.sin(walkPhase * 2)) * 0.03 : 0;
-  const y = cy + bob;
+// Нормальный персонаж (простой R6 без кривой шляпы)
+function drawR6(cx,cy,cz,yaw,walkPhase,walking){
+  const sw=walking?Math.sin(walkPhase)*0.3:0;
+  const bob=walking?Math.abs(Math.sin(walkPhase*2))*0.025:0;
+  const y=cy+bob;
 
-  const headCol = [1.0, 0.84, 0.2];
-  const torsoCol = [0.78, 0.14, 0.14];
-  const armCol = [0.12, 0.12, 0.16];
-  const legCol = [0.12, 0.12, 0.16];
-  const hatCol = [0.07, 0.07, 0.07];
+  // Тень
+  lbox(cx,0.02,cz,0,0,0,0,0.55,0.02,0.55,[0.08,0.08,0.08]);
 
-  lbox(cx, 0.02, cz, 0, 0, 0, 0, 0.7, 0.02, 0.7, [0.05, 0.05, 0.05]);
-  lbox(cx, y, cz, yaw, -0.25, 0.5, sw * 0.4, 0.25, 1.0, 0.25, legCol);
-  lbox(cx, y, cz, yaw, 0.25, 0.5, -sw * 0.4, 0.25, 1.0, 0.25, legCol);
-  lbox(cx, y, cz, yaw, 0, 1.5, 0, 0.5, 1.0, 0.25, torsoCol);
-  lbox(cx, y, cz, yaw, -0.75, 1.5, -sw * 0.3, 0.25, 1.0, 0.25, armCol);
-  lbox(cx, y, cz, yaw, 0.75, 1.5, sw * 0.3, 0.25, 1.0, 0.25, armCol);
-  lbox(cx, y, cz, yaw, 0, 2.5, 0, 0.5, 0.5, 0.5, headCol);
-  lbox(cx, y, cz, yaw, -0.15, 2.58, 0.51, 0.09, 0.14, 0.03, [0.1, 0.1, 0.1]);
-  lbox(cx, y, cz, yaw, 0.15, 2.58, 0.51, 0.09, 0.14, 0.03, [0.1, 0.1, 0.1]);
-  lbox(cx, y, cz, yaw, 0, 2.37, 0.51, 0.22, 0.07, 0.03, [0.1, 0.1, 0.1]);
-  lbox(cx, y, cz, yaw, 0, 2.95, 0, 0.7, 0.12, 0.7, hatCol);
-  lbox(cx, y, cz, yaw, 0, 3.2, 0, 0.4, 0.28, 0.4, hatCol);
-  lbox(cx, y, cz, yaw, 0.4, 3.5, 0, 0.07, 0.35, 0.07, [0.93, 0.93, 0.9]);
+  // Ноги
+  lbox(cx,y,cz,yaw,-0.2,0.45,sw*0.35,0.2,0.9,0.2,[0.2,0.25,0.7]);
+  lbox(cx,y,cz,yaw,0.2,0.45,-sw*0.35,0.2,0.9,0.2,[0.2,0.25,0.7]);
+
+  // Торс
+  lbox(cx,y,cz,yaw,0,1.35,0,0.45,0.9,0.25,[0.25,0.55,0.95]);
+
+  // Руки
+  lbox(cx,y,cz,yaw,-0.6,1.35,-sw*0.25,0.18,0.85,0.18,[0.95,0.8,0.2]);
+  lbox(cx,y,cz,yaw,0.6,1.35,sw*0.25,0.18,0.85,0.18,[0.95,0.8,0.2]);
+
+  // Голова
+  lbox(cx,y,cz,yaw,0,2.2,0,0.4,0.4,0.4,[0.95,0.8,0.2]);
+
+  // Глаза
+  lbox(cx,y,cz,yaw,-0.12,2.28,0.41,0.07,0.1,0.02,[0.1,0.1,0.1]);
+  lbox(cx,y,cz,yaw,0.12,2.28,0.41,0.07,0.1,0.02,[0.1,0.1,0.1]);
+  // Рот
+  lbox(cx,y,cz,yaw,0,2.12,0.41,0.16,0.05,0.02,[0.1,0.1,0.1]);
 }
 
-function collideHoriz(px, pz) {
-  const r = 0.4;
-  for (const w of wallBoxes) {
-    const mnx = w.x - w.hw - r, mxx = w.x + w.hw + r;
-    const mnz = w.z - w.hd - r, mxz = w.z + w.hd + r;
-    if (px > mnx && px < mxx && pz > mnz && pz < mxz) {
-      const a = px - mnx, b = mxx - px, e = pz - mnz, f = mxz - pz;
-      const m = Math.min(a, b, e, f);
-      if (m === a) px = mnx;
-      else if (m === b) px = mxx;
-      else if (m === e) pz = mnz;
-      else pz = mxz;
+function collideHoriz(px,pz){
+  const r=0.4;
+  for(const w of wallBoxes){
+    const mnx=w.x-w.hw-r,mxx=w.x+w.hw+r,mnz=w.z-w.hd-r,mxz=w.z+w.hd+r;
+    if(px>mnx&&px<mxx&&pz>mnz&&pz<mxz){
+      const a=px-mnx,b=mxx-px,e=pz-mnz,f=mxz-pz,m=Math.min(a,b,e,f);
+      if(m===a)px=mnx;else if(m===b)px=mxx;else if(m===e)pz=mnz;else pz=mxz;
     }
   }
-  return [px, pz];
+  return[px,pz];
 }
-
-function groundTop(px, pz, curY) {
-  let best = -100;
-  for (const p of flatPlatforms) {
-    if (Math.abs(px - p.x) < p.hw + 0.5 && Math.abs(pz - p.z) < p.hd + 0.5) {
-      if (p.top <= curY + 0.8 && p.top > best) best = p.top;
+function groundTop(px,pz,curY){
+  let best=-100;
+  for(const p of flatPlatforms){
+    if(Math.abs(px-p.x)<p.hw+0.5&&Math.abs(pz-p.z)<p.hd+0.5){
+      if(p.top<=curY+0.8&&p.top>best)best=p.top;
     }
   }
   return best;
 }
 
-let bP, bN, bC, worldCount = 0;
-function loadGame(idx) {
-  wallBoxes.length = 0;
-  flatPlatforms.length = 0;
-  P.length = 0; N.length = 0; C.length = 0;
-  acidY = -999;
-  playerHasSword = false;
-
-  const data = GAMES[idx].build();
-  skyCol = data.sky;
-  curSpawn = data.spawn;
-
-  const makeBuf = (arr) => {
-    const b = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, b);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(arr), gl.STATIC_DRAW);
-    return b;
-  };
-  bP = makeBuf(P);
-  bN = makeBuf(N);
-  bC = makeBuf(C);
-  worldCount = P.length / 3;
-
-  Object.assign(player, {
-    x: data.spawn.x, z: data.spawn.z, y: data.spawn.y,
-    vy: 0, health: 100, dead: false, spawnProt: 4, place: idx
-  });
-
+let bP,bN,bC,worldCount=0;
+function loadGame(idx){
+  wallBoxes.length=0;flatPlatforms.length=0;P.length=0;N.length=0;C.length=0;acidY=-999;playerHasSword=false;
+  const data=GAMES[idx].build();
+  skyCol=data.sky;curSpawn=data.spawn;
+  const makeBuf=arr=>{const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(arr),gl.STATIC_DRAW);return b;};
+  bP=makeBuf(P);bN=makeBuf(N);bC=makeBuf(C);worldCount=P.length/3;
+  Object.assign(player,{x:data.spawn.x,z:data.spawn.z,y:data.spawn.y,vy:0,health:100,dead:false,spawnProt:4,place:idx});
   document.getElementById('deathScreen').classList.remove('on');
-  document.getElementById('bShoot').style.display = (idx === 3) ? 'block' : 'none';
-  if (idx === 3) playerHasSword = true;
-
-  document.getElementById('lbN').textContent = myUser.nick;
-  chatLog = [];
-  renderChat();
-  toast('▶ ' + GAMES[idx].name);
+  document.getElementById('bShoot').style.display=(idx===3)?'block':'none';
+  if(idx===3)playerHasSword=true;
+  document.getElementById('lbN').textContent=myUser.nick;
+  chatLog=[];renderChat();
+  toast('▶ '+GAMES[idx].name);
 }
 
-function send(m) {
-  if (ws && ws.readyState === 1) ws.send(JSON.stringify(m));
-}
+function send(m){if(ws&&ws.readyState===1)ws.send(JSON.stringify(m));}
+function authMsg(t){document.getElementById('authMsg').textContent=t;}
 
-function authMsg(t) {
-  document.getElementById('authMsg').textContent = t;
-}
-
-function openWs(onopen) {
-  if (ws) {
-    try { ws.onclose = null; ws.close(); } catch(e) {}
-    ws = null;
-  }
+function openWs(onopen){
+  if(ws){try{ws.onclose=null;ws.close();}catch(e){}ws=null;}
   authMsg('Подключение к серверу...');
-  try {
-    ws = new WebSocket(SERVER_URL);
-  } catch(e) {
-    authMsg('Ошибка подключения');
-    return;
-  }
-
-  ws.onopen = () => {
-    authMsg('');
-    document.getElementById('srvSt').textContent = '✅ Подключено';
-    if (onopen) onopen();
-  };
-  ws.onclose = () => {
-    ws = null;
-    document.getElementById('srvSt').textContent = 'Отключено';
-    if (!authed) authMsg('Нет соединения с сервером');
-    else toast('Соединение потеряно');
-    authed = false;
-  };
-  ws.onerror = () => {};
-  ws.onmessage = (ev) => {
-    let m;
-    try { m = JSON.parse(ev.data); } catch(e) { return; }
-    handleMsg(m);
-  };
+  try{ws=new WebSocket(SERVER_URL);}catch(e){authMsg('Ошибка подключения');return;}
+  ws.onopen=()=>{authMsg('');document.getElementById('srvSt').textContent='✅ Подключено';if(onopen)onopen();};
+  ws.onclose=()=>{ws=null;document.getElementById('srvSt').textContent='Отключено';if(!authed)authMsg('Нет соединения с сервером');else toast('Соединение потеряно');authed=false;};
+  ws.onerror=()=>{};
+  ws.onmessage=ev=>{let m;try{m=JSON.parse(ev.data);}catch(e){return;}handleMsg(m);};
 }
 
-function doAuth(type) {
-  const nick = document.getElementById('inpNick').value.trim();
-  const pass = document.getElementById('inpPass').value;
-  if (!nick || !pass) {
-    authMsg('Введи ник и пароль');
-    return;
-  }
-  pending = {nick, pass};
-  openWs(() => send({type, nick, pass}));
+function doAuth(type){
+  const nick=document.getElementById('inpNick').value.trim();
+  const pass=document.getElementById('inpPass').value;
+  if(!nick||!pass){authMsg('Введи ник и пароль');return;}
+  pending={nick,pass};
+  openWs(()=>send({type,nick,pass}));
 }
 
-function handleMsg(m) {
-  if (m.type === 'authResult') {
-    if (m.ok) {
-      authed = true;
-      if (pending) {
-        myUser.nick = pending.nick;
-        localStorage.setItem('nerix_nick', pending.nick);
-        localStorage.setItem('nerix_pass', pending.pass);
-      }
-      if (m.user) {
-        myUser.nerixs = m.user.nerixs || 0;
-        myUser.nelsi = m.user.nelsi || 0;
-      }
-      document.getElementById('auth').style.display = 'none';
+function handleMsg(m){
+  if(m.type==='authResult'){
+    if(m.ok){
+      authed=true;
+      if(pending){myUser.nick=pending.nick;localStorage.setItem('nerix_nick',pending.nick);localStorage.setItem('nerix_pass',pending.pass);}
+      if(m.user){myUser.nerixs=m.user.nerixs||0;myUser.nelsi=m.user.nelsi||0;}
+      document.getElementById('auth').style.display='none';
       showPlatform();
-      toast('Добро пожаловать, ' + myUser.nick);
-    } else {
-      authMsg(m.msg || 'Ошибка входа');
-    }
+      toast('Добро пожаловать, '+myUser.nick);
+    }else authMsg(m.msg||'Ошибка входа');
   }
 }
 
-const joy = document.getElementById('joy');
-const knob = joy.querySelector('.knob');
-let joyX = 0, joyY = 0, joyId = null;
-
-joy.addEventListener('pointerdown', e => {
-  e.preventDefault();
-  joyId = e.pointerId;
-  joy.setPointerCapture(e.pointerId);
-  moveJoy(e);
-});
-joy.addEventListener('pointermove', e => {
-  if (e.pointerId === joyId) moveJoy(e);
-});
-joy.addEventListener('pointerup', () => {
-  joyId = null;
-  joyX = joyY = 0;
-  knob.style.transform = 'translate(-50%,-50%)';
-});
-
-function moveJoy(e) {
-  const r = joy.getBoundingClientRect();
-  let dx = (e.clientX - r.left - r.width/2) / (r.width/2);
-  let dy = (e.clientY - r.top - r.height/2) / (r.height/2);
-  const l = Math.hypot(dx, dy) || 1;
-  if (l > 1) { dx /= l; dy /= l; }
-  joyX = dx;
-  joyY = -dy;
-  knob.style.transform = `translate(calc(-50% + ${dx*34}px), calc(-50% + ${dy*34}px))`;
+const joy=document.getElementById('joy'),knob=joy.querySelector('.knob');
+let joyX=0,joyY=0,joyId=null;
+joy.addEventListener('pointerdown',e=>{e.preventDefault();joyId=e.pointerId;joy.setPointerCapture(e.pointerId);moveJoy(e);});
+joy.addEventListener('pointermove',e=>{if(e.pointerId===joyId)moveJoy(e);});
+joy.addEventListener('pointerup',()=>{joyId=null;joyX=joyY=0;knob.style.transform='translate(-50%,-50%)';});
+function moveJoy(e){
+  const r=joy.getBoundingClientRect();
+  let dx=(e.clientX-r.left-r.width/2)/(r.width/2);
+  let dy=(e.clientY-r.top-r.height/2)/(r.height/2);
+  const l=Math.hypot(dx,dy)||1;if(l>1){dx/=l;dy/=l;}
+  joyX=dx;joyY=-dy;
+  knob.style.transform=`translate(calc(-50% + ${dx*34}px), calc(-50% + ${dy*34}px))`;
 }
 
-let lookId = null, lx = 0, ly = 0;
-canvas.addEventListener('pointerdown', e => {
-  if (e.target !== canvas) return;
-  lookId = e.pointerId;
-  lx = e.clientX;
-  ly = e.clientY;
-  canvas.setPointerCapture(e.pointerId);
-});
-canvas.addEventListener('pointermove', e => {
-  if (e.pointerId !== lookId) return;
-  camYaw -= (e.clientX - lx) * lookSens;
-  camPitch = Math.max(-0.4, Math.min(1.1, camPitch + (e.clientY - ly) * lookSens));
-  lx = e.clientX;
-  ly = e.clientY;
-});
-canvas.addEventListener('pointerup', e => {
-  if (e.pointerId === lookId) lookId = null;
-});
+let lookId=null,lx=0,ly=0;
+canvas.addEventListener('pointerdown',e=>{if(e.target!==canvas)return;lookId=e.pointerId;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture(e.pointerId);});
+canvas.addEventListener('pointermove',e=>{if(e.pointerId!==lookId)return;camYaw-=(e.clientX-lx)*lookSens;camPitch=Math.max(-0.4,Math.min(1.1,camPitch+(e.clientY-ly)*lookSens));lx=e.clientX;ly=e.clientY;});
+canvas.addEventListener('pointerup',e=>{if(e.pointerId===lookId)lookId=null;});
 
-document.getElementById('bJump').onpointerdown = e => {
-  e.preventDefault();
-  if (player.onGround && !player.dead) {
-    player.vy = 9.5;
-    player.onGround = false;
-  }
-};
-document.getElementById('bShoot').onpointerdown = e => {
-  e.preventDefault();
-  if (playerHasSword) toast('⚔ Удар!');
-};
+document.getElementById('bJump').onpointerdown=e=>{e.preventDefault();if(player.onGround&&!player.dead){player.vy=9.5;player.onGround=false;}};
+document.getElementById('bShoot').onpointerdown=e=>{e.preventDefault();if(playerHasSword)toast('⚔ Удар!');};
 
-function toast(t) {
-  const el = document.getElementById('toast');
-  el.textContent = t;
-  el.classList.add('on');
-  setTimeout(() => el.classList.remove('on'), 2200);
-}
-
-function renderChat() {
-  const box = document.getElementById('chatMsgs');
-  box.innerHTML = '';
-  chatLog.slice(-30).forEach(m => {
-    const d = document.createElement('div');
-    d.innerHTML = m.system
-      ? `<span style="color:#f0c040">${m.text}</span>`
-      : `<span class="from">${m.from}:</span> ${m.text}`;
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2200);}
+function renderChat(){
+  const box=document.getElementById('chatMsgs');box.innerHTML='';
+  chatLog.slice(-30).forEach(m=>{
+    const d=document.createElement('div');
+    d.innerHTML=m.system?`<span style="color:#f0c040">${m.text}</span>`:`<span class="from">${m.from}:</span> ${m.text}`;
     box.appendChild(d);
   });
-  box.scrollTop = box.scrollHeight;
+  box.scrollTop=box.scrollHeight;
 }
-
-document.getElementById('chatBtn').onclick = () => {
-  document.getElementById('chatPanel').classList.toggle('on');
-};
-document.getElementById('chatSend').onclick = () => {
-  const input = document.getElementById('chatInput');
-  const t = input.value.trim();
-  if (!t) return;
-  chatLog.push({from: myUser.nick, text: t});
-  send({type: 'chat', text: t});
-  input.value = '';
-  renderChat();
+document.getElementById('chatBtn').onclick=()=>document.getElementById('chatPanel').classList.toggle('on');
+document.getElementById('chatSend').onclick=()=>{
+  const input=document.getElementById('chatInput');
+  const t=input.value.trim();if(!t)return;
+  chatLog.push({from:myUser.nick,text:t});
+  send({type:'chat',text:t});
+  input.value='';renderChat();
 };
 
-function showPlatform() {
+function showPlatform(){
   document.getElementById('hud').classList.remove('on');
   document.getElementById('platform').classList.add('on');
-  running = false;
-  renderGames();
-  renderTasks();
-  document.getElementById('balanceNerixs').textContent = myUser.nerixs;
-  document.getElementById('balanceNelsi').textContent = myUser.nelsi;
+  running=false;
+  renderGames();renderTasks();
+  document.getElementById('balanceNerixs').textContent=myUser.nerixs;
+  document.getElementById('balanceNelsi').textContent=myUser.nelsi;
 }
 
-function renderGames() {
-  const g = document.getElementById('gamesGrid');
-  g.innerHTML = '';
-  GAMES.forEach((game, i) => {
-    const d = document.createElement('div');
-    d.className = 'gameCard';
-    d.innerHTML = `
-      <div class="thumb">${game.ic}</div>
-      <div class="body">
-        <div class="nm">${game.name}</div>
-        <div class="ds">${game.ds}</div>
-        <button class="playBtn">ИГРАТЬ</button>
-      </div>`;
-    d.onclick = () => {
+function renderGames(){
+  const g=document.getElementById('gamesGrid');g.innerHTML='';
+  GAMES.forEach((game,i)=>{
+    const d=document.createElement('div');d.className='gameCard';
+    d.innerHTML=`<div class="thumb">${game.ic}</div><div class="body"><div class="nm">${game.name}</div><div class="ds">${game.ds}</div><button class="playBtn">ИГРАТЬ</button></div>`;
+    d.onclick=()=>{
       document.getElementById('platform').classList.remove('on');
       document.getElementById('hud').classList.add('on');
-      loadGame(i);
-      running = true;
+      loadGame(i);running=true;
     };
     g.appendChild(d);
   });
 }
 
-function renderTasks() {
-  const el = document.getElementById('tasksList');
-  const day = new Date().toDateString();
-  let s = JSON.parse(localStorage.getItem('nerix_quests') || '{}');
-  if (s.day !== day) {
-    s = {day, list: [
-      {name: 'Зайти в игру', reward: 10, done: true},
-      {name: 'Сыграть 2 матча', reward: 25, done: false},
-      {name: 'Пройти 200 метров', reward: 15, done: false},
-      {name: 'Сложный квест: убить 3 игрока', reward: 40, done: false}
+function renderTasks(){
+  const el=document.getElementById('tasksList');
+  const day=new Date().toDateString();
+  let s=JSON.parse(localStorage.getItem('nerix_quests')||'{}');
+  if(s.day!==day){
+    s={day,list:[
+      {name:'Зайти в игру',reward:10,done:true},
+      {name:'Сыграть 2 матча',reward:25,done:false},
+      {name:'Пройти 200 метров',reward:15,done:false}
     ]};
-    localStorage.setItem('nerix_quests', JSON.stringify(s));
+    localStorage.setItem('nerix_quests',JSON.stringify(s));
   }
-  el.innerHTML = '';
-  s.list.forEach(t => {
-    const div = document.createElement('div');
-    div.style.cssText = 'background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center';
-    div.innerHTML = `<div><b>${t.name}</b><br><small style="opacity:.6">+${t.reward} 💧</small></div><div>${t.done ? '✅' : '⬜'}</div>`;
+  el.innerHTML='';
+  s.list.forEach(t=>{
+    const div=document.createElement('div');
+    div.style.cssText='background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center';
+    div.innerHTML=`<div><b>${t.name}</b><br><small style="opacity:.6">+${t.reward} 💧</small></div><div>${t.done?'✅':'⬜'}</div>`;
     el.appendChild(div);
   });
 }
 
-document.getElementById('btnAuth').onclick = () => doAuth('login');
-document.getElementById('btnReg').onclick = () => doAuth('register');
-document.getElementById('btnGuest').onclick = () => {
-  myUser.nick = document.getElementById('inpNick').value.trim() || 'Guest';
-  document.getElementById('auth').style.display = 'none';
-  showPlatform();
-  toast('Офлайн-режим');
+document.getElementById('btnAuth').onclick=()=>doAuth('login');
+document.getElementById('btnReg').onclick=()=>doAuth('register');
+document.getElementById('btnGuest').onclick=()=>{
+  myUser.nick=document.getElementById('inpNick').value.trim()||'Guest';
+  document.getElementById('auth').style.display='none';
+  showPlatform();toast('Офлайн-режим');
 };
 
-(function() {
-  const n = localStorage.getItem('nerix_nick');
-  const p = localStorage.getItem('nerix_pass');
-  if (n && p) {
-    document.getElementById('inpNick').value = n;
-    document.getElementById('inpPass').value = p;
-    pending = {nick: n, pass: p};
-    openWs(() => send({type: 'login', nick: n, pass: p}));
+(function(){
+  const n=localStorage.getItem('nerix_nick'),p=localStorage.getItem('nerix_pass');
+  if(n&&p){
+    document.getElementById('inpNick').value=n;
+    document.getElementById('inpPass').value=p;
+    pending={nick:n,pass:p};
+    openWs(()=>send({type:'login',nick:n,pass:p}));
   }
 })();
 
-document.getElementById('btnMenu').onclick = () => {
-  document.getElementById('pauseMenu').classList.add('on');
-  gamePaused = true;
-};
-document.getElementById('pmStay').onclick = () => {
-  document.getElementById('pauseMenu').classList.remove('on');
-  gamePaused = false;
-};
-document.getElementById('pmLeave').onclick = () => {
-  document.getElementById('pauseMenu').classList.remove('on');
-  gamePaused = false;
-  showPlatform();
-};
-document.getElementById('pmRespawn').onclick = () => {
-  Object.assign(player, {
-    health: 100, dead: false, spawnProt: 3.5,
-    x: curSpawn.x, z: curSpawn.z, y: curSpawn.y, vy: 0
-  });
+document.getElementById('btnMenu').onclick=()=>{document.getElementById('pauseMenu').classList.add('on');gamePaused=true;};
+document.getElementById('pmStay').onclick=()=>{document.getElementById('pauseMenu').classList.remove('on');gamePaused=false;};
+document.getElementById('pmLeave').onclick=()=>{document.getElementById('pauseMenu').classList.remove('on');gamePaused=false;showPlatform();};
+document.getElementById('pmRespawn').onclick=()=>{
+  Object.assign(player,{health:100,dead:false,spawnProt:3.5,x:curSpawn.x,z:curSpawn.z,y:curSpawn.y,vy:0});
   document.getElementById('deathScreen').classList.remove('on');
-  document.getElementById('pauseMenu').classList.remove('on');
-  gamePaused = false;
+  document.getElementById('pauseMenu').classList.remove('on');gamePaused=false;
 };
-document.getElementById('pmSettings').onclick = () => {
-  document.getElementById('pauseMenu').classList.remove('on');
-  document.getElementById('settingsPanel').classList.add('on');
-};
-document.getElementById('settingsClose').onclick = () => {
-  document.getElementById('settingsPanel').classList.remove('on');
-  document.getElementById('pauseMenu').classList.add('on');
-};
-document.getElementById('sensRange').oninput = function() {
-  lookSens = this.value * 0.001;
-};
-document.getElementById('btnLogout').onclick = () => {
-  localStorage.removeItem('nerix_nick');
-  localStorage.removeItem('nerix_pass');
-  location.reload();
-};
+document.getElementById('pmSettings').onclick=()=>{document.getElementById('pauseMenu').classList.remove('on');document.getElementById('settingsPanel').classList.add('on');};
+document.getElementById('settingsClose').onclick=()=>{document.getElementById('settingsPanel').classList.remove('on');document.getElementById('pauseMenu').classList.add('on');};
+document.getElementById('sensRange').oninput=function(){lookSens=this.value*0.001;};
+document.getElementById('btnLogout').onclick=()=>{localStorage.removeItem('nerix_nick');localStorage.removeItem('nerix_pass');location.reload();};
 
-document.getElementById('btnPlayers').onclick = () => {
-  document.getElementById('ppList').innerHTML = `<div class="settingRow"><span>${myUser.nick} (ты)</span></div>`;
+document.getElementById('btnPlayers').onclick=()=>{
+  document.getElementById('ppList').innerHTML=`<div class="settingRow"><span>${myUser.nick} (ты)</span></div>`;
   document.getElementById('playersPanel').classList.add('on');
 };
-document.getElementById('pmPlayers').onclick = () => {
-  document.getElementById('ppList').innerHTML = `<div class="settingRow"><span>${myUser.nick} (ты)</span></div>`;
+document.getElementById('pmPlayers').onclick=()=>{
+  document.getElementById('ppList').innerHTML=`<div class="settingRow"><span>${myUser.nick} (ты)</span></div>`;
   document.getElementById('playersPanel').classList.add('on');
 };
-document.getElementById('ppClose').onclick = () => {
-  document.getElementById('playersPanel').classList.remove('on');
-};
+document.getElementById('ppClose').onclick=()=>document.getElementById('playersPanel').classList.remove('on');
 
-document.querySelectorAll('.tab').forEach(t => {
-  t.onclick = () => {
-    document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
     t.classList.add('on');
-    const page = document.getElementById('page-' + t.dataset.page);
-    if (page) page.classList.add('on');
+    const page=document.getElementById('page-'+t.dataset.page);
+    if(page)page.classList.add('on');
   };
 });
 
-function matLook(ex, ey, ez, cx, cy, cz) {
-  let fx = cx-ex, fy = cy-ey, fz = cz-ez;
-  const l = Math.hypot(fx, fy, fz) || 1;
-  fx /= l; fy /= l; fz /= l;
-  let rx = -fz, ry = 0, rz = fx;
-  const l2 = Math.hypot(rx, rz) || 1;
-  rx /= l2; rz /= l2;
-  const ux = ry*fz - rz*fy, uy = rz*fx - rx*fz, uz = rx*fy - ry*fx;
-  return new Float32Array([
-    rx, ux, -fx, 0,
-    ry, uy, -fy, 0,
-    rz, uz, -fz, 0,
-    -(rx*ex + ry*ey + rz*ez),
-    -(ux*ex + uy*ey + uz*ez),
-    fx*ex + fy*ey + fz*ez, 1
-  ]);
+function matLook(ex,ey,ez,cx,cy,cz){
+  let fx=cx-ex,fy=cy-ey,fz=cz-ez;const l=Math.hypot(fx,fy,fz)||1;fx/=l;fy/=l;fz/=l;
+  let rx=-fz,ry=0,rz=fx;const l2=Math.hypot(rx,rz)||1;rx/=l2;rz/=l2;
+  const ux=ry*fz-rz*fy,uy=rz*fx-rx*fz,uz=rx*fy-ry*fx;
+  return new Float32Array([rx,ux,-fx,0,ry,uy,-fy,0,rz,uz,-fz,0,-(rx*ex+ry*ey+rz*ez),-(ux*ex+uy*ey+uz*ez),fx*ex+fy*ey+fz*ez,1]);
 }
-function persp(fov, asp, n, f) {
-  const q = 1 / Math.tan(fov/2), d = n - f;
-  return new Float32Array([
-    q/asp, 0, 0, 0,
-    0, q, 0, 0,
-    0, 0, (f+n)/d, -1,
-    0, 0, 2*f*n/d, 0
-  ]);
+function persp(fov,asp,n,f){
+  const q=1/Math.tan(fov/2),d=n-f;
+  return new Float32Array([q/asp,0,0,0,0,q,0,0,0,0,(f+n)/d,-1,0,0,2*f*n/d,0]);
 }
 
-let last = performance.now();
-function loop(t) {
-  const dt = Math.min(0.033, (t - last) / 1000);
-  last = t;
+let last=performance.now();
+function loop(t){
+  const dt=Math.min(0.033,(t-last)/1000);last=t;
+  if(running&&!gamePaused){
+    if(Math.hypot(joyX,joyY)>0.15&&!player.dead){
+      const fx=-Math.sin(camYaw),fz=-Math.cos(camYaw),rx=-fz,rz=fx;
+      let wx=fx*joyY+rx*joyX,wz=fz*joyY+rz*joyX;
+      const wl=Math.hypot(wx,wz)||1;wx/=wl;wz/=wl;
+      player.yaw=Math.atan2(wx,wz);
+      const[nx,nz]=collideHoriz(player.x+wx*player.speed*dt,player.z+wz*player.speed*dt);
+      player.x=nx;player.z=nz;player.walking=true;player.walkPhase+=dt*9;
+    }else player.walking=false;
 
-  if (running && !gamePaused) {
-    if (Math.hypot(joyX, joyY) > 0.15 && !player.dead) {
-      const fx = -Math.sin(camYaw), fz = -Math.cos(camYaw);
-      const rx = -fz, rz = fx;
-      let wx = fx * joyY + rx * joyX;
-      let wz = fz * joyY + rz * joyX;
-      const wl = Math.hypot(wx, wz) || 1;
-      wx /= wl; wz /= wl;
-      player.yaw = Math.atan2(wx, wz);
-      const [nx, nz] = collideHoriz(
-        player.x + wx * player.speed * dt,
-        player.z + wz * player.speed * dt
-      );
-      player.x = nx;
-      player.z = nz;
-      player.walking = true;
-      player.walkPhase += dt * 9;
-    } else {
-      player.walking = false;
-    }
+    player.vy-=24*dt;player.y+=player.vy*dt;
+    const gy=groundTop(player.x,player.z,player.y);
+    if(player.y<=gy+0.1){player.y=gy;player.vy=0;player.onGround=true;}
+    else player.onGround=false;
 
-    player.vy -= 24 * dt;
-    player.y += player.vy * dt;
-    const gy = groundTop(player.x, player.z, player.y);
-    if (player.y <= gy + 0.1) {
-      player.y = gy;
-      player.vy = 0;
-      player.onGround = true;
-    } else {
-      player.onGround = false;
-    }
-
-    if (acidY > -900 && player.y < acidY + 0.5 && player.spawnProt <= 0 && !player.dead) {
-      player.dead = true;
-      player.respawnAt = performance.now() + 2000;
-      player.wipeouts++;
-      document.getElementById('lbW').textContent = player.wipeouts;
+    if(acidY>-900&&player.y<acidY+0.5&&player.spawnProt<=0&&!player.dead){
+      player.dead=true;player.respawnAt=performance.now()+2000;player.wipeouts++;
+      document.getElementById('lbW').textContent=player.wipeouts;
       document.getElementById('deathScreen').classList.add('on');
     }
-    if (player.y < -25 && !player.dead) {
-      player.dead = true;
-      player.respawnAt = performance.now() + 2000;
+    if(player.y<-25&&!player.dead){
+      player.dead=true;player.respawnAt=performance.now()+2000;
       document.getElementById('deathScreen').classList.add('on');
     }
-    if (player.dead && performance.now() >= player.respawnAt) {
-      Object.assign(player, {
-        dead: false, health: 100, spawnProt: 3.5,
-        x: curSpawn.x, z: curSpawn.z, y: curSpawn.y, vy: 0
-      });
+    if(player.dead&&performance.now()>=player.respawnAt){
+      Object.assign(player,{dead:false,health:100,spawnProt:3.5,x:curSpawn.x,z:curSpawn.z,y:curSpawn.y,vy:0});
       document.getElementById('deathScreen').classList.remove('on');
     }
+    if(player.spawnProt>0){player.spawnProt-=dt;document.getElementById('spawnProt').style.display='block';}
+    else document.getElementById('spawnProt').style.display='none';
 
-    if (player.spawnProt > 0) {
-      player.spawnProt -= dt;
-      document.getElementById('spawnProt').style.display = 'block';
-    } else {
-      document.getElementById('spawnProt').style.display = 'none';
-    }
+    const cx=player.x+Math.sin(camYaw)*camDistance;
+    const cz=player.z+Math.cos(camYaw)*camDistance;
+    const cy=player.y+2.2+Math.sin(camPitch)*camDistance*0.4;
 
-    const cx = player.x + Math.sin(camYaw) * camDistance;
-    const cz = player.z + Math.cos(camYaw) * camDistance;
-    const cy = player.y + 2.4 + Math.sin(camPitch) * camDistance * 0.4;
-
-    gl.clearColor(skyCol[0], skyCol[1], skyCol[2], 1);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.clearColor(skyCol[0],skyCol[1],skyCol[2],1);
+    gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST);
 
-    const view = matLook(cx, cy, cz, player.x, player.y + 1.2, player.z);
-    const proj = persp(Math.PI/3, canvas.width / canvas.height, 0.1, 400);
+    const view=matLook(cx,cy,cz,player.x,player.y+1.1,player.z);
+    const proj=persp(Math.PI/3,canvas.width/canvas.height,0.1,400);
     gl.useProgram(prog);
-    gl.uniformMatrix4fv(uV, false, view);
-    gl.uniformMatrix4fv(uP, false, proj);
-    gl.uniform3f(uLight, 0.5, 1.0, 0.4);
-    gl.uniform3f(uCam, cx, cy, cz);
-    gl.uniform3f(uFog, skyCol[0], skyCol[1], skyCol[2]);
+    gl.uniformMatrix4fv(uV,false,view);
+    gl.uniformMatrix4fv(uP,false,proj);
+    gl.uniform3f(uLight,0.5,1.0,0.4);
+    gl.uniform3f(uCam,cx,cy,cz);
+    gl.uniform3f(uFog,skyCol[0],skyCol[1],skyCol[2]);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, bP);
-    gl.enableVertexAttribArray(aPos);
-    gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
-    gl.bindBuffer(gl.ARRAY_BUFFER, bN);
-    gl.enableVertexAttribArray(aNor);
-    gl.vertexAttribPointer(aNor, 3, gl.FLOAT, false, 0, 0);
-    gl.bindBuffer(gl.ARRAY_BUFFER, bC);
-    gl.enableVertexAttribArray(aCol);
-    gl.vertexAttribPointer(aCol, 3, gl.FLOAT, false, 0, 0);
-    gl.drawArrays(gl.TRIANGLES, 0, worldCount);
+    gl.bindBuffer(gl.ARRAY_BUFFER,bP);gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,bN);gl.enableVertexAttribArray(aNor);gl.vertexAttribPointer(aNor,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,bC);gl.enableVertexAttribArray(aCol);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,0,0);
+    gl.drawArrays(gl.TRIANGLES,0,worldCount);
 
-    dPv = []; dNv = []; dCv = [];
-    if (!player.dead) {
-      drawR6(player.x, player.y, player.z, player.yaw, player.walkPhase, player.walking);
-    }
+    dPv=[];dNv=[];dCv=[];
+    if(!player.dead)drawR6(player.x,player.y,player.z,player.yaw,player.walkPhase,player.walking);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, dP);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(dPv), gl.DYNAMIC_DRAW);
-    gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
-    gl.bindBuffer(gl.ARRAY_BUFFER, dN);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(dNv), gl.DYNAMIC_DRAW);
-    gl.vertexAttribPointer(aNor, 3, gl.FLOAT, false, 0, 0);
-    gl.bindBuffer(gl.ARRAY_BUFFER, dC);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(dCv), gl.DYNAMIC_DRAW);
-    gl.vertexAttribPointer(aCol, 3, gl.FLOAT, false, 0, 0);
-    gl.drawArrays(gl.TRIANGLES, 0, dPv.length / 3);
+    gl.bindBuffer(gl.ARRAY_BUFFER,dP);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(dPv),gl.DYNAMIC_DRAW);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,dN);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(dNv),gl.DYNAMIC_DRAW);gl.vertexAttribPointer(aNor,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,dC);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(dCv),gl.DYNAMIC_DRAW);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,0,0);
+    gl.drawArrays(gl.TRIANGLES,0,dPv.length/3);
 
-    document.getElementById('st').textContent =
-      `X:${player.x.toFixed(0)} Y:${player.y.toFixed(1)} Z:${player.z.toFixed(0)}`;
-    document.getElementById('hpf').style.width = Math.max(0, player.health) + '%';
-    document.getElementById('hpt').textContent = '❤ ' + Math.round(player.health);
+    document.getElementById('st').textContent=`X:${player.x.toFixed(0)} Y:${player.y.toFixed(1)} Z:${player.z.toFixed(0)}`;
+    document.getElementById('hpf').style.width=Math.max(0,player.health)+'%';
+    document.getElementById('hpt').textContent='❤ '+Math.round(player.health);
   }
-
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
