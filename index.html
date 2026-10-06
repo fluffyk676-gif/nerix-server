@@ -97,6 +97,53 @@ body.ed #joy{bottom:250px!important}
 .catCard .cbuy{background:#9aa0a6;color:#000}.catCard .cbuy.lim{background:linear-gradient(90deg,#5eead4,#a78bfa);color:#000}
 .catCard .ceq{background:#2a2a2a;color:#fff}.catCard .con{background:#5eead4;color:#06201c}
 .catCard button:disabled{opacity:.4;cursor:not-allowed}
+/* ===== home UI ===== */
+#pTop{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;padding:12px 14px;background:#0d0d0d;border:0;justify-content:flex-start}
+.hamb{position:relative;width:34px;height:34px;display:flex;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;flex:none}
+.hamb i{display:block;height:3px;border-radius:2px;background:#fff}.hamb i:nth-child(1){width:26px}.hamb i:nth-child(2){width:20px}.hamb i:nth-child(3){width:26px}
+#logo{font-size:21px;font-weight:900;letter-spacing:3px;flex:1;min-width:0}
+.ic{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;position:relative;flex:none}
+.badge{position:absolute;top:-3px;right:-3px;background:#3b6cff;color:#fff;font:700 11px Arial;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+#balPill{background:#1a1f2b;border-radius:18px;padding:7px 11px;font-size:13px;white-space:nowrap;flex:none}
+#searchBar{padding:0 14px 6px}#searchBar input{margin:0}
+#pContent{flex:1;overflow-y:auto;padding:0 14px 96px}
+.page h2{margin:8px 0 12px}
+.profRow{display:flex;align-items:center;gap:12px;margin:6px 0 14px}
+.profRow .nm{font-size:26px;font-weight:800;word-break:break-all}
+.chip2{background:#1e2430;border-radius:16px;padding:6px 12px;font-size:13px;white-space:nowrap}
+.banner{border:1px solid #2a3140;border-radius:16px;padding:16px;display:flex;gap:12px;position:relative;margin-bottom:16px;background:#12161e}
+.bnIc{font-size:34px}.bnT{font-size:18px;font-weight:700}.bnS{opacity:.7;font-size:14px;margin:4px 0 10px;line-height:1.4}
+.bnBtn{background:#3b6cff;color:#fff;border:0;border-radius:10px;padding:9px 18px;font-weight:700;font-size:15px}
+.bnX{position:absolute;right:14px;top:12px;font-size:20px;opacity:.8;cursor:pointer}
+.frow{display:flex;gap:14px;overflow-x:auto;padding:4px 0 8px}
+.fcell{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:84px;max-width:90px;font-size:13px;cursor:pointer;text-align:center}
+.fcir{width:84px;height:84px;border-radius:50%;background:#1e2430;display:flex;align-items:center;justify-content:center;font-size:34px;position:relative;overflow:hidden}
+.dot{position:absolute;right:5px;bottom:5px;width:16px;height:16px;border-radius:50%;background:#2fd36f;border:3px solid #0d0d0d}
+.sec{font-size:22px;font-weight:800;margin:16px 0 10px}
+.hrow{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px}
+.tile{width:170px;flex:none;cursor:pointer}
+.tile .th{height:104px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:46px}
+.tile .tn{font-weight:700;margin:8px 0 3px;font-size:14px;line-height:1.25;max-height:36px;overflow:hidden}
+.tile .tm{font-size:12px;opacity:.65}
+.chRow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #1a1f2b;cursor:pointer}
+.chNo{width:26px;text-align:center;font-weight:800;opacity:.7}
+.chTh{width:64px;height:64px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px;flex:none}
+.chIn{display:flex;flex-direction:column;gap:3px}.chIn small{opacity:.6}
+#bnav{position:fixed;left:0;right:0;bottom:0;height:64px;background:#0d0d0d;border-top:1px solid #1a1f2b;display:none;justify-content:space-around;align-items:center;z-index:12}
+#platform.on #bnav{display:flex}
+.bn{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;opacity:.6;cursor:pointer;min-width:70px}
+.bn span{font-size:24px;line-height:28px;height:30px;display:flex;align-items:center}
+.bn.on{opacity:1;font-weight:700}
+#drawerBg{position:fixed;inset:0;background:#000a;z-index:39;display:none}#drawerBg.on{display:block}
+#drawer{position:fixed;left:0;top:0;bottom:0;width:min(86vw,360px);background:#0f1218;z-index:40;transform:translateX(-102%);transition:transform .25s;overflow-y:auto;padding:22px 16px}
+#drawer.on{transform:none}
+.dProf{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+#dNick{font-size:22px;font-weight:800}#dTag{opacity:.6;margin-top:3px}
+.dBal{border:1px solid #2a3140;border-radius:14px;padding:14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-size:18px;gap:8px;flex-wrap:wrap}
+.dItem{display:flex;align-items:center;gap:14px;padding:15px 8px;font-size:19px;font-weight:700;cursor:pointer}
+.dItem.danger{color:#ff6b6b}
+#notifPanel{position:fixed;right:10px;top:58px;width:min(330px,92vw);max-height:60vh;overflow-y:auto;background:#161a22;border:1px solid #2a3140;border-radius:14px;z-index:36;display:none;padding:6px}
+.nItem{display:flex;justify-content:space-between;gap:10px;padding:10px;border-bottom:1px solid #222834;font-size:14px}.nItem small{opacity:.5;flex:none}
 </style>
 </head>
 <body>
@@ -161,17 +208,26 @@ body.ed #joy{bottom:250px!important}
   <button class="btn" id="btnGuest" style="margin-top:8px;background:transparent;color:#9aa0a6">Играть без сервера</button>
 </div></div>
 <div id="platform">
-  <div id="pTop"><div id="logo">NERIX</div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <div id="balance">💎 <span id="balanceNerixs">0</span> · 💧 <span id="balanceNelsi">0</span></div>
-      <button class="tbtn" id="btnBonus">🎁 Бонус</button><button class="tbtn" id="btnLogout">ВЫЙТИ</button></div></div>
+  <div id="pTop">
+    <div class="hamb" id="hamb"><i></i><i></i><i></i></div>
+    <div id="logo">NERIX</div>
+    <div class="ic" id="icSearch">🔍</div>
+    <div id="balPill">💎 <span id="balanceNerixs">0</span> · 💧 <span id="balanceNelsi">0</span></div>
+    <div class="ic" id="icBell">🔔<span class="badge" id="bellBadge" style="display:none">0</span></div>
+  </div>
+  <div id="searchBar" style="display:none"><input id="searchInp" placeholder="Поиск игр..."></div>
   <div id="pContent">
-    <div class="tabbar">
-      <div class="tab on" data-page="games">🎮 Игры</div><div class="tab" data-page="tasks">📋 Квесты</div>
-      <div class="tab" data-page="catalog">🛍 Каталог</div><div class="tab" data-page="friends">👥 Друзья</div><div class="tab" data-page="studio">🛠 Студия</div><div class="tab" data-page="server">🌐 Карты игроков</div><div class="tab" data-page="avatar">🧍 Аватар</div></div>
-    <div class="page on" id="page-games"><h2>Игры</h2><div class="grid" id="gamesGrid"></div></div>
+    <div class="page on" id="page-games">
+      <div class="profRow"><div id="profAv"></div><div style="flex:1;min-width:0"><div class="nm" id="profNm"></div></div><div class="chip2" id="profChip">Офлайн</div></div>
+      <div class="banner" id="banner"><div class="bnIc">🎁</div><div style="flex:1"><div class="bnT">Ежедневный бонус</div><div class="bnS" id="bnTxt"></div><button class="bnBtn" id="bnTry">Забрать</button></div><div class="bnX" id="bnX">✕</div></div>
+      <div class="frow" id="frow"></div>
+      <div id="secRec"><div class="sec">Рекомендуем</div><div class="hrow" id="rowRec"></div></div>
+      <div id="secMine"><div class="sec">Мои игры</div><div class="hrow" id="rowMine"></div></div>
+      <div id="secSrv"><div class="sec">Карты игроков</div><div class="hrow" id="rowSrv"></div></div>
+    </div>
+    <div class="page" id="page-charts"><h2>Чарты</h2><div id="chartsList"></div></div>
     <div class="page" id="page-tasks"><h2>Ежедневные квесты</h2><div id="tasksList"></div></div>
-    <div class="page" id="page-catalog"><h2>🛍 Каталог</h2><div id="catBal" style="opacity:.7;margin:6px 0 4px">Баланс: —</div><div id="catEq" style="margin:4px 0 10px;font-size:22px"></div><div class="tabbar" id="catTabs"></div><div id="catGrid"></div></div>
+    <div class="page" id="page-catalog"><h2>🎒 Аватар и каталог</h2><div id="catBal" style="opacity:.7;margin:6px 0 4px">Баланс: —</div><div id="catEq" style="margin:4px 0 10px;font-size:22px"></div><div class="tabbar" id="catTabs"></div><div id="catGrid"></div></div>
     <div class="page" id="page-friends"><h2>Друзья</h2>
       <div style="display:flex;gap:8px;margin-bottom:12px"><input id="inpFriend" placeholder="Ник друга" style="flex:1">
       <button class="btn" style="width:auto;padding:10px 16px" id="btnAddFriend">Добавить</button></div><div id="friendsList"></div></div>
@@ -183,9 +239,28 @@ body.ed #joy{bottom:250px!important}
     <div class="page" id="page-server"><h2>Карты игроков</h2>
       <div id="srvSt" style="margin:10px 0;opacity:.8">Не подключено</div>
       <h3 style="margin:12px 0">Игры других игроков</h3><div class="grid" id="srvGames"></div></div>
-    <div class="page" id="page-avatar"><h2>Аватар</h2><div style="opacity:.7">Скоро больше кастомизации</div></div>
+  </div>
+  <div id="bnav">
+    <div class="bn on" data-go="games"><span>🏠</span>Главная</div>
+    <div class="bn" data-go="charts"><span>📊</span>Чарты</div>
+    <div class="bn" data-go="catalog"><span id="bnAv"></span>Аватар</div>
+    <div class="bn" data-go="friends"><span>💬</span>Друзья</div>
   </div>
 </div>
+<div id="drawerBg"></div>
+<div id="drawer">
+  <div class="dProf"><div id="dAv"></div><div><div id="dNick"></div><div id="dTag"></div></div></div>
+  <div class="dBal"><span>💎 <b id="dN">0</b></span><span>💧 <b id="dL">0</b></span><button class="tbtn" id="btnBonus">🎁 Бонус</button></div>
+  <div class="dItem" data-go="continue">⏱ Продолжить игру</div>
+  <div class="dItem" data-go="friends">👥 Друзья</div>
+  <div class="dItem" data-go="studio">🛠 Студия</div>
+  <div class="dItem" data-go="catalog">🎒 Инвентарь и каталог</div>
+  <div class="dItem" data-go="tasks">📋 Квесты</div>
+  <div class="dItem" data-go="server">🌐 Карты игроков</div>
+  <div class="dItem" id="dMusic">🔊 Музыка</div>
+  <div class="dItem danger" id="btnLogout">🚪 Выйти</div>
+</div>
+<div id="notifPanel"></div>
  
 <script>
 // ============ CORE ============
@@ -433,7 +508,7 @@ function facecyl(cx,cy,cz,yaw,oy,r,hh,col,half){ // face texture wrapped around 
 const gid=id=>document.getElementById(id);
 const esc=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const save={nerixs:100,nelsi:150};
-function updBal(){gid('balanceNerixs').textContent=save.nerixs;gid('balanceNelsi').textContent=save.nelsi;}
+function updBal(){gid('balanceNerixs').textContent=save.nerixs;gid('balanceNelsi').textContent=save.nelsi;refreshProfile();}
 const hazards=[],remotes={},tagEls={};
 let mode='play',studioTest=false,customGames=[],srvGames=[],ws=null,myId=null,lastSend=0,srvUrl=localStorage.getItem('nerix_server')||'';
 try{customGames=JSON.parse(localStorage.getItem('nerix_studio')||'[]');}catch(e){}
@@ -686,6 +761,7 @@ function handleMsg(m){
     case 'userUpdate':applyUser(m.user);break;
     case 'players':{
       lastPlayers=m.list||[];
+      if(gid('platform').classList.contains('on')&&performance.now()-lastRefresh>2000){lastRefresh=performance.now();renderGames();renderFriendsRow();if(gid('page-charts').classList.contains('on'))renderCharts();}
       if(gid('gamePage').classList.contains('on'))renderRooms();
       if(!running||mode!=='play'||studioTest)break;
       const seen={},mine=String(curPlace||''),base=mine.split('#')[0];
@@ -702,14 +778,14 @@ function handleMsg(m){
       else if(m.from!==myUser.nick)chatLog.push({from:esc(m.from),text:esc(m.text)});
       renderChat();break;
     case 'buyResult':case 'bonusResult':case 'friendResult':
-      if(m.user)applyUser(m.user);if(m.ok===true)playSfx(m.type==='buyResult'?'buy':'reward');else if(m.ok===false)playSfx('err');if(m.msg)toast(m.msg);break;
-    case 'taskNotify':toast('✔ '+m.name+' +'+m.reward);playSfx('reward');break;
+      if(m.user)applyUser(m.user);if(m.ok===true)playSfx(m.type==='buyResult'?'buy':'reward');else if(m.ok===false)playSfx('err');if(m.msg)notify(m.msg);break;
+    case 'taskNotify':notify('✔ '+m.name+' +'+m.reward);playSfx('reward');break;
     case 'games':srvGames=m.list||[];renderSrvGames();for(const k in gameCache)delete gameCache[k];
       if(gid('platform').classList.contains('on'))renderGames();
       for(const g of customGames)if(pubIds.indexOf(g.id)>=0&&!srvGames.some(x=>x.id===g.id)&&Date.now()-(repubAt[g.id]||0)>15000){repubAt[g.id]=Date.now();publish(g,true);}
       break;
     case 'game':if(m.game){gameCache[m.game.id]=m.game;const rm=pendingJoin?pendingJoin.room:'1';pendingJoin=null;playCustom(m.game,false,rm);}break;
-    case 'published':toast('✔ Игра опубликована для всех');playSfx('reward');send({type:'games'});break;
+    case 'published':notify('✔ Игра опубликована для всех');playSfx('reward');send({type:'games'});break;
   }
 }
 function renderSrvGames(){
@@ -754,6 +830,7 @@ function renderRooms(){
   if(isOnline()&&l.length<20){const b=document.createElement('button');b.className='btn';b.style.marginTop='8px';b.textContent='➕ Создать новый сервер';b.onclick=()=>joinGame(gpInfo,nextRoom(l));el.appendChild(b);}
 }
 function joinGame(info,room){
+  saveLast(info);
   if(info.kind==='builtin'){
     gid('gamePage').classList.remove('on');gid('platform').classList.remove('on');gid('hud').classList.add('on');
     mode='play';studioTest=false;document.body.classList.remove('ed');loadGame(info.idx,room);running=true;
@@ -891,15 +968,7 @@ function showPlatform(){
   for(const k in remotes)delete remotes[k];curPlace=null;
   send({type:'move',x:0,y:0,z:0,yaw:0,walking:false,walkPhase:0,place:'lobby',health:100});
   send({type:'games'});renderFriends();renderCatalog();startMenuMusic();
-  renderGames();renderTasks();renderStudio();updBal();
-}
-function renderGames(){
-  const g=gid('gamesGrid');g.innerHTML='';
-  const card=(info)=>{const d=document.createElement('div');d.className='gameCard';
-    d.innerHTML=`<div class="thumb">${info.ic}</div><div class="body"><div class="nm">${esc(info.name)}</div><div class="ds">${esc(info.short)}</div><button class="playBtn">ОТКРЫТЬ</button></div>`;d.onclick=()=>openGamePage(info);g.appendChild(d);};
-  GAMES.forEach((game,i)=>card({key:i,kind:'builtin',idx:i,name:game.name,ic:game.ic,short:game.ds,by:'NERIX',about:ABOUT[i]||game.ds}));
-  customGames.forEach(cg=>{const i=mineInfo(cg);i.short='Моя игра · '+cg.blocks.length+' блоков';card(i);});
-  srvGames.filter(sg=>!customGames.some(c=>c.id===sg.id)).forEach(sg=>card({key:'g'+sg.id,kind:'srv',id:sg.id,name:sg.name,ic:'🌐',short:'от '+sg.by+' · '+(+sg.n||0)+' блоков',by:sg.by,about:'Карта игрока '+sg.by+'. Блоков: '+(+sg.n||0)+'.'}));
+  renderGames();renderTasks();renderStudio();updBal();renderFriendsRow();renderBanner();updBell();
 }
 function renderTasks(){
   const el=document.getElementById('tasksList');el.innerHTML='';
@@ -931,9 +1000,92 @@ $('btnLogout').onclick=()=>{localStorage.removeItem('nerix_nick');localStorage.r
 const showPl=()=>{let h=`<div class="settingRow"><span>${esc(myUser.nick)} (ты)</span><span>${player.kos} / ${player.wipeouts}</span></div>`;for(const id in remotes)h+=`<div class="settingRow"><span>${esc(remotes[id].nick)}</span><span>онлайн</span></div>`;$('ppList').innerHTML=h;$('playersPanel').classList.add('on');};
 $('btnPlayers').onclick=showPl;$('pmPlayers').onclick=showPl;
 $('ppClose').onclick=()=>$('playersPanel').classList.remove('on');
-document.querySelectorAll('.tab').forEach(t=>{t.onclick=()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  t.classList.add('on');$('page-'+t.dataset.page).classList.add('on');if(t.dataset.page==='tasks')renderTasks();if(t.dataset.page==='studio')renderStudio();if(t.dataset.page==='catalog')renderCatalog();if(t.dataset.page==='server'){send({type:'games'});renderSrvGames();}};});
+ 
+ 
+// ============ HOME UI (главная, чарты, меню) ============
+const NOTIFS=[];let notifUnread=0,gameQuery='',lastRefresh=0;
+const THUMB={0:['#3aa17e','#2b6f8f'],1:['#f6c445','#f08a3c'],2:['#e0524a','#8e2a5a'],3:['#6b7aa0','#2b3550'],4:['#6a7686','#2b2f38']};
+function thumbBg(key){let c=THUMB[key];if(!c){let h=0;String(key).split('').forEach(ch=>h=(h*31+ch.charCodeAt(0))%360);c=['hsl('+h+',60%,48%)','hsl('+((h+50)%360)+',55%,30%)'];}return 'linear-gradient(135deg,'+c[0]+','+c[1]+')';}
+function onlineFor(key){let n=0;const k=String(key);for(const p of lastPlayers)if(String(p.place).split('#')[0]===k)n++;return n;}
+function allGames(){
+  const L=[];GAMES.forEach((g,i)=>L.push({key:i,kind:'builtin',idx:i,name:g.name,ic:g.ic,short:g.ds,by:'NERIX',about:ABOUT[i]||g.ds}));
+  customGames.forEach(cg=>{const i=mineInfo(cg);i.short='Моя игра · '+cg.blocks.length+' блоков';L.push(i);});
+  srvGames.filter(sg=>!customGames.some(c=>c.id===sg.id)).forEach(sg=>L.push({key:'g'+sg.id,kind:'srv',id:sg.id,name:sg.name,ic:'🌐',short:'от '+sg.by,by:sg.by,about:'Карта игрока '+sg.by+'. Блоков: '+(+sg.n||0)+'.'}));
+  return L;
+}
+function tile(info){
+  const d=document.createElement('div');d.className='tile';const n=onlineFor(info.key);
+  d.innerHTML='<div class="th" style="background:'+thumbBg(info.key)+'">'+info.ic+'</div><div class="tn">'+esc(info.name)+'</div><div class="tm">'+(n?'👥 '+n+' онлайн':esc(info.short||''))+'</div>';
+  d.onclick=()=>openGamePage(info);return d;
+}
+function fillRow(id,list,sec){const el=gid(id);el.innerHTML='';list.forEach(i=>el.appendChild(tile(i)));gid(sec).style.display=list.length?'block':'none';}
+function renderGames(){
+  const q=gameQuery.trim().toLowerCase(),f=l=>q?l.filter(i=>i.name.toLowerCase().includes(q)):l,all=allGames();
+  fillRow('rowRec',f(all.filter(i=>i.kind==='builtin')),'secRec');
+  fillRow('rowMine',f(all.filter(i=>i.kind==='mine')),'secMine');
+  fillRow('rowSrv',f(all.filter(i=>i.kind==='srv')),'secSrv');
+}
+function renderCharts(){
+  const el=gid('chartsList');el.innerHTML='';
+  allGames().map(i=>({i,n:onlineFor(i.key)})).sort((a,b)=>b.n-a.n).forEach((x,k)=>{
+    const d=document.createElement('div');d.className='chRow';
+    d.innerHTML='<div class="chNo">'+(k+1)+'</div><div class="chTh" style="background:'+thumbBg(x.i.key)+'">'+x.i.ic+'</div><div class="chIn"><b>'+esc(x.i.name)+'</b><small>'+(x.n?'👥 '+x.n+' онлайн':esc(x.i.short||''))+'</small></div>';
+    d.onclick=()=>openGamePage(x.i);el.appendChild(d);});
+}
+function shirtRGB(eq){const it=eq&&eq.shirt?itemById(eq.shirt):null,c=it?it.color:[0.2,0.4,0.85];return 'rgb('+c.map(v=>Math.round(v*255))+')';}
+function avatarSVG(eq,sz){
+  eq=eq||{};const hat=eq.hat?itemById(eq.hat):null,face=eq.face?itemById(eq.face):null;
+  return '<svg viewBox="0 0 100 100" width="'+sz+'" height="'+sz+'" style="border-radius:50%;flex:none"><rect width="100" height="100" fill="#22324f"/><rect x="16" y="72" width="68" height="40" rx="10" fill="'+shirtRGB(eq)+'"/><rect x="30" y="30" width="40" height="42" rx="8" fill="#f2d426"/><circle cx="42" cy="48" r="3.2" fill="#141414"/><circle cx="58" cy="48" r="3.2" fill="#141414"/><path d="M40 58 Q50 67 60 58" stroke="#141414" stroke-width="3" fill="none" stroke-linecap="round"/>'
+   +(face&&face.id==='sunglasses'?'<rect x="34" y="44" width="32" height="9" rx="3" fill="#111"/>':'')
+   +(hat?'<text x="50" y="36" font-size="34" text-anchor="middle">'+hat.ic+'</text>':'')+'</svg>';
+}
+function refreshProfile(){
+  const eq=myUser.equipped||{};
+  gid('profAv').innerHTML=avatarSVG(eq,64);gid('profNm').textContent=myUser.nick;gid('profChip').textContent=isOnline()?'Онлайн':'Офлайн';
+  gid('dAv').innerHTML=avatarSVG(eq,64);gid('dNick').textContent=myUser.nick;gid('dTag').textContent='@'+myUser.nick;
+  gid('bnAv').innerHTML=avatarSVG(eq,30);gid('dN').textContent=save.nerixs;gid('dL').textContent=save.nelsi;
+  gid('dMusic').textContent=(musicOn?'🔊':'🔇')+' Музыка: '+(musicOn?'вкл':'выкл');
+}
+function renderFriendsRow(){
+  const el=gid('frow');el.innerHTML='';
+  const add=document.createElement('div');add.className='fcell';add.innerHTML='<div class="fcir">➕</div><div>Добавить</div>';add.onclick=()=>goPage('friends');el.appendChild(add);
+  const fr=Array.isArray(myUser.friends)?myUser.friends:[],on=new Set(lastPlayers.map(p=>p.nick));
+  fr.forEach(f=>{const n=typeof f==='string'?f:f.nick,d=document.createElement('div');d.className='fcell';
+    d.innerHTML='<div class="fcir">'+avatarSVG({},84)+(on.has(n)?'<span class="dot"></span>':'')+'</div><div>'+esc(n)+'</div>';d.onclick=()=>goPage('friends');el.appendChild(d);});
+}
+function renderBanner(){
+  const el=gid('banner');if(localStorage.getItem('nerix_banner')===new Date().toDateString()){el.style.display='none';return;}
+  el.style.display='flex';gid('bnTxt').textContent=isOnline()?'Забери ежедневный бонус — нериксы за заход в игру.':'Войди на сервер, чтобы получать бонусы и играть с друзьями.';
+}
+gid('bnTry').onclick=()=>{if(isOnline())send({type:'bonus'});else toast('Бонус доступен после входа на сервер');};
+gid('bnX').onclick=()=>{localStorage.setItem('nerix_banner',new Date().toDateString());renderBanner();};
+function notify(t){NOTIFS.unshift({t,time:new Date().toTimeString().slice(0,5)});if(NOTIFS.length>30)NOTIFS.pop();notifUnread++;updBell();toast(t);}
+function updBell(){const b=gid('bellBadge');b.textContent=notifUnread;b.style.display=notifUnread?'flex':'none';}
+gid('icBell').onclick=e=>{e.stopPropagation();const p=gid('notifPanel'),open=p.style.display==='block';p.style.display=open?'none':'block';
+  if(!open){p.innerHTML=NOTIFS.length?NOTIFS.map(n=>'<div class="nItem"><span>'+esc(n.t)+'</span><small>'+n.time+'</small></div>').join(''):'<div class="nItem" style="opacity:.6">Уведомлений нет</div>';notifUnread=0;updBell();}};
+document.addEventListener('pointerdown',e=>{const p=gid('notifPanel');if(p.style.display==='block'&&!p.contains(e.target)&&e.target.id!=='icBell')p.style.display='none';},true);
+function openDrawer(){refreshProfile();gid('drawer').classList.add('on');gid('drawerBg').classList.add('on');}
+function closeDrawer(){gid('drawer').classList.remove('on');gid('drawerBg').classList.remove('on');}
+gid('hamb').onclick=openDrawer;gid('drawerBg').onclick=closeDrawer;
+function goPage(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));const pg=gid('page-'+n);if(pg)pg.classList.add('on');
+  document.querySelectorAll('.bn').forEach(b=>b.classList.toggle('on',b.dataset.go===n));closeDrawer();
+  if(n==='tasks')renderTasks();if(n==='studio')renderStudio();if(n==='catalog')renderCatalog();
+  if(n==='server'){send({type:'games'});renderSrvGames();}if(n==='charts')renderCharts();if(n==='games')renderGames();if(n==='friends')renderFriends();
+  gid('pContent').scrollTop=0;
+}
+function saveLast(info){try{localStorage.setItem('nerix_last',JSON.stringify({kind:info.kind,idx:info.idx,id:info.id||(info.game&&info.game.id)}));}catch(e){}}
+function continueGame(){
+  let l=null;try{l=JSON.parse(localStorage.getItem('nerix_last')||'null');}catch(e){}
+  if(!l){toast('Пока нет недавних игр');return;}
+  const f=allGames().find(i=>i.kind===l.kind&&(l.kind==='builtin'?i.idx===l.idx:(i.id||(i.game&&i.game.id))===l.id));
+  if(f)openGamePage(f);else toast('Игра больше недоступна');
+}
+document.querySelectorAll('[data-go]').forEach(el=>el.onclick=()=>{const g=el.dataset.go;if(g==='continue'){closeDrawer();continueGame();}else goPage(g);});
+gid('dMusic').onclick=()=>{musicOn=!musicOn;gid('chkMusic').checked=musicOn;if(musicOn&&!running)startMenuMusic();else stopMenuMusic();refreshProfile();};
+gid('icSearch').onclick=()=>{const b=gid('searchBar'),on=b.style.display!=='block';b.style.display=on?'block':'none';
+  if(on){goPage('games');gid('searchInp').focus();}else{gid('searchInp').value='';gameQuery='';renderGames();}};
+gid('searchInp').oninput=function(){gameQuery=this.value;renderGames();};
  
 // ============ MAIN LOOP ============
 function matLook(ex,ey,ez,cx,cy,cz){
